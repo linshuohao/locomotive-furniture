@@ -2,6 +2,9 @@
 
 ## 1. 本地环境
 
+- **Node.js** 22（与 CI 一致）
+- **包管理器**：npm（推荐，与 lockfile 对齐）
+
 ```bash
 npm install   # 自动执行 husky prepare，安装 Git hooks
 ```
@@ -10,12 +13,12 @@ npm install   # 自动执行 husky prepare，安装 Git hooks
 
 ## 2. 代码门禁
 
-| 层级           | 触发时机            | 检查项                                               |
-| -------------- | ------------------- | ---------------------------------------------------- |
-| **pre-commit** | `git commit`        | lint-staged：暂存区文件 ESLint + Prettier            |
-| **commit-msg** | 写入 commit message | commitlint：Conventional Commits 格式                |
-| **pre-push**   | `git push`          | `npm run check`（lint + typecheck + Vitest）         |
-| **CI**         | push / PR           | `check` + `build:e2e` + Playwright E2E（见 CI 配置） |
+| 层级           | 触发时机            | 检查项                                                            |
+| -------------- | ------------------- | ----------------------------------------------------------------- |
+| **pre-commit** | `git commit`        | lint-staged：暂存区文件 ESLint + Prettier                         |
+| **commit-msg** | 写入 commit message | commitlint：Conventional Commits 格式                             |
+| **pre-push**   | `git push`          | `npm run check:changed`（增量 lint + typecheck + Vitest related） |
+| **CI**         | push / PR           | `check` + `build:e2e` + Playwright E2E（见 CI 配置）              |
 
 跳过 hooks（仅限紧急情况）：
 
@@ -34,7 +37,8 @@ npm run test          # Vitest 单元测试
 npm run e2e:install   # 首次安装 Playwright Chromium
 npm run e2e           # E2E（build:e2e + Playwright）
 npm run e2e:ui        # Playwright UI 调试模式
-npm run check         # lint + typecheck + test（推送前门禁）
+npm run check:changed # 增量检查（pre-push hook 默认）
+npm run check         # 全量 lint + typecheck + test（推送前可选）
 npm run build         # 生产构建
 npm run build:e2e     # E2E 专用构建（mock commerce、关闭动效）
 ```
@@ -199,11 +203,12 @@ gh api --method PUT repos/linshuohao/locomotive-furniture/branches/main/protecti
 
 ## 7. 相关文件
 
-| 文件                           | 说明               |
-| ------------------------------ | ------------------ |
-| `.husky/pre-commit`            | 暂存区 lint-staged |
-| `.husky/commit-msg`            | commitlint 校验    |
-| `.husky/pre-push`              | 完整 check         |
-| `commitlint.config.js`         | 提交规范配置       |
-| `.github/workflows/ci.yml`     | 远程 CI 门禁       |
-| `package.json` → `lint-staged` | 暂存文件规则       |
+| 文件                           | 说明                                                    |
+| ------------------------------ | ------------------------------------------------------- |
+| `.husky/pre-commit`            | 暂存区 lint-staged                                      |
+| `.husky/commit-msg`            | commitlint 校验                                         |
+| `.husky/pre-push`              | 增量 `check:changed`（配置/依赖变更时回退全量 `check`） |
+| `scripts/check-changed.mjs`    | 增量门禁脚本                                            |
+| `commitlint.config.js`         | 提交规范配置                                            |
+| `.github/workflows/ci.yml`     | 远程 CI 门禁                                            |
+| `package.json` → `lint-staged` | 暂存文件规则                                            |

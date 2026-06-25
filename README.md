@@ -1,6 +1,6 @@
 # Atelier Furniture — Locomotive Scroll 跨境家具独立站
 
-> 10 SPU 极简高端家具独立站 Demo，复刻 Locomotive.ca 滚动视觉体系
+> 精选系列极简高端家具独立站 Demo（10 SKU 数据层），复刻 Locomotive.ca 滚动视觉体系
 
 ## 在线地址
 
@@ -59,14 +59,15 @@ npm run test         # 单元测试
 npm run e2e:install  # 安装 Playwright Chromium（首次）
 npm run e2e          # E2E 测试（build:e2e + Playwright）
 npm run e2e:ui       # Playwright UI 调试
-npm run check        # 推送前门禁（lint + typecheck + test）
+npm run check:changed # 增量检查（pre-push hook 默认）
+npm run check        # 全量 lint + typecheck + test（推送前可选）
 npm run deploy       # 手动部署主站（Production）
 npm run deploy:docs  # 手动部署文档站（Production）
 npm run deploy:all   # 主站 + 文档一并部署
 npm run deploy:preview  # 主站 Preview 部署
 ```
 
-本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check`。分支管理采用 **GitHub Flow**（`main` + 功能分支 + PR），详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
+本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check:changed`（增量）。分支管理采用 **GitHub Flow**（`main` + 功能分支 + PR），详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
 
 ## 部署（Vercel）
 

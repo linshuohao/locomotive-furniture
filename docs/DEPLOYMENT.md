@@ -2,7 +2,7 @@
 
 ## 1. 环境依赖
 
-- **Node.js** ≥ 18.16
+- **Node.js** 22（与 CI 一致；lockfile 需 npm 10+）
 - **包管理器**：npm / pnpm / yarn 任选
 
 ## 2. 本地开发
@@ -90,7 +90,7 @@ vercel git connect https://github.com/linshuohao/locomotive-furniture.git
 vercel link --yes --project locomotive-furniture   # 恢复主站本地关联
 ```
 
-推送前本地门禁：`npm run check`（pre-push hook 已启用）。
+推送前本地门禁：`npm run check:changed`（pre-push hook 已启用；全量校验可手动 `npm run check`）。
 
 ### 手动 CLI 部署
 
@@ -156,17 +156,17 @@ VITE_SITE_URL=https://locomotive-furniture.vercel.app
 
 `npm install` 后自动启用：
 
-| Hook       | 检查                                         |
-| ---------- | -------------------------------------------- |
-| pre-commit | lint-staged（ESLint + Prettier，仅暂存文件） |
-| commit-msg | commitlint（Conventional Commits）           |
-| pre-push   | `npm run check`（lint + typecheck + test）   |
+| Hook       | 检查                                                             |
+| ---------- | ---------------------------------------------------------------- |
+| pre-commit | lint-staged（ESLint + Prettier，仅暂存文件）                     |
+| commit-msg | commitlint（Conventional Commits）                               |
+| pre-push   | `npm run check:changed`（增量；配置/依赖变更时自动全量 `check`） |
 
 提交规范与完整说明见 [docs/CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ### GitHub Actions
 
-配置见 `.github/workflows/ci.yml`：
+配置见 `.github/workflows/ci.yml`（Node.js 22）：
 
 1. `npm ci`
 2. `npm run lint`

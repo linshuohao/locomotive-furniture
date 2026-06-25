@@ -21,9 +21,9 @@ features:
   - title: 滚动与动效
     details: Locomotive Scroll v5 + GSAP；MaskReveal 遮罩行、MarqueeBand、CyclingText、clip/scale 揭示；含降级策略与 TRADEOFFS 决策记录。
   - title: 电商闭环
-    details: 10 SKU → 购物车 → 结算 Demo；data/providers 支持 mock / http 切换。
+    details: 精选系列 → 购物车 → 结算 Demo（10 SKU 数据层）；data/providers 支持 mock / http 切换。
   - title: 工程化
-    details: Nuxt 3 SSR + Vue 3 + TS + Vitest + CI + Husky 门禁；Conventional Commits 提交规范。
+    details: Nuxt 3 SSR + Vue 3 + TS + Vitest + CI + Husky 增量门禁；Conventional Commits 提交规范。
 ---
 
 ## 文档导航
