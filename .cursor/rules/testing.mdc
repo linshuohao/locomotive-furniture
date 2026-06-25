@@ -1,14 +1,26 @@
 ---
-description: Vitest 单元测试规范
+description: Vitest 单元测试与 Playwright E2E 规范
 globs: "**/*.{spec,test}.ts"
 alwaysApply: false
 ---
 
 # 测试规范
 
-- 文件：`src/tests/*.spec.ts` 或 `src/**/*.spec.ts`
-- Vitest + jsdom，`globals: true`
-- 覆盖核心业务（cart、commerce、products、storage），不测试纯 UI 渲染
+## 分层
+
+| 目录 | 工具 | 覆盖范围 |
+| ---- | ---- | -------- |
+| `src/tests/*.spec.ts` | Vitest + jsdom | cart、commerce、products、storage 等业务逻辑 |
+| `e2e/*.spec.ts` | Playwright | 浏览器内用户路径（电商主流程等） |
+
+- 单元测试不测试纯 UI 渲染
+- E2E 使用 `data-testid` 选择器（见 PDP 加购、购物车结算、下单按钮）
+- E2E 构建用 `npm run build:e2e`（mock commerce + 关闭动效）
+
+## Vitest
+
+- `globals: true`，环境 `jsdom`
+- 配置：`vitest.config.ts`
 
 ## Pinia 测试
 
@@ -29,4 +41,12 @@ beforeEach(() => {
 })
 ```
 
-推送前：`npm run check`（lint + typecheck + test）
+## Playwright
+
+```bash
+npm run e2e:install   # 首次
+npm run e2e           # 全量
+npm run e2e:ui        # 调试
+```
+
+推送前：`npm run check`（不含 E2E）；CI 额外执行 Playwright。

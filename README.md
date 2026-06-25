@@ -26,7 +26,7 @@ npm run dev
 - **电商闭环**：10 SKU → 规格选择 → 加购 → 购物车 → 结算 → 成功页（Demo）
 - **Commerce 层**：`data/providers` 可切换 mock/http + Zod 校验 + 离线 fallback
 - **可观测性**：web-vitals 全量指标、typed 转化漏斗、motion jank 追踪
-- **工程标准**：Vue 3 + TS + Pinia + Vitest + CI（lint / typecheck / test / build）
+- **工程标准**：Vue 3 + TS + Pinia + Vitest + Playwright E2E + CI（lint / typecheck / test / build / e2e）
 - **性能降级**：motion capabilities 分级 + 设备 tier 自动关闭视差/WebGL
 
 ## 页面
@@ -52,6 +52,9 @@ npm run preview      # 预览主站
 npm run typecheck    # TypeScript 检查
 npm run lint         # 代码检查
 npm run test         # 单元测试
+npm run e2e:install  # 安装 Playwright Chromium（首次）
+npm run e2e          # E2E 测试（build:e2e + Playwright）
+npm run e2e:ui       # Playwright UI 调试
 npm run check        # 推送前门禁（lint + typecheck + test）
 npm run deploy       # 手动部署主站（Production）
 npm run deploy:docs  # 手动部署文档站（Production）

@@ -179,6 +179,7 @@ watch(
 
             <div data-pdp-reveal>
               <BaseButton
+                data-testid="add-to-cart"
                 size="lg"
                 class="w-full transition-transform duration-300"
                 :class="added ? 'scale-[0.98]' : ''"

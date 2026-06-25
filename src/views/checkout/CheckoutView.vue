@@ -119,7 +119,13 @@ const resolvedItems = computed(() =>
           </ScrollReveal>
 
           <ScrollReveal>
-            <BaseButton type="submit" size="lg" class="w-full" :disabled="!isValid || submitting">
+            <BaseButton
+              data-testid="place-order"
+              type="submit"
+              size="lg"
+              class="w-full"
+              :disabled="!isValid || submitting"
+            >
               {{ submitting ? t('checkout.processing') : t('checkout.placeOrder') }}
             </BaseButton>
           </ScrollReveal>
