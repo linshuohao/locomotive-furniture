@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useCartStore } from '@/store/cart'
 import { useLocale } from '@/composables/useLocale'
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher.vue'
@@ -13,6 +12,7 @@ const cart = useCartStore()
 const { t, localizedPath } = useLocale()
 const itemCount = computed(() => cart.itemCount)
 const badgeBump = ref(false)
+const menuOpen = ref(false)
 
 const links = computed(() => [
   { to: localizedPath('/'), label: t('nav.home') },
@@ -28,6 +28,22 @@ watch(itemCount, (next, prev) => {
     }, 650)
   }
 })
+
+function closeMenu() {
+  menuOpen.value = false
+}
+
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') closeMenu()
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeydown)
+})
 </script>
 
 <template>
@@ -38,15 +54,19 @@ watch(itemCount, (next, prev) => {
     <div
       class="mx-auto flex h-[var(--header-height)] max-w-7xl items-center justify-between px-6 backdrop-blur-md bg-brand-50/80 border-b border-brand-200/50"
     >
-      <RouterLink
+      <NuxtLink
         :to="localizedPath('/')"
         class="font-display text-2xl tracking-wide text-brand-900"
+        @click="closeMenu"
       >
         {{ t('brand.name') }}
-      </RouterLink>
+      </NuxtLink>
 
-      <nav class="hidden md:flex items-center gap-8">
-        <RouterLink
+      <nav
+        class="hidden md:flex items-center gap-8"
+        :aria-label="t('nav.primary')"
+      >
+        <NuxtLink
           v-for="link in links"
           :key="link.to"
           :to="link.to"
@@ -54,26 +74,64 @@ watch(itemCount, (next, prev) => {
           active-class="text-brand-950 nav-link--active"
         >
           {{ link.label }}
-        </RouterLink>
+        </NuxtLink>
       </nav>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 md:gap-4">
         <LocaleSwitcher />
-        <RouterLink
+        <NuxtLink
           :to="localizedPath('/cart')"
           class="relative text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950 transition-colors"
+          @click="closeMenu"
         >
           {{ t('nav.cart') }}
-          <span
-            v-if="itemCount > 0"
-            class="cart-badge absolute -top-2 -right-4 flex h-5 w-5 items-center justify-center rounded-full bg-brand-900 text-[10px] text-brand-50"
-            :class="{ 'cart-badge--bump': badgeBump }"
-          >
-            {{ itemCount }}
-          </span>
-        </RouterLink>
+          <ClientOnly>
+            <span
+              v-if="itemCount > 0"
+              class="cart-badge absolute -top-2 -right-4 flex h-5 w-5 items-center justify-center rounded-full bg-brand-900 text-[10px] text-brand-50"
+              :class="{ 'cart-badge--bump': badgeBump }"
+            >
+              {{ itemCount }}
+            </span>
+          </ClientOnly>
+        </NuxtLink>
+
+        <button
+          type="button"
+          class="md:hidden flex h-10 w-10 items-center justify-center border border-brand-300 text-brand-900"
+          :aria-expanded="menuOpen"
+          :aria-controls="'mobile-nav'"
+          :aria-label="menuOpen ? t('nav.closeMenu') : t('nav.openMenu')"
+          @click="menuOpen = !menuOpen"
+        >
+          <span class="sr-only">{{ menuOpen ? t('nav.closeMenu') : t('nav.openMenu') }}</span>
+          <span class="text-xl leading-none">{{ menuOpen ? '×' : '☰' }}</span>
+        </button>
       </div>
     </div>
+
+    <nav
+      v-if="menuOpen"
+      id="mobile-nav"
+      class="md:hidden border-b border-brand-200 bg-brand-50/95 backdrop-blur-md px-6 py-4"
+      :aria-label="t('nav.primary')"
+    >
+      <ul class="space-y-3">
+        <li
+          v-for="link in links"
+          :key="link.to"
+        >
+          <NuxtLink
+            :to="link.to"
+            class="block py-2 text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950"
+            active-class="text-brand-950"
+            @click="closeMenu"
+          >
+            {{ link.label }}
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
   </header>
 </template>
 

@@ -5,7 +5,7 @@ import vueParser from 'vue-eslint-parser'
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: ['dist/**', '.nuxt/**', '.output/**', 'node_modules/**'],
   },
   ...eslintPluginVue.configs['flat/recommended'],
   {
@@ -39,6 +39,14 @@ export default [
     },
     rules: {
       'vue/multi-word-component-names': 'off',
+      'vue/html-self-closing': [
+        'warn',
+        {
+          html: { void: 'always', normal: 'never', component: 'always' },
+          svg: 'always',
+          math: 'always',
+        },
+      ],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },

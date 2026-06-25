@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import gsap from 'gsap'
-import { detectPerformanceTier } from '@/lib/motion/performance'
+import { getMotionCapabilitiesSnapshot } from '@/lib/motion/motionCapabilities'
 
 const props = withDefaults(
   defineProps<{
@@ -23,7 +23,7 @@ let timer: ReturnType<typeof setInterval> | null = null
 let activeAnim: gsap.core.Animation | null = null
 
 function animationsEnabled(): boolean {
-  return detectPerformanceTier().animations
+  return getMotionCapabilitiesSnapshot().animations
 }
 
 function animateSwap(nextIndex: number) {
@@ -76,7 +76,11 @@ watch(
 
 <template>
   <span class="cycling-text inline-flex overflow-hidden align-bottom">
-    <component :is="tag" ref="rootRef" class="cycling-text__inner block">
+    <component
+      :is="tag"
+      ref="rootRef"
+      class="cycling-text__inner block"
+    >
       {{ displayText }}
     </component>
   </span>

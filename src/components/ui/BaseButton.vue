@@ -35,6 +35,6 @@ const sizeClasses = {
     class="inline-flex items-center justify-center uppercase tracking-widest transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
     :class="[variantClasses[variant], sizeClasses[size]]"
   >
-    <slot />
+    <slot></slot>
   </button>
 </template>

@@ -12,6 +12,6 @@ defineProps<{
     :data-scroll-speed="speed"
     class="relative w-full"
   >
-    <slot />
+    <slot></slot>
   </section>
 </template>

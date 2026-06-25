@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref, computed } from 'vue'
-import { getProducts } from '@/data/products'
+import { defineAsyncComponent, ref, computed, watch, nextTick } from 'vue'
+import { fetchProducts } from '@/data/api'
+import type { Product } from '@/data/schemas'
 import ProductCard from '@/components/product/ProductCard.vue'
 import ScrollSection from '@/components/scroll/ScrollSection.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
@@ -9,7 +10,6 @@ import MarqueeBand from '@/components/scroll/MarqueeBand.vue'
 import CyclingText from '@/components/scroll/CyclingText.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
-import { RouterLink } from 'vue-router'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import {
   createHeroEnterTimeline,
@@ -20,12 +20,29 @@ import {
 } from '@/lib/scroll/animation'
 import { useLocale } from '@/composables/useLocale'
 
+usePageSeo('meta.home')
+
 const WebGLRevealMask = defineAsyncComponent(
   () => import('@/components/scroll/WebGLRevealMask.vue'),
 )
 
 const { t, locale, localizedPath } = useLocale()
-const featured = computed(() => getProducts(locale.value).filter((product) => product.featured))
+
+const { data: productsResult, pending: loadingFeatured } = await useAsyncData(
+  () => `home-featured-${locale.value}`,
+  () => fetchProducts(),
+  { watch: [locale] },
+)
+
+const featured = computed(
+  () => productsResult.value?.data?.filter((product: Product) => product.featured) ?? [],
+)
+
+watch(loadingFeatured, async (isLoading) => {
+  if (!isLoading) {
+    await nextTick()
+  }
+})
 
 const marqueeItems = computed(() => [
   t('home.marquee.craftsmanship'),
@@ -86,14 +103,20 @@ useGsapTimeline(
       createScaleFadeReveal(featuredGridRef.value, '[data-featured-card]')
     }
   },
-  { watchSource: featuredGridRef },
+  {
+    watchSource: computed(
+      () => !loadingFeatured.value && featuredGridRef.value && featured.value.length,
+    ),
+  },
 )
 </script>
 
 <template>
   <div class="pt-[var(--header-height)]">
-    <section class="relative min-h-screen flex items-end pb-24 px-6">
-      <WebGLRevealMask />
+    <section class="relative min-h-screen overflow-hidden flex items-end pb-24 px-6">
+      <ClientOnly>
+        <WebGLRevealMask />
+      </ClientOnly>
       <ScrollReveal
         tag="div"
         :speed="-0.35"
@@ -108,11 +131,17 @@ useGsapTimeline(
         />
         <div
           class="absolute inset-0 bg-gradient-to-t from-brand-950/60 via-brand-950/20 to-transparent"
-        />
+        ></div>
       </ScrollReveal>
       <div class="relative z-10 mx-auto max-w-7xl w-full">
-        <p ref="heroEyebrowRef" class="text-brand-200 text-sm uppercase tracking-[0.3em] mb-4">
-          <CyclingText :phrases="cyclingPhrases" tag="span" />
+        <p
+          ref="heroEyebrowRef"
+          class="text-brand-200 text-sm uppercase tracking-[0.3em] mb-4"
+        >
+          <CyclingText
+            :phrases="cyclingPhrases"
+            tag="span"
+          />
           <span class="mx-2 opacity-40">—</span>
           {{ t('home.hero.eyebrow') }}
         </p>
@@ -127,23 +156,36 @@ useGsapTimeline(
             <span data-mask-line>{{ t('home.hero.titleLine2') }}</span>
           </span>
         </h1>
-        <p ref="heroSubtitleRef" class="text-brand-200 text-lg mt-6 max-w-xl">
+        <p
+          ref="heroSubtitleRef"
+          class="text-brand-200 text-lg mt-6 max-w-xl"
+        >
           {{ t('home.hero.subtitle') }}
         </p>
-        <div ref="heroCtaRef" class="mt-10 flex gap-4">
-          <RouterLink :to="localizedPath('/products')">
+        <div
+          ref="heroCtaRef"
+          class="mt-10 flex gap-4"
+        >
+          <NuxtLink :to="localizedPath('/products')">
             <BaseButton size="lg">
               {{ t('home.hero.cta') }}
             </BaseButton>
-          </RouterLink>
+          </NuxtLink>
         </div>
       </div>
       <div class="absolute bottom-0 left-0 right-0 z-10 h-0.5 bg-white/20">
-        <div class="hero-progress-bar h-full bg-white" data-scroll data-scroll-css-progress />
+        <div
+          class="hero-progress-bar h-full bg-white"
+          data-scroll
+          data-scroll-css-progress
+        ></div>
       </div>
     </section>
 
-    <MarqueeBand :items="marqueeItems" speed="slow" />
+    <MarqueeBand
+      :items="marqueeItems"
+      speed="slow"
+    />
 
     <ScrollSection class="py-32 px-6 bg-brand-50">
       <div class="mx-auto max-w-7xl grid md:grid-cols-2 gap-16 items-center">
@@ -167,7 +209,10 @@ useGsapTimeline(
         </MaskReveal>
         <div ref="philosophyImageRef">
           <ScrollReveal :speed="0.15">
-            <div ref="philosophyImageInnerRef" class="overflow-hidden">
+            <div
+              ref="philosophyImageInnerRef"
+              class="overflow-hidden"
+            >
               <LazyImage
                 src="/images/philosophy.jpg"
                 :alt="t('home.philosophy.imageAlt')"
@@ -181,7 +226,10 @@ useGsapTimeline(
 
     <section class="py-32 px-6 bg-brand-100">
       <div class="mx-auto max-w-7xl">
-        <ScrollReveal variant="scale" class="text-center mb-16">
+        <ScrollReveal
+          variant="scale"
+          class="text-center mb-16"
+        >
           <p class="text-xs uppercase tracking-widest text-brand-500 mb-2">
             {{ t('home.featured.eyebrow') }}
           </p>
@@ -189,24 +237,47 @@ useGsapTimeline(
             {{ t('home.featured.title') }}
           </h2>
         </ScrollReveal>
-        <div ref="featuredGridRef" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div v-for="product in featured" :key="product.id" data-featured-card>
+        <div
+          ref="featuredGridRef"
+          class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
+        >
+          <div
+            v-for="product in featured"
+            :key="product.id"
+            data-featured-card
+          >
             <ProductCard :product="product" />
           </div>
         </div>
-        <ScrollReveal variant="scale" class="text-center mt-16">
-          <RouterLink :to="localizedPath('/products')">
+        <p
+          v-if="!loadingFeatured && featured.length === 0"
+          class="text-center text-brand-500 text-sm"
+        >
+          {{ t('catalog.subtitle') }}
+        </p>
+        <ScrollReveal
+          variant="scale"
+          class="text-center mt-16"
+        >
+          <NuxtLink :to="localizedPath('/products')">
             <BaseButton variant="secondary">
               {{ t('home.featured.viewAll') }}
             </BaseButton>
-          </RouterLink>
+          </NuxtLink>
         </ScrollReveal>
       </div>
     </section>
 
-    <MarqueeBand :items="marqueeItems" reverse speed="fast" />
+    <MarqueeBand
+      :items="marqueeItems"
+      reverse
+      speed="fast"
+    />
 
-    <ScrollSection sticky class="min-h-[120vh]">
+    <ScrollSection
+      sticky
+      class="min-h-[120vh]"
+    >
       <section
         ref="narrativeSectionRef"
         class="sticky top-[var(--header-height)] min-h-[calc(100vh-var(--header-height))] flex items-center px-6 bg-brand-900"
@@ -230,7 +301,11 @@ useGsapTimeline(
               {{ t('home.narrative.body') }}
             </p>
           </MaskReveal>
-          <ScrollReveal variant="clip" :speed="0.12" class="hidden md:block">
+          <ScrollReveal
+            variant="clip"
+            :speed="0.12"
+            class="hidden md:block"
+          >
             <LazyImage
               src="/images/narrative-sofa.jpg"
               :alt="t('home.narrative.imageAlt')"
@@ -242,7 +317,10 @@ useGsapTimeline(
     </ScrollSection>
 
     <section class="py-32 px-6 text-center bg-brand-50">
-      <MaskReveal tag="div" class="mx-auto max-w-2xl">
+      <MaskReveal
+        tag="div"
+        class="mx-auto max-w-2xl"
+      >
         <h2 class="font-display text-4xl text-brand-900 mb-6">
           <span class="mask-line-wrap">
             <span data-mask-line>{{ t('home.cta.title') }}</span>
@@ -251,11 +329,11 @@ useGsapTimeline(
         <p class="text-brand-600 mb-10">
           {{ t('home.cta.body') }}
         </p>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton size="lg">
             {{ t('home.cta.button') }}
           </BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </MaskReveal>
     </section>
   </div>

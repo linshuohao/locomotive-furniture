@@ -7,7 +7,10 @@
     "home": "首页",
     "collection": "系列",
     "about": "关于",
-    "cart": "购物车"
+    "cart": "购物车",
+    "primary": "主导航",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
   },
   "meta": {
     "home": "首页",
@@ -33,7 +36,7 @@
       "cycling1": "永恒",
       "cycling2": "永恒设计",
       "cycling3": "永恒生活",
-      "subtitle": "十件精选单品。永恒造型、可持续材质，直送到家。",
+      "subtitle": "匠心甄选。永恒造型、可持续材质，直送到家。",
       "cta": "探索系列",
       "imageAlt": "极简奢华客厅"
     },
@@ -54,7 +57,7 @@
     "featured": {
       "eyebrow": "精选",
       "title": "系列",
-      "viewAll": "查看全部 10 件"
+      "viewAll": "查看完整系列"
     },
     "narrative": {
       "eyebrow": "全球匠作",
@@ -64,12 +67,12 @@
     },
     "cta": {
       "title": "开启你的空间",
-      "body": "十件家具，无限组合。从打动你的那一件开始。",
+      "body": "精心甄选，无限组合。从打动你的那一件开始。",
       "button": "立即选购"
     }
   },
   "catalog": {
-    "eyebrow": "10 款 SPU 系列",
+    "eyebrow": "精选系列",
     "title": "系列",
     "subtitle": "为现代生活精选的家具。每一件都与系列中的其他作品相得益彰。",
     "allCategories": "全部"
@@ -128,7 +131,7 @@
     "eyebrow": "关于 Atelier",
     "title": "有温度的家具",
     "storyTitle": "我们的故事",
-    "storyP1": "Atelier 源于一个简单信念：你的家值得更少、更好的物件。我们与欧洲和亚洲的独立工坊合作，为你带来十件精心甄选的家具 — 每一件都因工艺、可持续与永恒设计而被选中。",
+    "storyP1": "Atelier 源于一个简单信念：你的家值得更少、更好的物件。我们与欧洲和亚洲的独立工坊合作，为你带来精心甄选的家具系列 — 每一件都因工艺、可持续与永恒设计而被选中。",
     "storyP2": "我们通过低碳物流全球配送。每一单都精心包装，部分地区提供白手套送装服务。",
     "imageAlt": "Atelier 展厅",
     "ctaTitle": "准备好探索了吗？",
@@ -141,5 +144,8 @@
   },
   "fallback": {
     "offlineCatalog": "正在使用离线目录备用数据"
+  },
+  "ui": {
+    "imageUnavailable": "图片不可用"
   }
 }

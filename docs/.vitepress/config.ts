@@ -23,7 +23,7 @@ export default defineConfig({
         items: [
           { text: '文档首页', link: '/' },
           { text: '项目 README', link: '/README' },
-          { text: '交付清单', link: '/DELIVERY' },
+          { text: 'Demo 范围', link: '/DELIVERY' },
         ],
       },
       {

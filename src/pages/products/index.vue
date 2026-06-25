@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick, inject } from 'vue'
+import { ref, computed, watch, nextTick, inject } from 'vue'
 import { fetchProducts } from '@/data/api'
 import type { Product } from '@/data/schemas'
 import ProductCard from '@/components/product/ProductCard.vue'
@@ -10,12 +10,22 @@ import { createHeroEnterTimeline, createScaleFadeReveal } from '@/lib/scroll/ani
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
 import { useLocale } from '@/composables/useLocale'
 
+usePageSeo('meta.collection')
+
 const scroll = inject(scrollInjectionKey, null)
 const { t, locale } = useLocale()
 
-const products = ref<Product[]>([])
-const loading = ref(true)
-const fallbackNotice = ref<string | null>(null)
+const { data: productsResult, pending: loading } = await useAsyncData(
+  () => `products-${locale.value}`,
+  () => fetchProducts(),
+  { watch: [locale] },
+)
+
+const products = computed(() => productsResult.value?.data ?? [])
+const fallbackNotice = computed(() => {
+  const error = productsResult.value?.error
+  return error ? t(error as 'fallback.offlineCatalog') : null
+})
 
 const heroRef = ref<HTMLElement | null>(null)
 const eyebrowRef = ref<HTMLElement | null>(null)
@@ -29,23 +39,19 @@ const categories = computed(() => [
 ])
 const activeCategory = ref('')
 
-async function loadProducts() {
-  loading.value = true
-  activeCategory.value = t('catalog.allCategories')
-  const result = await fetchProducts()
-  if (result.data) products.value = result.data
-  if (result.error) fallbackNotice.value = result.error
-  loading.value = false
-  await nextTick()
-  await scroll?.update()
-}
+watch(
+  locale,
+  () => {
+    activeCategory.value = t('catalog.allCategories')
+  },
+  { immediate: true },
+)
 
-onMounted(() => {
-  void loadProducts()
-})
-
-watch(locale, () => {
-  void loadProducts()
+watch(loading, async (isLoading) => {
+  if (!isLoading) {
+    await nextTick()
+    await scroll?.update()
+  }
 })
 
 useGsapTimeline(
@@ -84,28 +90,46 @@ const filtered = computed(() => {
   const allLabel = t('catalog.allCategories')
   return activeCategory.value === allLabel || !activeCategory.value
     ? products.value
-    : products.value.filter((product) => product.category === activeCategory.value)
+    : products.value.filter((product: Product) => product.category === activeCategory.value)
 })
 </script>
 
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
-    <section ref="heroRef" class="relative mb-12 py-16 px-6 overflow-hidden">
-      <ScrollReveal :speed="-0.2" class="absolute inset-0 -z-10 pointer-events-none">
-        <div class="h-full w-full bg-gradient-to-br from-brand-200 via-brand-100 to-brand-50" />
+    <section
+      ref="heroRef"
+      class="relative mb-12 py-16 px-6 overflow-hidden"
+    >
+      <ScrollReveal
+        :speed="-0.2"
+        class="absolute inset-0 -z-10 pointer-events-none"
+      >
+        <div class="h-full w-full bg-gradient-to-br from-brand-200 via-brand-100 to-brand-50"></div>
       </ScrollReveal>
 
       <div class="mx-auto max-w-7xl relative">
-        <p ref="eyebrowRef" class="text-xs uppercase tracking-widest text-brand-500 mb-2">
+        <p
+          ref="eyebrowRef"
+          class="text-xs uppercase tracking-widest text-brand-500 mb-2"
+        >
           {{ t('catalog.eyebrow') }}
         </p>
-        <h1 ref="titleRef" class="font-display text-4xl md:text-6xl text-brand-900 max-w-2xl">
+        <h1
+          ref="titleRef"
+          class="font-display text-4xl md:text-6xl text-brand-900 max-w-2xl"
+        >
           {{ t('catalog.title') }}
         </h1>
-        <p ref="subtitleRef" class="text-brand-600 mt-4 max-w-xl">
+        <p
+          ref="subtitleRef"
+          class="text-brand-600 mt-4 max-w-xl"
+        >
           {{ t('catalog.subtitle') }}
         </p>
-        <p v-if="fallbackNotice" class="text-brand-500 text-xs mt-2">
+        <p
+          v-if="fallbackNotice"
+          class="text-brand-500 text-xs mt-2"
+        >
           {{ fallbackNotice }}
         </p>
       </div>
@@ -132,8 +156,15 @@ const filtered = computed(() => {
           </button>
         </ScrollReveal>
 
-        <div ref="productGridRef" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          <div v-for="product in filtered" :key="product.id" data-product-card>
+        <div
+          ref="productGridRef"
+          class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+        >
+          <div
+            v-for="product in filtered"
+            :key="product.id"
+            data-product-card
+          >
             <ProductCard :product="product" />
           </div>
         </div>

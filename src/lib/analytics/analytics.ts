@@ -9,12 +9,21 @@ type AnalyticsEvent =
 
 const queue: AnalyticsEvent[] = []
 
-const analyticsEnabled = import.meta.env.VITE_ENABLE_ANALYTICS === 'true'
+function isAnalyticsEnabled(): boolean {
+  if (import.meta.client) {
+    try {
+      return useRuntimeConfig().public.enableAnalytics === 'true'
+    } catch {
+      return false
+    }
+  }
+  return process.env.NUXT_PUBLIC_ENABLE_ANALYTICS === 'true'
+}
 
 export function track(event: AnalyticsEvent): void {
   queue.push(event)
 
-  if (import.meta.env.DEV || analyticsEnabled) {
+  if (import.meta.dev || isAnalyticsEnabled()) {
     console.debug('[analytics]', event)
   }
 }

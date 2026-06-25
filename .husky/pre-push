@@ -1,1 +1,13 @@
-npm run check
+#!/bin/sh
+# pre-push: incremental check for commits being pushed (not entire branch vs main)
+
+CHECK_CHANGED_BASE=""
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ -n "$remote_sha" ] && [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+    CHECK_CHANGED_BASE="$remote_sha"
+  fi
+done
+
+export CHECK_CHANGED_BASE
+npm run check:changed

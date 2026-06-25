@@ -1,3 +1,5 @@
+import { getCommerceConfig } from '@/data/config'
+
 export const API_TIMEOUT_MS = 3_000
 export const CACHE_TTL_MS = 60_000
 
@@ -32,13 +34,13 @@ export async function simulateLatency<T>(data: T, latencyMs = 80): Promise<T> {
 }
 
 function apiBaseUrl(): string {
-  return (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+  return getCommerceConfig().apiBaseUrl
 }
 
 export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   const base = apiBaseUrl()
   if (!base) {
-    throw new Error('VITE_API_BASE_URL is not configured')
+    throw new Error('NUXT_PUBLIC_API_BASE_URL is not configured')
   }
 
   const url = `${base}${path.startsWith('/') ? path : `/${path}`}`

@@ -3,7 +3,7 @@ import { catalogFallback, offlineProductBySlug, offlineProducts } from '@/data/f
 import type { Product } from '@/data/schemas'
 import type { CheckoutPayload, CommerceResponse } from '@/data/types'
 import type { CommerceProvider } from '@/data/providers/types'
-import { getCurrentLocale } from '@/i18n'
+import { getCurrentLocale } from '@/lib/i18n/currentLocale'
 
 async function fetchProductsMock(): Promise<CommerceResponse<Product[]>> {
   const locale = getCurrentLocale()

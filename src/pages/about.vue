@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import ScrollSection from '@/components/scroll/ScrollSection.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import MaskReveal from '@/components/scroll/MaskReveal.vue'
 import MarqueeBand from '@/components/scroll/MarqueeBand.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import { RouterLink } from 'vue-router'
-import { computed } from 'vue'
 import { useLocale } from '@/composables/useLocale'
+
+usePageSeo('meta.about')
 
 const { t, localizedPath } = useLocale()
 
@@ -24,12 +25,19 @@ const marqueeItems = computed(() => [
   <div class="pt-[var(--header-height)]">
     <section class="min-h-[70vh] flex items-center px-6 bg-brand-900">
       <div class="mx-auto max-w-4xl text-center">
-        <MaskReveal tag="p" class="text-brand-400 text-xs uppercase tracking-[0.3em] mb-6">
+        <MaskReveal
+          tag="p"
+          class="text-brand-400 text-xs uppercase tracking-[0.3em] mb-6"
+        >
           <span class="mask-line-wrap">
             <span data-mask-line>{{ t('about.eyebrow') }}</span>
           </span>
         </MaskReveal>
-        <MaskReveal tag="h1" class="font-display text-5xl md:text-6xl text-brand-50" hero>
+        <MaskReveal
+          tag="h1"
+          class="font-display text-5xl md:text-6xl text-brand-50"
+          hero
+        >
           <span class="mask-line-wrap">
             <span data-mask-line>{{ t('about.title') }}</span>
           </span>
@@ -54,22 +62,32 @@ const marqueeItems = computed(() => [
             {{ t('about.storyP2') }}
           </p>
         </MaskReveal>
-        <ScrollReveal variant="clip" :speed="0.2">
-          <LazyImage src="/images/about.jpg" :alt="t('about.imageAlt')" aspect="4/5" />
+        <ScrollReveal
+          variant="clip"
+          :speed="0.2"
+        >
+          <LazyImage
+            src="/images/about.jpg"
+            :alt="t('about.imageAlt')"
+            aspect="4/5"
+          />
         </ScrollReveal>
       </div>
     </ScrollSection>
 
     <section class="py-24 px-6 bg-brand-100 text-center">
-      <ScrollReveal variant="scale" class="mx-auto max-w-2xl">
+      <ScrollReveal
+        variant="scale"
+        class="mx-auto max-w-2xl"
+      >
         <h2 class="font-display text-3xl text-brand-900 mb-6">
           {{ t('about.ctaTitle') }}
         </h2>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton size="lg">
             {{ t('about.ctaButton') }}
           </BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </ScrollReveal>
     </section>
   </div>

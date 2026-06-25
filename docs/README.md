@@ -1,6 +1,6 @@
 # 项目 README
 
-本页为项目概览摘要；仓库根目录 `README.md` 含完整说明。
+本页为 Demo 项目概览摘要；仓库根目录 `README.md` 含完整说明。
 
 ## 快速开始
 
@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-访问 http://localhost:5173
+访问 http://localhost:3000
 
 ## 在线地址
 

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-const props = withDefaults(
+withDefaults(
   defineProps<{
     items: string[]
     speed?: 'slow' | 'normal' | 'fast'
@@ -14,80 +12,82 @@ const props = withDefaults(
     separator: '·',
   },
 )
-
-const trackClass = computed(() => [
-  'marquee-track',
-  `marquee-track--${props.speed}`,
-  props.reverse ? 'marquee-track--reverse' : '',
-])
 </script>
 
 <template>
   <div
-    class="marquee-band overflow-hidden border-y border-brand-300/40 bg-brand-100/60 py-4"
+    class="marquee-band relative z-10 overflow-hidden border-y border-brand-300/40 bg-brand-100 py-4"
+    data-lenis-prevent
     aria-hidden="true"
   >
-    <div :class="trackClass">
-      <span v-for="(item, i) in items" :key="`a-${i}`" class="marquee-item">
-        {{ item }}<span class="marquee-sep">{{ separator }}</span>
+    <div
+      class="marquee-band__track"
+      :class="{
+        'marquee-band__track--slow': speed === 'slow',
+        'marquee-band__track--fast': speed === 'fast',
+        'marquee-band__track--reverse': reverse,
+      }"
+    >
+      <span
+        v-for="(item, i) in items"
+        :key="`a-${i}`"
+        class="marquee-band__item shrink-0 px-6 font-display text-[clamp(1.25rem,3vw,2rem)] uppercase tracking-[0.2em] text-brand-700 whitespace-nowrap"
+      >
+        {{ item }}<span class="marquee-band__sep">{{ separator }}</span>
       </span>
-      <span v-for="(item, i) in items" :key="`b-${i}`" class="marquee-item">
-        {{ item }}<span class="marquee-sep">{{ separator }}</span>
+      <span
+        v-for="(item, i) in items"
+        :key="`b-${i}`"
+        class="marquee-band__item shrink-0 px-6 font-display text-[clamp(1.25rem,3vw,2rem)] uppercase tracking-[0.2em] text-brand-700 whitespace-nowrap"
+      >
+        {{ item }}<span class="marquee-band__sep">{{ separator }}</span>
       </span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.marquee-track {
+/* translate 与 Locomotive/GSAP 的 inline transform 互不干扰 */
+.marquee-band__track {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-band-scroll 28s linear infinite;
+  will-change: translate;
 }
 
-.marquee-track--slow {
+.marquee-band__track--slow {
   animation-duration: 40s;
 }
 
-.marquee-track--fast {
+.marquee-band__track--fast {
   animation-duration: 18s;
 }
 
-.marquee-track--reverse {
+.marquee-band__track--reverse {
   animation-direction: reverse;
 }
 
-.marquee-item {
-  flex-shrink: 0;
-  padding: 0 1.5rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--color-brand-700);
-  white-space: nowrap;
-}
-
-.marquee-sep {
+.marquee-band__sep {
   margin-left: 1.5rem;
   opacity: 0.35;
 }
 
-@keyframes marquee-scroll {
+@keyframes marquee-band-scroll {
   from {
-    transform: translateX(0);
+    translate: 0 0;
   }
   to {
-    transform: translateX(-50%);
+    translate: -50% 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .marquee-band__track {
     animation: none;
     flex-wrap: wrap;
     width: 100%;
     justify-content: center;
+    will-change: auto;
   }
 }
 </style>

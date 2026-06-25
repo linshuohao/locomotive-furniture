@@ -16,7 +16,7 @@
 ### AppHeader
 
 - 固定顶部导航
-- 滚动方向显隐（`App.vue` 注入 scroll 上下文）
+- 滚动方向显隐（`layouts/default.vue` 注入 scroll 上下文）
 - 购物车数量角标 + bump 动画
 - 导航链接 hover 下划线滑入（`.nav-link::after`）
 
@@ -55,7 +55,7 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 
 ### Skeleton / PageSkeleton / ProductCardSkeleton
 
-加载态占位，用于 `ProductsView` async fetch 期间。
+加载态占位，用于 `pages/products/index.vue` async fetch 期间。
 
 ---
 
@@ -271,13 +271,13 @@ import {
 } from '@/composables/useLocomotiveScroll'
 ```
 
-| API                     | 说明                         |
-| ----------------------- | ---------------------------- |
-| `useLocomotiveScroll()` | 在 `App.vue` 初始化/销毁实例 |
-| `useScrollLifecycle()`  | 页面级生命周期封装           |
-| `scrollInjectionKey`    | provide/inject 滚动上下文    |
-| `update()`              | DOM 变更后 resize            |
-| `scrollTo(target)`      | 编程式滚动                   |
+| API                     | 说明                                     |
+| ----------------------- | ---------------------------------------- |
+| `useLocomotiveScroll()` | 在 `layouts/default.vue` 初始化/销毁实例 |
+| `useScrollLifecycle()`  | 页面级生命周期封装                       |
+| `scrollInjectionKey`    | provide/inject 滚动上下文                |
+| `update()`              | DOM 变更后 resize                        |
+| `scrollTo(target)`      | 编程式滚动                               |
 
 ---
 

@@ -2,7 +2,6 @@
 import type { Product } from '@/types'
 import { formatPrice } from '@/data/products'
 import LazyImage from '@/components/ui/LazyImage.vue'
-import { RouterLink } from 'vue-router'
 import { useLocale } from '@/composables/useLocale'
 
 defineProps<{
@@ -13,7 +12,10 @@ const { locale, localizedPath } = useLocale()
 </script>
 
 <template>
-  <RouterLink :to="localizedPath(`/products/${product.slug}`)" class="group block">
+  <NuxtLink
+    :to="localizedPath(`/products/${product.slug}`)"
+    class="group block"
+  >
     <div class="product-card__media overflow-hidden">
       <LazyImage
         :src="product.images[0]"
@@ -23,7 +25,7 @@ const { locale, localizedPath } = useLocale()
       />
       <div
         class="product-card__overlay absolute inset-0 bg-brand-950/0 transition-colors duration-500 group-hover:bg-brand-950/10"
-      />
+      ></div>
     </div>
     <div class="mt-4 space-y-1">
       <p class="text-xs uppercase tracking-widest text-brand-500">
@@ -38,7 +40,7 @@ const { locale, localizedPath } = useLocale()
         {{ formatPrice(product.price, product.currency, locale) }}
       </p>
     </div>
-  </RouterLink>
+  </NuxtLink>
 </template>
 
 <style scoped>

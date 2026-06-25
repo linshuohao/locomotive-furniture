@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useCartStore } from '@/store/cart'
 import { formatPrice } from '@/data/products'
-import type { CheckoutForm } from '@/types'
+import { CheckoutFormSchema } from '@/data/schemas'
 import { trackBeginCheckout } from '@/lib/analytics/analytics'
+import { setCheckoutSession } from '@/lib/checkoutSession'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useLocale } from '@/composables/useLocale'
 import { resolveCartLine } from '@/composables/useCartLine'
 
+usePageSeo('meta.checkout')
+
 const cart = useCartStore()
-const router = useRouter()
 const { t, locale, localizedPath } = useLocale()
 
-const form = ref<CheckoutForm>({
+const form = ref({
   email: '',
   firstName: '',
   lastName: '',
@@ -24,35 +25,30 @@ const form = ref<CheckoutForm>({
   postalCode: '',
 })
 
-const errors = ref<Partial<Record<keyof CheckoutForm, string>>>({})
+const errors = ref<Partial<Record<keyof typeof form.value, string>>>({})
 const submitting = ref(false)
 
-const isValid = computed(() => {
-  return (
-    form.value.email.includes('@') &&
-    form.value.firstName.trim() &&
-    form.value.lastName.trim() &&
-    form.value.address.trim() &&
-    form.value.city.trim() &&
-    form.value.country.trim() &&
-    form.value.postalCode.trim()
-  )
-})
+const isValid = computed(() => CheckoutFormSchema.safeParse(form.value).success)
 
 onMounted(() => {
-  if (cart.items.length === 0) router.replace(localizedPath('/cart'))
+  if (cart.items.length === 0) navigateTo(localizedPath('/cart'), { replace: true })
 })
 
 function validate(): boolean {
+  const result = CheckoutFormSchema.safeParse(form.value)
   errors.value = {}
-  if (!form.value.email.includes('@')) errors.value.email = t('checkout.errors.email')
-  if (!form.value.firstName.trim()) errors.value.firstName = t('checkout.errors.required')
-  if (!form.value.lastName.trim()) errors.value.lastName = t('checkout.errors.required')
-  if (!form.value.address.trim()) errors.value.address = t('checkout.errors.required')
-  if (!form.value.city.trim()) errors.value.city = t('checkout.errors.required')
-  if (!form.value.country.trim()) errors.value.country = t('checkout.errors.required')
-  if (!form.value.postalCode.trim()) errors.value.postalCode = t('checkout.errors.required')
-  return Object.keys(errors.value).length === 0
+
+  if (result.success) return true
+
+  for (const issue of result.error.issues) {
+    const field = issue.path[0]
+    if (typeof field === 'string' && field in form.value) {
+      errors.value[field as keyof typeof form.value] =
+        field === 'email' ? t('checkout.errors.email') : t('checkout.errors.required')
+    }
+  }
+
+  return false
 }
 
 async function submit() {
@@ -62,9 +58,10 @@ async function submit() {
   const subtotalBefore = cart.subtotal
   try {
     const result = await cart.submitCheckout(form.value)
-    await router.push({
+    setCheckoutSession(result.orderId, subtotalBefore)
+    await navigateTo({
       path: localizedPath('/checkout/success'),
-      query: { orderId: result.orderId, subtotal: String(subtotalBefore) },
+      query: { orderId: result.orderId },
     })
   } catch (err) {
     errors.value.email = err instanceof Error ? err.message : t('checkout.errors.failed')
@@ -94,13 +91,22 @@ const resolvedItems = computed(() =>
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
     <div class="mx-auto max-w-4xl px-6 py-16">
-      <ScrollReveal tag="h1" class="font-display text-4xl text-brand-900 mb-12">
+      <ScrollReveal
+        tag="h1"
+        class="font-display text-4xl text-brand-900 mb-12"
+      >
         {{ t('checkout.title') }}
       </ScrollReveal>
 
       <div class="grid lg:grid-cols-5 gap-12">
-        <form class="lg:col-span-3 space-y-6" @submit.prevent="submit">
-          <ScrollReveal v-for="field in fields" :key="field.key">
+        <form
+          class="lg:col-span-3 space-y-6"
+          @submit.prevent="submit"
+        >
+          <ScrollReveal
+            v-for="field in fields"
+            :key="field.key"
+          >
             <label
               :for="field.key"
               class="block text-xs uppercase tracking-widest text-brand-500 mb-2"
@@ -113,7 +119,10 @@ const resolvedItems = computed(() =>
               :type="field.type || 'text'"
               class="w-full border border-brand-300 bg-white px-4 py-3 text-brand-900 focus:border-brand-900 focus:outline-none transition-colors"
             />
-            <p v-if="errors[field.key]" class="text-red-600 text-xs mt-1">
+            <p
+              v-if="errors[field.key]"
+              class="text-red-600 text-xs mt-1"
+            >
               {{ errors[field.key] }}
             </p>
           </ScrollReveal>

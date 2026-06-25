@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, provide, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, provide, watch } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import CartAddedToast from '@/components/product/CartAddedToast.vue'
 import { scrollInjectionKey, useLocomotiveScroll } from '@/composables/useLocomotiveScroll'
@@ -9,47 +8,68 @@ import { useLocale } from '@/composables/useLocale'
 
 const route = useRoute()
 const { t, localizedPath } = useLocale()
-const { scrollDirection, isScrolling, init, destroy, scrollProgress, update, scrollTo } =
-  useLocomotiveScroll()
+const {
+  scrollDirection,
+  isScrolling,
+  scrollInstance,
+  init,
+  destroy,
+  scrollProgress,
+  update,
+  scrollTo,
+} = useLocomotiveScroll()
 const { capabilities } = useMotionCapabilities()
 
 provide(scrollInjectionKey, { update, scrollTo })
 
 const headerHidden = computed(() => scrollDirection.value === 'down' && isScrolling.value)
 
-watch(
-  () => route.path,
-  (path) => {
-    destroy()
-    if (capabilities.value.pageTransition) {
-      document.documentElement.dataset.route = path
-    } else {
-      onPageEnter()
-    }
-  },
+const pageTransition = computed(() =>
+  capabilities.value.pageTransition
+    ? { name: 'page', mode: 'out-in' as const, onAfterEnter: onPageEnter }
+    : false,
 )
 
 function onPageEnter() {
   void init().then(() => update())
 }
+
+onMounted(() => {
+  if (!capabilities.value.pageTransition) {
+    onPageEnter()
+  }
+})
+
+watch(
+  () => route.path,
+  async () => {
+    if (!import.meta.client) return
+
+    if (capabilities.value.pageTransition) {
+      destroy()
+      document.documentElement.dataset.route = route.path
+      return
+    }
+
+    if (scrollInstance.value) {
+      await update()
+      return
+    }
+
+    await onPageEnter()
+  },
+)
 </script>
 
 <template>
-  <div class="min-h-screen" :style="{ '--scroll-progress': scrollProgress }">
+  <div
+    class="min-h-screen"
+    :style="{ '--scroll-progress': scrollProgress }"
+  >
     <AppHeader :hidden="headerHidden" />
     <CartAddedToast />
     <main>
-      <RouterView v-slot="{ Component, route: currentRoute }">
-        <Transition
-          v-if="capabilities.pageTransition"
-          name="page"
-          mode="out-in"
-          @after-enter="onPageEnter"
-        >
-          <component :is="Component" :key="currentRoute.path" />
-        </Transition>
-        <component :is="Component" v-else :key="currentRoute.path" />
-      </RouterView>
+      <NuxtPage :transition="pageTransition" />
     </main>
     <footer class="border-t border-brand-200 bg-brand-100 py-12 px-6">
       <div class="mx-auto max-w-7xl flex flex-col md:flex-row justify-between gap-8">
@@ -66,20 +86,29 @@ function onPageEnter() {
             <p class="uppercase tracking-widest text-brand-900 text-xs">
               {{ t('footer.shop') }}
             </p>
-            <RouterLink :to="localizedPath('/products')" class="block hover:text-brand-900">
+            <NuxtLink
+              :to="localizedPath('/products')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.collection') }}
-            </RouterLink>
-            <RouterLink :to="localizedPath('/cart')" class="block hover:text-brand-900">
+            </NuxtLink>
+            <NuxtLink
+              :to="localizedPath('/cart')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.cart') }}
-            </RouterLink>
+            </NuxtLink>
           </div>
           <div class="space-y-2">
             <p class="uppercase tracking-widest text-brand-900 text-xs">
               {{ t('footer.brand') }}
             </p>
-            <RouterLink :to="localizedPath('/about')" class="block hover:text-brand-900">
+            <NuxtLink
+              :to="localizedPath('/about')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.about') }}
-            </RouterLink>
+            </NuxtLink>
           </div>
         </div>
       </div>

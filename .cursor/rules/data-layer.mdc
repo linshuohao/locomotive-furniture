@@ -18,9 +18,9 @@ export type Product = z.infer<typeof ProductSchema>
 
 ## Commerce Provider
 
-- 对外 facade：`@/data/api.ts`（View/Store 不直接 import provider）
+- 对外 facade：`@/data/api.ts`（Page/Store 不直接 import provider）
 - 实现：`providers/mock.ts` | `http.ts`
-- 切换：`VITE_COMMERCE_PROVIDER=mock|http`
+- 切换：`NUXT_PUBLIC_COMMERCE_PROVIDER=mock|http`
 - 新增 Provider：实现 `CommerceProvider` → `providers/index.ts` 注册
 - 测试：`resetCommerceProvider()` 重置缓存
 
@@ -35,7 +35,7 @@ interface CommerceResponse<T> {
 ```
 
 - 失败自动 fallback 到 `fallback.ts` / `products.ts`
-- View 层展示 `result.error` 提示
+- Page 层展示 `result.error` 提示
 
 ## REST 约定（http 模式）
 

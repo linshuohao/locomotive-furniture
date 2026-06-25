@@ -5,6 +5,7 @@ import { mockProvider } from '@/data/providers/mock'
 import { httpProvider } from '@/data/providers/http'
 import { fetchProducts } from '@/data/api'
 import { clearCache } from '@/data/client'
+import { catalogFallback, FALLBACK_MESSAGE_KEY } from '@/data/fallback'
 
 describe('commerce config', () => {
   it('defaults to mock provider', () => {
@@ -27,7 +28,7 @@ describe('commerce provider', () => {
   })
 
   it('selects http provider when env is http', () => {
-    vi.stubEnv('VITE_COMMERCE_PROVIDER', 'http')
+    vi.stubEnv('NUXT_PUBLIC_COMMERCE_PROVIDER', 'http')
     resetCommerceProvider()
     expect(getCommerceProvider()).toBe(httpProvider)
     vi.unstubAllEnvs()
@@ -45,5 +46,10 @@ describe('mock provider api', () => {
     expect(result.data).not.toBeNull()
     expect(result.data!.length).toBeGreaterThan(0)
     expect(result.error).toBeNull()
+  })
+
+  it('catalogFallback returns i18n message key', () => {
+    const result = catalogFallback([])
+    expect(result.error).toBe(FALLBACK_MESSAGE_KEY)
   })
 })

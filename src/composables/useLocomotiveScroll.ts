@@ -4,7 +4,7 @@ import 'locomotive-scroll/dist/locomotive-scroll.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { LocomotiveScrollOptions } from '@/types'
-import { detectPerformanceTier, FpsMonitor } from '@/lib/motion/performance'
+import { FpsMonitor } from '@/lib/motion/performance'
 import { trackScrollFps } from '@/lib/analytics/analytics'
 import { getMotionCapabilitiesSnapshot, trackMotionJank } from '@/lib/motion/motionCapabilities'
 import { LENIS_OPTIONS, SCROLL_CSS_VARS } from '@/lib/scroll/scrollConstants'
@@ -29,26 +29,24 @@ let lastScrollRef = 0
 let lastFrameTime = 0
 let jankTicker: ((time: number) => void) | null = null
 
-function isSmoothScrollEnabled(): boolean {
-  if (import.meta.env.VITE_ENABLE_SMOOTH_SCROLL === 'false') return false
-  if (!getMotionCapabilitiesSnapshot().smoothScroll) return false
-  const tier = detectPerformanceTier()
-  return tier.smoothScroll
+function isSmoothScrollEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
+  if (config.public.enableSmoothScroll === 'false') return false
+  return getMotionCapabilitiesSnapshot().smoothScroll
 }
 
-function isParallaxEnabled(): boolean {
-  if (import.meta.env.VITE_ENABLE_PARALLAX === 'false') return false
-  if (!getMotionCapabilitiesSnapshot().parallax) return false
-  const tier = detectPerformanceTier()
-  return tier.parallax
+function isParallaxEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
+  if (config.public.enableParallax === 'false') return false
+  return getMotionCapabilitiesSnapshot().parallax
 }
 
 export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
-  const tier = detectPerformanceTier()
-  const enableSmooth = options.enableSmooth ?? isSmoothScrollEnabled()
-  const enableParallax = options.enableParallax ?? isParallaxEnabled()
+  const runtimeConfig = useRuntimeConfig()
+  const enableSmooth = options.enableSmooth ?? isSmoothScrollEnabled(runtimeConfig)
+  const enableParallax = options.enableParallax ?? isParallaxEnabled(runtimeConfig)
 
   const init = async () => {
+    if (import.meta.server) return
+
     await nextTick()
 
     if (scrollInstance.value) {
@@ -141,7 +139,7 @@ export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
         })
       })
 
-      if (import.meta.env.DEV) {
+      if (import.meta.dev) {
         fpsMonitor = new FpsMonitor()
         fpsMonitor.start(trackScrollFps)
       }
@@ -186,7 +184,7 @@ export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
     scrollProgress,
     scrollDirection,
     isScrolling,
-    tier,
+    tier: getMotionCapabilitiesSnapshot().tier,
     enableParallax,
     init,
     update,

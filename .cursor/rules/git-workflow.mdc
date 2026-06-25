@@ -34,7 +34,7 @@ npm run lint | lint:fix | typecheck
 |------|------|
 | pre-commit | lint-staged（ESLint + Prettier） |
 | commit-msg | commitlint |
-| pre-push | `npm run check` |
+| pre-push | `npm run check:changed`（增量 lint + typecheck + Vitest related） |
 | CI | check + build:e2e + Playwright E2E |
 
 **不要**使用 `--no-verify` 除非用户明确要求。
@@ -83,6 +83,6 @@ gh pr create                         # 或 GitHub Web 开 PR
 ## 构建与部署
 
 - `prebuild` → `scripts/generate-seo.mjs`
-- 构建：`vue-tsc -b && vite build`
-- Rollup 分包：`scroll`、`vendor`
-- Vercel SPA rewrite（`vercel.json`）
+- 构建：`nuxt build`（SSR，产物 `.output/`）
+- Rollup 分包：`scroll`、`vendor`（`nuxt.config.ts`）
+- Vercel：`framework: nuxtjs`（`vercel.json`）
