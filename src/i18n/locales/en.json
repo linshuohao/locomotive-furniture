@@ -36,7 +36,7 @@
       "cycling1": "Timeless",
       "cycling2": "Timeless Design",
       "cycling3": "Timeless Living",
-      "subtitle": "Ten curated pieces. Timeless forms, sustainable materials, delivered to your door.",
+      "subtitle": "Curated with intention. Timeless forms, sustainable materials, delivered to your door.",
       "cta": "Explore Collection",
       "imageAlt": "Minimal luxury living room"
     },
@@ -57,7 +57,7 @@
     "featured": {
       "eyebrow": "Featured",
       "title": "The Collection",
-      "viewAll": "View All 10 Pieces"
+      "viewAll": "View Full Collection"
     },
     "narrative": {
       "eyebrow": "Crafted globally",
@@ -67,12 +67,12 @@
     },
     "cta": {
       "title": "Begin your space",
-      "body": "Ten pieces. Infinite combinations. Start with what speaks to you.",
+      "body": "A considered edit. Infinite combinations. Start with what speaks to you.",
       "button": "Shop Now"
     }
   },
   "catalog": {
-    "eyebrow": "10 SPU Collection",
+    "eyebrow": "Curated Collection",
     "title": "The Collection",
     "subtitle": "Curated furniture for modern living. Each piece designed to complement the others.",
     "allCategories": "All"
@@ -131,7 +131,7 @@
     "eyebrow": "About Atelier",
     "title": "Furniture with intention",
     "storyTitle": "Our story",
-    "storyP1": "Atelier was founded on a simple belief: your home deserves fewer, better things. We partner with independent workshops across Europe and Asia to bring you ten carefully curated pieces — each selected for craftsmanship, sustainability, and timeless design.",
+    "storyP1": "Atelier was founded on a simple belief: your home deserves fewer, better things. We partner with independent workshops across Europe and Asia to bring you a carefully curated collection — each piece selected for craftsmanship, sustainability, and timeless design.",
     "storyP2": "We ship worldwide with carbon-conscious logistics. Every order is packed with care, and white-glove delivery is available in select regions.",
     "imageAlt": "Atelier showroom",
     "ctaTitle": "Ready to explore?",
