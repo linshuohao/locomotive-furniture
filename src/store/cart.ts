@@ -16,6 +16,7 @@ function getVariantPrice(basePrice: number, priceModifier: number): number {
 
 export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>(getStorageItem<CartItem[]>(CART_KEY, []))
+  const recentAdd = ref<CartItem | null>(null)
 
   const itemCount = computed(() => items.value.reduce((sum, i) => sum + i.quantity, 0))
   const subtotal = computed(() => items.value.reduce((sum, i) => sum + i.price * i.quantity, 0))
@@ -65,6 +66,7 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     persist()
+    recentAdd.value = existing ?? line
     trackAddToCart({
       slug: line.slug,
       variantId: line.variantId,
@@ -94,6 +96,10 @@ export const useCartStore = defineStore('cart', () => {
     persist()
   }
 
+  function clearRecentAdd() {
+    recentAdd.value = null
+  }
+
   function clearCart() {
     items.value = []
     persist()
@@ -117,11 +123,13 @@ export const useCartStore = defineStore('cart', () => {
 
   return {
     items,
+    recentAdd,
     itemCount,
     subtotal,
     addItem,
     updateQuantity,
     removeItem,
+    clearRecentAdd,
     clearCart,
     submitCheckout,
   }

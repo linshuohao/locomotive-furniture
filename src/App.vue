@@ -2,6 +2,7 @@
 import { computed, provide, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from '@/components/layout/AppHeader.vue'
+import CartAddedToast from '@/components/product/CartAddedToast.vue'
 import { scrollInjectionKey, useLocomotiveScroll } from '@/composables/useLocomotiveScroll'
 import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
 
@@ -36,6 +37,7 @@ function onPageEnter() {
 <template>
   <div class="min-h-screen" :style="{ '--scroll-progress': scrollProgress }">
     <AppHeader :hidden="headerHidden" />
+    <CartAddedToast />
     <main>
       <RouterView v-slot="{ Component, route: currentRoute }">
         <Transition

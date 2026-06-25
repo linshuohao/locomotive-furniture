@@ -70,10 +70,15 @@ const canAdd = computed(() => {
 
 function addToCart() {
   if (!product.value || !selectedVariant.value) return
-  cart.addItem(product.value.id, selectedVariant.value, quantity.value)
+  const ok = cart.addItem(product.value.id, selectedVariant.value, quantity.value)
+  if (!ok) return
   added.value = true
-  setTimeout(() => (added.value = false), 2000)
+  setTimeout(() => (added.value = false), 2500)
 }
+
+watch(selectedVariant, () => {
+  added.value = false
+})
 
 watch(
   () => route.params.slug,
@@ -168,8 +173,25 @@ watch(
             </div>
 
             <div data-pdp-reveal>
-              <BaseButton size="lg" class="w-full" :disabled="!canAdd" @click="addToCart">
-                {{ added ? 'Added to Cart' : 'Add to Cart' }}
+              <BaseButton
+                size="lg"
+                class="w-full transition-transform duration-300"
+                :class="added ? 'scale-[0.98]' : ''"
+                :variant="added ? 'success' : 'primary'"
+                :disabled="!canAdd"
+                @click="addToCart"
+              >
+                <span v-if="added" class="inline-flex items-center justify-center gap-2">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.704 5.29a1 1 0 0 1 0 1.42l-7.25 7.25a1 1 0 0 1-1.42 0l-3.25-3.25a1 1 0 1 1 1.42-1.42l2.54 2.54 6.54-6.54a1 1 0 0 1 1.42 0Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Added — view cart below
+                </span>
+                <span v-else>Add to Cart</span>
               </BaseButton>
             </div>
 

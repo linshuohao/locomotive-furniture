@@ -8,7 +8,8 @@ hero:
   actions:
     - theme: brand
       text: 进入站点
-      link: ../
+      link: http://localhost:5173
+      target: _blank
     - theme: alt
       text: 快速开始
       link: /DEPLOYMENT

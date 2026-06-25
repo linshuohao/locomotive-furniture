@@ -1,9 +1,11 @@
 import { defineConfig } from 'vitepress'
 
+const appUrl = process.env.VITE_SITE_URL || 'http://localhost:5173'
+
 export default defineConfig({
   title: 'Atelier Docs',
   description: 'Locomotive Scroll 跨境家具独立站 — 架构、部署与开发文档',
-  base: '/docs/',
+  base: '/',
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: [
@@ -15,7 +17,7 @@ export default defineConfig({
     logo: '/favicon.svg',
     siteTitle: 'Atelier Docs',
     nav: [
-      { text: '返回站点', link: '../' },
+      { text: '返回站点', link: appUrl, target: '_blank', rel: 'noreferrer' },
       { text: '架构', link: '/ARCHITECTURE' },
       { text: '部署', link: '/DEPLOYMENT' },
     ],

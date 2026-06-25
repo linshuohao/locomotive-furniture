@@ -30,24 +30,16 @@ pnpm test:coverage
 ## 4. 生产构建
 
 ```bash
-pnpm build              # 仅站点 → dist/
-pnpm run build:vercel   # 站点 + VitePress 文档 → dist/ + dist/docs/
-pnpm preview            # 预览站点（不含 /docs，见下方）
+pnpm build              # 站点 → dist/
+pnpm preview            # 预览站点
 ```
 
-文档本地开发：
+文档（独立站点）：
 
 ```bash
-npm run docs:dev        # http://localhost:5173/docs/
-npm run docs:build      # 构建到 docs/.vitepress/dist
+npm run docs:dev        # 本地文档开发
+npm run docs:build      # → docs/.vitepress/dist
 npm run docs:preview    # 预览文档站
-```
-
-预览**合并产物**（站点 + 文档同域）：
-
-```bash
-npm run build:vercel
-npx serve dist          # 根路径 = 站点，/docs/ = 文档
 ```
 
 构建优化：
@@ -57,46 +49,46 @@ npx serve dist          # 根路径 = 站点，/docs/ = 文档
 
 ## 5. Vercel 部署（推荐）
 
-项目已包含 `vercel.json`，**单项目**同时托管站点与文档：
+站点与文档为**两个独立 Vercel 项目**，互不干扰；主站 Header 不展示文档入口。
 
-| 路径 | 内容 |
-|------|------|
-| `/` | Vue SPA（Atelier 站点） |
-| `/docs/` | VitePress 文档站 |
+| 项目 | 配置文件 | 构建命令 | 输出目录 |
+|------|----------|----------|----------|
+| 主站 | `vercel.json` | `npm run build` | `dist` |
+| 文档 | `vercel.docs.json` | `npm run docs:build` | `docs/.vitepress/dist` |
 
-### 方式 A：Vercel Dashboard
+### 主站项目
 
-1. 将仓库导入 [vercel.com](https://vercel.com)
-2. **Root Directory** 设为 `2/locomotive-furniture`（若 monorepo）或仓库根目录
-3. 构建命令 / 输出目录已由 `vercel.json` 指定，无需修改
-4. 在 **Environment Variables** 中配置（Production）：
+1. 导入仓库，Root Directory 设为 `2/locomotive-furniture`（monorepo 时）
+2. 使用默认 `vercel.json`
+3. 环境变量（Production）：
 
 ```bash
-VITE_SITE_URL=https://your-project.vercel.app
+VITE_SITE_URL=https://your-app.vercel.app
 VITE_COMMERCE_PROVIDER=mock
 VITE_ENABLE_ANALYTICS=true
 ```
 
-5. Deploy
-
-### 方式 B：Vercel CLI
-
 ```bash
-npm i -g vercel
-cd locomotive-furniture
-vercel login
-vercel          # 首次预览部署
-vercel --prod   # 生产部署
+vercel --prod
 ```
 
-### 本地验证合并构建
+### 文档项目
+
+1. **同一仓库**再新建一个 Vercel Project
+2. Root Directory 同上
+3. **Project Settings → General → Build & Development Settings**：
+   - 或在 CLI 使用：`vercel --local-config vercel.docs.json`
+4. 环境变量（Production）— 用于导航栏「返回站点」链接：
 
 ```bash
-npm run build:vercel
-npx serve dist
-# 站点 http://localhost:3000/
-# 文档 http://localhost:3000/docs/
+VITE_SITE_URL=https://your-app.vercel.app
 ```
+
+```bash
+vercel --local-config vercel.docs.json --prod
+```
+
+文档站独立域名示例：`https://atelier-docs.vercel.app/`
 
 ---
 
@@ -108,7 +100,7 @@ npx serve dist
 |------|------|
 | Nginx | root 指向 dist，history fallback |
 | Netlify | `_redirects` 或 netlify.toml |
-| OSS/CDN | 上传 dist 全量（含 docs/ 子目录） |
+| OSS/CDN | 分别上传 `dist/` 与 `docs/.vitepress/dist` |
 
 ### Nginx 示例
 
@@ -120,10 +112,6 @@ server {
 
   gzip on;
   gzip_types text/css application/javascript application/json;
-
-  location /docs/ {
-    try_files $uri $uri/ /docs/index.html;
-  }
 
   location / {
     try_files $uri $uri/ /index.html;

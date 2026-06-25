@@ -36,10 +36,10 @@ npm run dev
 
 ```bash
 npm run dev          # 开发站点
-npm run docs:dev     # 开发文档（VitePress）
-npm run build        # 仅站点
-npm run build:vercel # 站点 + 文档（Vercel 用）
-npm run preview      # 预览
+npm run docs:dev     # 开发文档（独立 VitePress 站点）
+npm run build        # 构建主站
+npm run docs:build   # 构建文档站
+npm run preview      # 预览主站
 npm run typecheck    # TypeScript 检查
 npm run lint         # 代码检查
 npm run test         # 单元测试
@@ -47,15 +47,17 @@ npm run test         # 单元测试
 
 ## 部署（Vercel）
 
+两个独立项目，配置见 `vercel.json` 与 `vercel.docs.json`：
+
 ```bash
-npm run build:vercel   # 本地验证
-npx vercel --prod      # 需先 vercel login
+vercel --prod                                          # 主站
+vercel --local-config vercel.docs.json --prod          # 文档
 ```
 
-- **站点**：`https://<project>.vercel.app/`
-- **文档**：`https://<project>.vercel.app/docs/`
+- **主站**：`https://<app>.vercel.app/`
+- **文档**：`https://<docs>.vercel.app/`（独立域名）
 
-配置见 `vercel.json` 与 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。
+详见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。
 
 ## 文档
 
