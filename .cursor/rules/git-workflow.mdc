@@ -34,7 +34,7 @@ npm run lint | lint:fix | typecheck
 |------|------|
 | pre-commit | lint-staged（ESLint + Prettier） |
 | commit-msg | commitlint |
-| pre-push | `npm run check` |
+| pre-push | `npm run check:changed`（增量 lint + typecheck + Vitest related） |
 | CI | check + build:e2e + Playwright E2E |
 
 **不要**使用 `--no-verify` 除非用户明确要求。
