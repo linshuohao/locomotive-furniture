@@ -50,7 +50,16 @@
 | 领域类型（Zod）     | `src/data/schemas.ts`                    |
 | 10 SPU 静态目录     | `src/data/products.ts`                   |
 
-## 5. 验收命令
+## 5. 在线部署
+
+| 站点 | 生产地址                                     | 配置               |
+| ---- | -------------------------------------------- | ------------------ |
+| 主站 | https://locomotive-furniture.vercel.app      | `vercel.json`      |
+| 文档 | https://locomotive-furniture-docs.vercel.app | `vercel.docs.json` |
+
+元数据：[`sites.json`](../sites.json)。Git 推送到 `main` 触发 Vercel 自动部署。
+
+## 6. 验收命令
 
 ```bash
 pnpm install
@@ -60,7 +69,7 @@ pnpm test     # 13 项单元测试 ✅
 pnpm lint     # 代码规范
 ```
 
-## 6. 性能指标（构建实测）
+## 7. 性能指标（构建实测）
 
 | 指标                         | 目标     | 实测                     |
 | ---------------------------- | -------- | ------------------------ |

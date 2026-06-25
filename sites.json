@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/linshuohao/locomotive-furniture",
+  "team": "lins-projects-21c965b7",
+  "production": {
+    "app": {
+      "name": "Atelier Furniture",
+      "url": "https://locomotive-furniture.vercel.app",
+      "vercelProject": "locomotive-furniture"
+    },
+    "docs": {
+      "name": "Atelier Docs",
+      "url": "https://locomotive-furniture-docs.vercel.app",
+      "vercelProject": "locomotive-furniture-docs"
+    }
+  }
+}

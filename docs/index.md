@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: 进入站点
-      link: http://localhost:5173
+      link: https://locomotive-furniture.vercel.app
       target: _blank
     - theme: alt
       text: 快速开始

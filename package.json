@@ -18,6 +18,11 @@
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.config.ts",
     "check": "npm run lint && npm run typecheck && npm run test",
+    "vercel-build": "node scripts/vercel-build.mjs",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "deploy:docs": "vercel --prod --project locomotive-furniture-docs",
+    "deploy:all": "npm run deploy && npm run deploy:docs",
     "e2e": "echo 'E2E: install Cypress separately — see docs/DEPLOYMENT.md'",
     "prepare": "husky"
   },

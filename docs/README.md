@@ -13,18 +13,22 @@ npm run dev
 
 ## 在线地址
 
-文档为**独立站点**，与主站分域名部署：
+| 站点     | 地址                                         |
+| -------- | -------------------------------------------- |
+| **主站** | https://locomotive-furniture.vercel.app      |
+| **文档** | https://locomotive-furniture-docs.vercel.app |
 
-- **主站**：由 `vercel.json` 部署
-- **文档**：由 `vercel.docs.json` 部署；导航栏「返回站点」指向 `VITE_SITE_URL`
+元数据见仓库根目录 [`sites.json`](../sites.json)。推送到 `main` 后 Vercel 自动部署两个项目。
 
 ## 主要脚本
 
-| 命令 | 说明 |
-|------|------|
-| `npm run dev` | 开发主站 |
-| `npm run docs:dev` | 开发文档站 |
-| `npm run build` | 构建主站 |
-| `npm run docs:build` | 构建文档站 |
+| 命令                  | 说明           |
+| --------------------- | -------------- |
+| `npm run dev`         | 开发主站       |
+| `npm run docs:dev`    | 开发文档站     |
+| `npm run build`       | 构建主站       |
+| `npm run docs:build`  | 构建文档站     |
+| `npm run deploy`      | 手动部署主站   |
+| `npm run deploy:docs` | 手动部署文档站 |
 
 详见 [DEPLOYMENT](./DEPLOYMENT.md)。

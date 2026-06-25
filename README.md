@@ -2,6 +2,15 @@
 
 > 10 SPU 极简高端家具独立站，复刻 Locomotive.ca 滚动视觉体系
 
+## 在线地址
+
+| 站点     | 地址                                         | Vercel 项目                 |
+| -------- | -------------------------------------------- | --------------------------- |
+| **主站** | https://locomotive-furniture.vercel.app      | `locomotive-furniture`      |
+| **文档** | https://locomotive-furniture-docs.vercel.app | `locomotive-furniture-docs` |
+
+站点元数据见 [`sites.json`](sites.json)。推送到 `main` 分支后，两个 Vercel 项目会自动部署。
+
 ## 快速开始
 
 ```bash
@@ -44,21 +53,34 @@ npm run typecheck    # TypeScript 检查
 npm run lint         # 代码检查
 npm run test         # 单元测试
 npm run check        # 推送前门禁（lint + typecheck + test）
+npm run deploy       # 手动部署主站（Production）
+npm run deploy:docs  # 手动部署文档站（Production）
+npm run deploy:all   # 主站 + 文档一并部署
+npm run deploy:preview  # 主站 Preview 部署
 ```
 
 本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check`。详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
 
 ## 部署（Vercel）
 
-两个独立项目，配置见 `vercel.json` 与 `vercel.docs.json`：
+主站与文档为**两个独立 Vercel 项目**，已关联 GitHub 仓库，推送到 `main` 自动部署。
+
+| 项目 | 配置               | 构建                                   | 输出    |
+| ---- | ------------------ | -------------------------------------- | ------- |
+| 主站 | `vercel.json`      | `npm run vercel-build`                 | `dist/` |
+| 文档 | `vercel.docs.json` | `npm run vercel-build`（按项目名分流） | `dist/` |
+
+`scripts/vercel-build.mjs` 根据 `VERCEL_PROJECT_NAME` 自动选择主站或文档构建。
 
 ```bash
-vercel --prod                                          # 主站
-vercel --local-config vercel.docs.json --prod          # 文档
+npm run deploy           # 主站 → Production
+npm run deploy:docs      # 文档 → Production
+npm run deploy:all       # 主站 + 文档
+npm run deploy:preview   # 主站 Preview
 ```
 
-- **主站**：`https://<app>.vercel.app/`
-- **文档**：`https://<docs>.vercel.app/`（独立域名）
+- **主站**：https://locomotive-furniture.vercel.app
+- **文档**：https://locomotive-furniture-docs.vercel.app
 
 详见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。
 

@@ -2,7 +2,7 @@
 import { inject, onMounted } from 'vue'
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     speed?: number
     offset?: string

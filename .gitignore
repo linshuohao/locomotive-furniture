@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .vercel
+.vercel.main
 docs/.vitepress/cache
 docs/.vitepress/dist
 
@@ -25,3 +26,4 @@ docs/.vitepress/dist
 *.njsproj
 *.sln
 *.sw?
+.env*

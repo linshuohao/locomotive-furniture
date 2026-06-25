@@ -48,51 +48,76 @@ npm run docs:preview    # 预览文档站
 - TS 类型剔除
 - 路由懒加载
 
-## 5. Vercel 部署（推荐）
+## 5. 在线地址
 
-站点与文档为**两个独立 Vercel 项目**，互不干扰；主站 Header 不展示文档入口。
+站点元数据统一维护在仓库根目录 [`sites.json`](../sites.json)：
 
-| 项目 | 配置文件           | 构建命令             | 输出目录               |
-| ---- | ------------------ | -------------------- | ---------------------- |
-| 主站 | `vercel.json`      | `npm run build`      | `dist`                 |
-| 文档 | `vercel.docs.json` | `npm run docs:build` | `docs/.vitepress/dist` |
+| 站点 | 生产地址                                     | Vercel 项目                 |
+| ---- | -------------------------------------------- | --------------------------- |
+| 主站 | https://locomotive-furniture.vercel.app      | `locomotive-furniture`      |
+| 文档 | https://locomotive-furniture-docs.vercel.app | `locomotive-furniture-docs` |
 
-### 主站项目
+## 6. Vercel 部署
 
-1. 导入本仓库（使用仓库根目录）
-2. 使用默认 `vercel.json`
-3. 环境变量（Production）：
+站点与文档为**两个独立 Vercel 项目**，共用同一 GitHub 仓库；主站 Header 不展示文档入口。
+
+| 项目 | 配置文件           | 构建命令               | 输出目录 |
+| ---- | ------------------ | ---------------------- | -------- |
+| 主站 | `vercel.json`      | `npm run vercel-build` | `dist`   |
+| 文档 | `vercel.docs.json` | `npm run vercel-build` | `dist`   |
+
+`scripts/vercel-build.mjs` 根据环境变量 `VERCEL_PROJECT_NAME` 分流：
+
+- 项目名含 `docs` → `npm run docs:build`，产物复制到 `dist/`
+- 否则 → `npm run build`（主站）
+
+### Git 自动部署（推荐）
+
+仓库：`github.com/linshuohao/locomotive-furniture`
+
+| 分支事件      | 主站                | 文档                |
+| ------------- | ------------------- | ------------------- |
+| 推送到 `main` | Production 自动部署 | Production 自动部署 |
+| Pull Request  | Preview 部署        | Preview 部署        |
+
+**首次配置文档项目 Git 关联**（主站已关联）：
 
 ```bash
-VITE_SITE_URL=https://your-app.vercel.app
+vercel link --yes --project locomotive-furniture-docs
+vercel git connect https://github.com/linshuohao/locomotive-furniture.git
+vercel link --yes --project locomotive-furniture   # 恢复主站本地关联
+```
+
+推送前本地门禁：`npm run check`（pre-push hook 已启用）。
+
+### 手动 CLI 部署
+
+```bash
+npm run deploy           # 主站 Production
+npm run deploy:docs      # 文档 Production
+npm run deploy:all       # 主站 + 文档
+npm run deploy:preview   # 主站 Preview
+```
+
+### 环境变量（Production）
+
+**主站**：
+
+```bash
+VITE_SITE_URL=https://locomotive-furniture.vercel.app
 VITE_COMMERCE_PROVIDER=mock
 VITE_ENABLE_ANALYTICS=true
 ```
 
-```bash
-vercel --prod
-```
-
-### 文档项目
-
-1. **同一仓库**再新建一个 Vercel Project（同样使用仓库根目录）
-2. **Project Settings → General → Build & Development Settings**：
-   - 或在 CLI 使用：`vercel --local-config vercel.docs.json`
-3. 环境变量（Production）— 用于导航栏「返回站点」链接：
+**文档**（导航栏「返回站点」链接）：
 
 ```bash
-VITE_SITE_URL=https://your-app.vercel.app
+VITE_SITE_URL=https://locomotive-furniture.vercel.app
 ```
-
-```bash
-vercel --local-config vercel.docs.json --prod
-```
-
-文档站独立域名示例：`https://atelier-docs.vercel.app/`
 
 ---
 
-## 6. 其他平台部署
+## 7. 其他平台部署
 
 `dist/` 为纯静态资源，亦支持：
 
@@ -124,7 +149,7 @@ server {
 }
 ```
 
-## 7. 环境切换
+## 8. 环境切换
 
 | 文件               | 用途                 |
 | ------------------ | -------------------- |
@@ -143,7 +168,7 @@ server {
 
 详见项目根目录 `.env.example` 文件。
 
-## 8. CI/CD 与代码门禁
+## 9. CI/CD 与代码门禁
 
 ### 本地 Git Hooks（Husky）
 
@@ -167,7 +192,9 @@ server {
 4. `npm run test`
 5. `npm run build`
 
-## 9. E2E 测试（可选扩展）
+CI 负责代码质量门禁；生产部署由 Vercel Git 集成触发。
+
+## 10. E2E 测试（可选扩展）
 
 ```bash
 npm install -D cypress
@@ -176,6 +203,6 @@ npx cypress open
 
 建议覆盖：加购 → 购物车 → 结算完整流程。
 
-## 10. 线上动画动态开关
+## 11. 线上动画动态开关
 
 通过环境变量或后台配置注入 `VITE_ENABLE_SMOOTH_SCROLL=false` 可在不重新开发的情况下关闭平滑滚动。

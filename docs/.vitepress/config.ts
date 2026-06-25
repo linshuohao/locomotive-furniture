@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 
-const appUrl = process.env.VITE_SITE_URL || 'http://localhost:5173'
+const appUrl = process.env.VITE_SITE_URL || 'https://locomotive-furniture.vercel.app'
 
 export default defineConfig({
   title: 'Atelier Docs',
