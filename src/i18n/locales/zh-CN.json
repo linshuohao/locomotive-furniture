@@ -28,9 +28,21 @@
     "hero": {
       "eyebrow": "跨境家具",
       "title": "与你共居的设计",
+      "titleLine1": "与你共居的",
+      "titleLine2": "设计",
+      "cycling1": "永恒",
+      "cycling2": "永恒设计",
+      "cycling3": "永恒生活",
       "subtitle": "十件精选单品。永恒造型、可持续材质，直送到家。",
       "cta": "探索系列",
       "imageAlt": "极简奢华客厅"
+    },
+    "marquee": {
+      "craftsmanship": "匠心工艺",
+      "sustainability": "可持续",
+      "shipping": "全球配送",
+      "curated": "精选生活",
+      "artisan": "手工制作"
     },
     "philosophy": {
       "eyebrow": "我们的理念",

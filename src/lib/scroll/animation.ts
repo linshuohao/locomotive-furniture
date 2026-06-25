@@ -171,6 +171,143 @@ export function createFormCascade(form: HTMLElement, fields: HTMLElement[]) {
   )
 }
 
+/** Locomotive-style line mask reveal — each [data-mask-line] slides up from clip */
+export function createMaskLineReveal(
+  container: HTMLElement,
+  options: { stagger?: number; y?: number; delay?: number; scroll?: boolean } = {},
+) {
+  const { stagger = 0.08, y = '110%', delay = 0, scroll = true } = options
+  const lines = container.querySelectorAll('[data-mask-line]')
+  if (!lines.length) return null
+
+  const config: gsap.TweenVars = {
+    y: 0,
+    duration: 0.9,
+    stagger,
+    ease: EASE_EXPO,
+    delay,
+  }
+
+  if (scroll) {
+    config.immediateRender = false
+    config.scrollTrigger = {
+      trigger: container,
+      start: 'top 88%',
+      toggleActions: SCROLL_TOGGLE,
+      once: true,
+    }
+  }
+
+  return gsap.fromTo(lines, { y, autoAlpha: 1 }, config)
+}
+
+/** Hero mount-only mask lines (no scroll trigger) */
+export function createHeroMaskLines(
+  container: HTMLElement,
+  options: { stagger?: number; delay?: number } = {},
+) {
+  return createMaskLineReveal(container, { ...options, scroll: false })
+}
+
+/** Image clip-path reveal on scroll — expands from bottom */
+export function createClipImageReveal(
+  trigger: HTMLElement,
+  target: HTMLElement,
+  options: { scrub?: boolean } = {},
+) {
+  const { scrub = false } = options
+
+  if (scrub) {
+    return gsap.fromTo(
+      target,
+      { clipPath: 'inset(100% 0 0 0)' },
+      {
+        clipPath: 'inset(0% 0 0 0)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger,
+          start: 'top 85%',
+          end: 'top 35%',
+          scrub: 1,
+        },
+      },
+    )
+  }
+
+  return gsap.fromTo(
+    target,
+    { clipPath: 'inset(100% 0 0 0)', autoAlpha: 0.6 },
+    {
+      clipPath: 'inset(0% 0 0 0)',
+      autoAlpha: 1,
+      duration: 1.1,
+      ease: EASE_EXPO,
+      immediateRender: false,
+      scrollTrigger: {
+        trigger,
+        start: 'top 85%',
+        toggleActions: SCROLL_TOGGLE,
+        once: true,
+      },
+    },
+  )
+}
+
+/** Scale + fade reveal for cards and blocks */
+export function createScaleFadeReveal(
+  container: HTMLElement,
+  items: HTMLElement[] | NodeListOf<Element> | string,
+  options: { stagger?: number; scale?: number } = {},
+) {
+  const { stagger = 0.12, scale = 0.92 } = options
+  const targets = typeof items === 'string' ? items : gsap.utils.toArray(items)
+  if (!targets.length) return null
+
+  return gsap.fromTo(
+    targets,
+    { scale, autoAlpha: 0, y: 24 },
+    {
+      scale: 1,
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.85,
+      stagger,
+      ease: EASE_EXPO,
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: container,
+        start: 'top 88%',
+        toggleActions: SCROLL_TOGGLE,
+        once: true,
+      },
+    },
+  )
+}
+
+/** Horizontal scrub — subtle drift like Locomotive featured cards */
+export function createHorizontalDrift(
+  trigger: HTMLElement,
+  target: HTMLElement,
+  options: { xPercent?: number } = {},
+) {
+  const { xPercent = -6 } = options
+
+  return gsap.fromTo(
+    target,
+    { xPercent: -xPercent / 2 },
+    {
+      xPercent: xPercent / 2,
+      ease: 'none',
+      scrollTrigger: {
+        trigger,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    },
+  )
+}
+
 /** Success celebration burst (mount-only, no scroll) */
 export function createSuccessTimeline(container: HTMLElement) {
   const children = container.querySelectorAll('[data-success-item]')

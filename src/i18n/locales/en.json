@@ -28,9 +28,21 @@
     "hero": {
       "eyebrow": "Cross-border furniture",
       "title": "Design that lives with you",
+      "titleLine1": "Design that",
+      "titleLine2": "lives with you",
+      "cycling1": "Timeless",
+      "cycling2": "Timeless Design",
+      "cycling3": "Timeless Living",
       "subtitle": "Ten curated pieces. Timeless forms, sustainable materials, delivered to your door.",
       "cta": "Explore Collection",
       "imageAlt": "Minimal luxury living room"
+    },
+    "marquee": {
+      "craftsmanship": "Craftsmanship",
+      "sustainability": "Sustainability",
+      "shipping": "Global Shipping",
+      "curated": "Curated Living",
+      "artisan": "Artisan Made"
     },
     "philosophy": {
       "eyebrow": "Our philosophy",

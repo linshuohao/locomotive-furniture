@@ -9,11 +9,14 @@ withDefaults(
     cssProgress?: boolean
     scrollClass?: string
     tag?: string
+    /** default | clip | scale — Locomotive-style reveal variants */
+    variant?: 'default' | 'clip' | 'scale'
   }>(),
   {
     offset: '0,100px',
     scrollClass: 'is-inview',
     tag: 'div',
+    variant: 'default',
   },
 )
 
@@ -37,7 +40,11 @@ onMounted(() => {
     :data-scroll-class="scrollClass"
     :data-scroll-css-progress="cssProgress ? '' : undefined"
     class="scroll-reveal"
+    :class="variant !== 'default' ? `scroll-reveal--${variant}` : undefined"
   >
-    <slot />
+    <div v-if="variant === 'clip'" class="scroll-reveal__inner">
+      <slot />
+    </div>
+    <slot v-else />
   </component>
 </template>

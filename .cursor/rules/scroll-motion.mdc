@@ -18,6 +18,17 @@ alwaysApply: false
 - 页面挂载用 `useGsapTimeline`
 - GSAP ticker 与 Lenis 帧同步（非双 RAF）
 
+## 动效组件
+
+| 组件 | 用途 |
+|------|------|
+| `ScrollReveal` | Locomotive InView + 视差；`variant="clip\|scale"` |
+| `MaskReveal` | 逐行遮罩上滑（`data-mask-line` + `.mask-line-wrap`） |
+| `MarqueeBand` | 无限横向文字带（CSS） |
+| `CyclingText` | Hero 循环切换文案 |
+| `ScrollSection` | Sticky / 视差容器 |
+| `WebGLRevealMask` | Hero WebGL 蒙层（tier 门控） |
+
 ## 性能门控
 
 - `motionCapabilities`：`full | reduced | static`
