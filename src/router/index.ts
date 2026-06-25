@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { trackPageView } from '@/core/monitoring'
+import { trackPageView } from '@/lib/analytics/analytics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,37 +12,43 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue'),
+      component: () => import('@/views/home/HomeView.vue'),
       meta: { scrollEffects: true, title: 'Home' },
     },
     {
       path: '/products',
       name: 'products',
-      component: () => import('@/views/ProductsView.vue'),
-      meta: { scrollEffects: false, title: 'Collection' },
+      component: () => import('@/views/catalog/ProductsView.vue'),
+      meta: { scrollEffects: true, title: 'Collection' },
     },
     {
       path: '/products/:slug',
       name: 'product-detail',
-      component: () => import('@/views/ProductDetailView.vue'),
-      meta: { scrollEffects: false, title: 'Product' },
+      component: () => import('@/views/catalog/ProductDetailView.vue'),
+      meta: { scrollEffects: true, title: 'Product' },
     },
     {
       path: '/cart',
       name: 'cart',
-      component: () => import('@/views/CartView.vue'),
-      meta: { scrollEffects: false, title: 'Cart' },
+      component: () => import('@/views/cart/CartView.vue'),
+      meta: { scrollEffects: true, title: 'Cart' },
     },
     {
       path: '/checkout',
       name: 'checkout',
-      component: () => import('@/views/CheckoutView.vue'),
-      meta: { scrollEffects: false, title: 'Checkout' },
+      component: () => import('@/views/checkout/CheckoutView.vue'),
+      meta: { scrollEffects: true, title: 'Checkout' },
+    },
+    {
+      path: '/checkout/success',
+      name: 'checkout-success',
+      component: () => import('@/views/checkout/CheckoutSuccessView.vue'),
+      meta: { scrollEffects: true, title: 'Order Confirmed' },
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/views/AboutView.vue'),
+      component: () => import('@/views/about/AboutView.vue'),
       meta: { scrollEffects: true, title: 'About' },
     },
     {

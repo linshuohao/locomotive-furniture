@@ -2,10 +2,17 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { CartItem, CheckoutForm } from '@/types'
 import { getProductById } from '@/data/products'
-import { getStorageItem, setStorageItem } from '@/core/storage'
-import { trackAddToCart, trackCheckout } from '@/core/monitoring'
+import { CartItemInputSchema } from '@/data/schemas'
+import { getStorageItem, setStorageItem } from '@/lib/storage'
+import { submitCheckout as submitCheckoutApi } from '@/data/api'
+import { trackAddToCart } from '@/lib/analytics/analytics'
 
-const CART_KEY = 'cart'
+const CART_KEY = 'atelier-cart-v1'
+const MAX_QUANTITY = 99
+
+function getVariantPrice(basePrice: number, priceModifier: number): number {
+  return basePrice + priceModifier
+}
 
 export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>(getStorageItem<CartItem[]>(CART_KEY, []))
@@ -19,34 +26,50 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  function addItem(productId: string, variantId: string, quantity = 1) {
+  function resolveLine(productId: string, variantId: string, quantity: number) {
     const product = getProductById(productId)
-    if (!product) return false
+    if (!product) return null
 
     const variant = product.variants.find((v) => v.id === variantId)
-    if (!variant) return false
+    if (!variant || !variant.inStock) return null
 
-    const price = product.price + variant.priceModifier
+    const parsed = CartItemInputSchema.safeParse({ productId, variantId, quantity })
+    if (!parsed.success) return null
+
+    const unitPrice = getVariantPrice(product.price, variant.priceModifier)
+
+    return {
+      productId,
+      variantId,
+      quantity: Math.min(MAX_QUANTITY, quantity),
+      slug: product.slug,
+      name: product.name,
+      price: unitPrice,
+      image: product.images[0],
+      variantName: variant.name,
+    } satisfies CartItem
+  }
+
+  function addItem(productId: string, variantId: string, quantity = 1) {
+    const line = resolveLine(productId, variantId, quantity)
+    if (!line) return false
+
     const existing = items.value.find(
       (i) => i.productId === productId && i.variantId === variantId,
     )
 
     if (existing) {
-      existing.quantity += quantity
+      existing.quantity = Math.min(MAX_QUANTITY, existing.quantity + line.quantity)
     } else {
-      items.value.push({
-        productId,
-        variantId,
-        quantity,
-        name: product.name,
-        price,
-        image: product.images[0],
-        variantName: variant.name,
-      })
+      items.value.push(line)
     }
 
     persist()
-    trackAddToCart(productId)
+    trackAddToCart({
+      slug: line.slug,
+      variantId: line.variantId,
+      price: line.price * line.quantity,
+    })
     return true
   }
 
@@ -59,7 +82,7 @@ export const useCartStore = defineStore('cart', () => {
     if (quantity <= 0) {
       removeItem(productId, variantId)
     } else {
-      item.quantity = quantity
+      item.quantity = Math.min(MAX_QUANTITY, quantity)
       persist()
     }
   }
@@ -76,15 +99,20 @@ export const useCartStore = defineStore('cart', () => {
     persist()
   }
 
-  function submitCheckout(_form: CheckoutForm): Promise<{ orderId: string }> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        trackCheckout()
-        const orderId = `ORD-${Date.now()}`
-        clearCart()
-        resolve({ orderId })
-      }, 800)
-    })
+  async function submitCheckout(form: CheckoutForm): Promise<{ orderId: string }> {
+    const payload = {
+      ...form,
+      items: items.value,
+      subtotal: subtotal.value,
+    }
+
+    const result = await submitCheckoutApi(payload)
+    if (!result.data) {
+      throw new Error(result.error ?? 'Checkout failed')
+    }
+
+    clearCart()
+    return result.data
   }
 
   return {

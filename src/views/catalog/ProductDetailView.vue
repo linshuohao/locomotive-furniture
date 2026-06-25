@@ -1,0 +1,199 @@
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { fetchProductBySlug } from '@/data/api'
+import type { Product } from '@/data/schemas'
+import { getProductBySlug, formatPrice } from '@/data/products'
+import { useCartStore } from '@/store/cart'
+import LazyImage from '@/components/ui/LazyImage.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import VariantSelector from '@/components/product/VariantSelector.vue'
+import ProductViewTracker from '@/components/product/ProductViewTracker.vue'
+import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
+import Skeleton from '@/components/ui/Skeleton.vue'
+import { useGsapTimeline } from '@/composables/useGsapTimeline'
+import { createPdpTimeline } from '@/lib/scroll/animation'
+const route = useRoute()
+const router = useRouter()
+const cart = useCartStore()
+
+const product = ref<Product | null>(null)
+const loading = ref(true)
+const selectedVariant = ref('')
+const quantity = ref(1)
+const added = ref(false)
+
+const copyColRef = ref<HTMLElement | null>(null)
+
+async function loadProduct(slug: string) {
+  loading.value = true
+  const result = await fetchProductBySlug(slug)
+  if (result.data) {
+    product.value = result.data
+    selectedVariant.value = result.data.variants[0]?.id ?? ''
+  } else {
+    router.replace('/products')
+  }
+  loading.value = false
+}
+
+onMounted(() => {
+  void loadProduct(route.params.slug as string)
+})
+
+watch(
+  () => route.params.slug,
+  (slug) => {
+    if (typeof slug === 'string') void loadProduct(slug)
+  },
+)
+
+useGsapTimeline(
+  () => {
+    if (!copyColRef.value) return
+    createPdpTimeline(copyColRef.value)
+  },
+  { watchSource: computed(() => !loading.value && product.value) },
+)
+
+const currentPrice = computed(() => {
+  if (!product.value) return 0
+  const variant = product.value.variants.find((v) => v.id === selectedVariant.value)
+  return product.value.price + (variant?.priceModifier ?? 0)
+})
+
+const canAdd = computed(() => {
+  if (!product.value || !selectedVariant.value) return false
+  const variant = product.value.variants.find((v) => v.id === selectedVariant.value)
+  return variant?.inStock !== false
+})
+
+function addToCart() {
+  if (!product.value || !selectedVariant.value) return
+  cart.addItem(product.value.id, selectedVariant.value, quantity.value)
+  added.value = true
+  setTimeout(() => (added.value = false), 2000)
+}
+
+watch(
+  () => route.params.slug,
+  (slug) => {
+    if (!loading.value && !getProductBySlug(slug as string)) router.replace('/products')
+  },
+)
+</script>
+
+<template>
+  <div class="pt-[var(--header-height)] min-h-screen">
+    <div v-if="loading" class="mx-auto max-w-7xl px-6 py-12">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <Skeleton class="aspect-[4/5] w-full" />
+        <div class="space-y-4">
+          <Skeleton class="h-4 w-24" />
+          <Skeleton class="h-12 w-3/4" />
+          <Skeleton class="h-8 w-1/3" />
+          <Skeleton class="h-12 w-full mt-8" />
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="product" class="mx-auto max-w-7xl px-6 py-12">
+      <ProductViewTracker :product="product" />
+
+      <ScrollReveal class="text-sm text-brand-500 mb-8" tag="nav">
+        <RouterLink to="/products" class="hover:text-brand-900">Collection</RouterLink>
+        <span class="mx-2">/</span>
+        <span class="text-brand-900">{{ product.name }}</span>
+      </ScrollReveal>
+
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+        <div class="space-y-4">
+          <ScrollReveal :speed="-0.08">
+            <LazyImage :src="product.images[0]" :alt="product.name" aspect="4/5" />
+          </ScrollReveal>
+          <div v-if="product.images[1]" class="grid grid-cols-2 gap-4">
+            <ScrollReveal
+              v-for="(img, i) in product.images.slice(1)"
+              :key="i"
+              :speed="0.06"
+            >
+              <LazyImage
+                :src="img"
+                :alt="`${product.name} detail ${i + 2}`"
+                aspect="1/1"
+              />
+            </ScrollReveal>
+          </div>
+        </div>
+
+        <div ref="copyColRef" class="lg:py-8">
+          <p data-pdp-reveal class="text-xs uppercase tracking-widest text-brand-500">
+            {{ product.category }}
+          </p>
+          <h1
+            data-pdp-reveal
+            class="font-display text-4xl md:text-5xl text-brand-900 mt-2"
+          >
+            {{ product.name }}
+          </h1>
+          <p data-pdp-reveal class="text-brand-600 mt-4">{{ product.tagline }}</p>
+          <p data-pdp-reveal class="font-display text-2xl text-brand-900 mt-6">
+            {{ formatPrice(currentPrice, product.currency) }}
+          </p>
+
+          <div class="mt-8 space-y-6">
+            <div data-pdp-reveal>
+              <VariantSelector v-model="selectedVariant" :variants="product.variants" />
+            </div>
+
+            <div data-pdp-reveal class="flex items-center gap-4">
+              <p class="text-xs uppercase tracking-widest text-brand-500">Quantity</p>
+              <div class="flex items-center gap-3">
+                <button
+                  type="button"
+                  class="w-8 h-8 border border-brand-300 flex items-center justify-center"
+                  @click="quantity = Math.max(1, quantity - 1)"
+                >
+                  −
+                </button>
+                <span class="w-6 text-center">{{ quantity }}</span>
+                <button
+                  type="button"
+                  class="w-8 h-8 border border-brand-300 flex items-center justify-center"
+                  @click="quantity = Math.min(99, quantity + 1)"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div data-pdp-reveal>
+              <BaseButton size="lg" class="w-full" :disabled="!canAdd" @click="addToCart">
+                {{ added ? 'Added to Cart' : 'Add to Cart' }}
+              </BaseButton>
+            </div>
+
+            <div data-pdp-reveal>
+              <RouterLink to="/cart">
+                <BaseButton variant="secondary" size="lg" class="w-full mt-3">
+                  View Cart
+                </BaseButton>
+              </RouterLink>
+            </div>
+          </div>
+
+          <div class="mt-12 space-y-6 border-t border-brand-200 pt-8">
+            <div data-pdp-reveal>
+              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">Description</h2>
+              <p class="text-brand-600 leading-relaxed">{{ product.description }}</p>
+            </div>
+            <div data-pdp-reveal>
+              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">Dimensions</h2>
+              <p class="text-brand-600">{{ product.dimensions }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

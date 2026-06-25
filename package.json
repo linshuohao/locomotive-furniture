@@ -5,10 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-seo.mjs",
     "build": "vue-tsc -b && vite build",
+    "build:vercel": "npm run prebuild && vue-tsc -b && vite build && npm run docs:build && node scripts/copy-docs-to-dist.mjs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "preview": "vite preview",
-    "lint": "eslint src --ext .ts,.vue && prettier --check \"src/**/*.{ts,vue,scss}\"",
-    "lint:fix": "eslint src --ext .ts,.vue --fix && prettier --write \"src/**/*.{ts,vue,scss}\"",
+    "typecheck": "vue-tsc -b --noEmit",
+    "lint": "eslint src --ext .ts,.vue && prettier --check \"src/**/*.{ts,vue,css}\"",
+    "lint:fix": "eslint src --ext .ts,.vue --fix && prettier --write \"src/**/*.{ts,vue,css}\"",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.config.ts",
@@ -16,8 +22,13 @@
     "prepare": "husky || true"
   },
   "lint-staged": {
-    "*.{ts,vue}": ["eslint --fix", "prettier --write"],
-    "*.{scss,css,json,md}": ["prettier --write"]
+    "*.{ts,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,json,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@vueuse/core": "^14.3.0",
@@ -25,7 +36,9 @@
     "locomotive-scroll": "^5.0.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.38",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "web-vitals": "^5.3.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.1.0",
@@ -44,10 +57,10 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.8",
     "prettier": "^3.8.4",
-    "sass": "^1.101.0",
     "tailwindcss": "^4.3.1",
     "typescript": "~6.0.2",
     "vite": "^8.1.0",
+    "vitepress": "^1.6.4",
     "vitest": "^4.1.9",
     "vue-tsc": "^3.3.5"
   }

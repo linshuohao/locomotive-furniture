@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-50: #faf8f5;
+  --color-brand-100: #f0ebe3;
+  --color-brand-200: #e0d5c8;
+  --color-brand-300: #c9b8a3;
+  --color-brand-400: #b09a7e;
+  --color-brand-500: #9a8268;
+  --color-brand-600: #8a7359;
+  --color-brand-700: #735e4a;
+  --color-brand-800: #604f40;
+  --color-brand-900: #514337;
+  --color-brand-950: #2b221b;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --ease-brand: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+:root {
+  --scroll-progress: 0;
+  --header-height: 72px;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-brand-50);
+  color: var(--color-brand-950);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+[data-scroll-class='is-inview'].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.scroll-ready [data-scroll-class='is-inview']:not(.is-inview) {
+  /* Keep content visible — only shift; avoids blank pages when IO lags */
+  opacity: 1;
+  transform: translateY(16px);
+  transition:
+    transform 0.8s var(--ease-brand);
+}
+
+[data-scroll-css-progress] {
+  --scroll-progress: var(--progress, 0);
+}
+
+.hero-progress-bar {
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left center;
+}
+
+.page-enter-active {
+  animation: pageFadeIn 0.5s ease-out;
+}
+
+.page-leave-active {
+  transition: opacity 0.3s var(--ease-brand);
+}
+
+.page-leave-to {
+  opacity: 0;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  [data-scroll] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

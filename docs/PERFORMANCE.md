@@ -14,30 +14,34 @@
 
 ### Web Vitals
 
-`src/core/monitoring.ts` 自动采集 LCP、CLS，通过 `reportWebVital()` 上报。
+`src/lib/analytics/webVitals.ts` 自动采集 LCP、CLS，通过 `track()` 上报。
 
 ### 业务埋点
 
 | 事件 | 触发点 |
 |------|--------|
-| page_view | 路由切换 |
-| add_to_cart | 加购成功 |
-| checkout_complete | 结算完成 |
-| scroll_fps | 开发环境滚动帧率 |
-| Error / uncaught | 全局 JS 错误 |
+| `page_view` | 路由切换 |
+| `product_view` | PDP 挂载 |
+| `add_to_cart` | 加购成功 |
+| `begin_checkout` | 进入结算 |
+| `purchase` | 订单成功 |
+| `motion_jank` | GSAP ticker 帧差超阈值 |
+| `web_vital` | LCP / CLS / INP 等 |
 
-开发环境：控制台 `console.debug('[Analytics]', ...)`
-生产环境：设置 `VITE_ENABLE_ANALYTICS=true`
+开发环境：控制台 `console.debug('[analytics]', ...)`
+生产环境：设置 `VITE_ENABLE_ANALYTICS=true`（transport 层 Phase 2 接入）
 
 ## 3. 设备降级配置
 
-`src/core/performance.ts` → `detectPerformanceTier()`
+`src/lib/motion/performance.ts` → `detectPerformanceTier()`
 
 | Tier | smoothScroll | parallax | animations |
 |------|--------------|----------|------------|
 | high | ✅ | ✅ | ✅ |
-| medium | ✅ | ❌ | ✅ |
+| medium | ✅ | 条件启用* | ✅ |
 | low | ❌ | ❌ | ❌ |
+
+\* 移动端 medium tier：`parallax` 取决于 `motionCapabilities` 与 `VITE_ENABLE_PARALLAX`
 
 触发条件：
 - `prefers-reduced-motion: reduce` → low

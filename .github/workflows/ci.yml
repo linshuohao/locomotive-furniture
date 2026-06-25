@@ -18,13 +18,11 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
-        working-directory: locomotive-furniture
 
       - run: npm run lint
-        working-directory: locomotive-furniture
+
+      - run: npm run typecheck
 
       - run: npm run test
-        working-directory: locomotive-furniture
 
       - run: npm run build
-        working-directory: locomotive-furniture

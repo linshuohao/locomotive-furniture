@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import { initWebVitals, initErrorTracking } from './core/monitoring'
-import './assets/styles/main.scss'
+import { initWebVitals } from '@/lib/analytics/webVitals'
+import { initErrorTracking } from '@/lib/analytics/analytics'
+import '@/assets/styles/main.css'
 
 const app = createApp(App)
 

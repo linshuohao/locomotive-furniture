@@ -1,45 +1,4 @@
-export interface ProductVariant {
-  id: string
-  name: string
-  color: string
-  material: string
-  priceModifier: number
-}
-
-export interface Product {
-  id: string
-  slug: string
-  name: string
-  tagline: string
-  description: string
-  category: string
-  price: number
-  currency: string
-  images: string[]
-  variants: ProductVariant[]
-  dimensions: string
-  featured: boolean
-}
-
-export interface CartItem {
-  productId: string
-  variantId: string
-  quantity: number
-  name: string
-  price: number
-  image: string
-  variantName: string
-}
-
-export interface CheckoutForm {
-  email: string
-  firstName: string
-  lastName: string
-  address: string
-  city: string
-  country: string
-  postalCode: string
-}
+/** Infrastructure & UI types — domain models live in @/data/schemas */
 
 export interface LocomotiveScrollOptions {
   enableSmooth?: boolean
@@ -59,3 +18,12 @@ export interface WebVitalsMetric {
   value: number
   rating: 'good' | 'needs-improvement' | 'poor'
 }
+
+/** Re-export domain types from Zod schemas (single source of truth) */
+export type {
+  Product,
+  ProductVariant,
+  CartItem,
+  CheckoutForm,
+  CartItemInput,
+} from '@/data/schemas'

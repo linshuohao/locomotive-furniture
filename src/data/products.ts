@@ -1,9 +1,10 @@
-import type { Product } from '@/types'
+import type { Product } from '@/data/schemas'
+import { ProductSchema, withDefaultSeo } from '@/data/schemas'
 
-const img = (id: number, w = 1200, h = 800) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`
+const productImage = (productId: string, index: 1 | 2 = 1) =>
+  `/images/products/${productId}-${index}.jpg`
 
-export const products: Product[] = [
+const rawProducts = [
   {
     id: '1',
     slug: 'nordic-lounge-chair',
@@ -14,7 +15,7 @@ export const products: Product[] = [
     category: 'Seating',
     price: 1290,
     currency: 'USD',
-    images: [img(1567533762532), img(1586023491125)],
+    images: [productImage('1', 1), productImage('1', 2)],
     variants: [
       { id: '1a', name: 'Natural / Wool Grey', color: '#C4B8A8', material: 'Ash + Wool', priceModifier: 0 },
       { id: '1b', name: 'Walnut / Wool Charcoal', color: '#3D2B1F', material: 'Walnut + Wool', priceModifier: 150 },
@@ -32,7 +33,7 @@ export const products: Product[] = [
     category: 'Tables',
     price: 2490,
     currency: 'USD',
-    images: [img(1617806117933), img(1615529328331)],
+    images: [productImage('2', 1), productImage('2', 2)],
     variants: [
       { id: '2a', name: 'Natural Oak', color: '#D4A574', material: 'Oak', priceModifier: 0 },
       { id: '2b', name: 'Smoked Oak', color: '#5C4033', material: 'Oak', priceModifier: 200 },
@@ -50,7 +51,7 @@ export const products: Product[] = [
     category: 'Lighting',
     price: 680,
     currency: 'USD',
-    images: [img(1507473886341), img(1513506003901)],
+    images: [productImage('3', 1), productImage('3', 2)],
     variants: [
       { id: '3a', name: 'Brass / Linen', color: '#B8860B', material: 'Brass + Linen', priceModifier: 0 },
     ],
@@ -67,7 +68,7 @@ export const products: Product[] = [
     category: 'Seating',
     price: 3890,
     currency: 'USD',
-    images: [img(1555041469), img(1493663284031)],
+    images: [productImage('4', 1), productImage('4', 2)],
     variants: [
       { id: '4a', name: 'Ivory Bouclé', color: '#F5F0E8', material: 'Bouclé', priceModifier: 0 },
       { id: '4b', name: 'Slate Velvet', color: '#4A5568', material: 'Velvet', priceModifier: 300 },
@@ -85,7 +86,7 @@ export const products: Product[] = [
     category: 'Storage',
     price: 1890,
     currency: 'USD',
-    images: [img(1594620302202), img(1616486338812)],
+    images: [productImage('5', 1), productImage('5', 2)],
     variants: [
       { id: '5a', name: 'Walnut', color: '#3D2B1F', material: 'Walnut', priceModifier: 0 },
     ],
@@ -102,7 +103,7 @@ export const products: Product[] = [
     category: 'Tables',
     price: 980,
     currency: 'USD',
-    images: [img(1532372320542), img(1617098674098)],
+    images: [productImage('6', 1), productImage('6', 2)],
     variants: [
       { id: '6a', name: 'Travertine / Steel', color: '#E8E0D5', material: 'Travertine', priceModifier: 0 },
     ],
@@ -119,7 +120,7 @@ export const products: Product[] = [
     category: 'Storage',
     price: 420,
     currency: 'USD',
-    images: [img(1598306416), img(1615877384947)],
+    images: [productImage('7', 1), productImage('7', 2)],
     variants: [
       { id: '7a', name: 'Matte Black', color: '#1A1A1A', material: 'Steel', priceModifier: 0 },
       { id: '7b', name: 'Warm White', color: '#F5F0E8', material: 'Steel', priceModifier: 0 },
@@ -137,7 +138,7 @@ export const products: Product[] = [
     category: 'Bedroom',
     price: 2190,
     currency: 'USD',
-    images: [img(1505693416388), img(1522771739844)],
+    images: [productImage('8', 1), productImage('8', 2)],
     variants: [
       { id: '8a', name: 'Queen / Natural Oak', color: '#D4A574', material: 'Oak', priceModifier: 0 },
       { id: '8b', name: 'King / Natural Oak', color: '#D4A574', material: 'Oak', priceModifier: 400 },
@@ -155,7 +156,7 @@ export const products: Product[] = [
     category: 'Lighting',
     price: 540,
     currency: 'USD',
-    images: [img(1513506003901), img(1565814636199)],
+    images: [productImage('9', 1), productImage('9', 2)],
     variants: [
       { id: '9a', name: 'Clear Glass', color: '#E8F4F8', material: 'Glass + Brass', priceModifier: 0 },
       { id: '9b', name: 'Smoked Glass', color: '#4A5568', material: 'Glass + Brass', priceModifier: 80 },
@@ -173,7 +174,7 @@ export const products: Product[] = [
     category: 'Office',
     price: 1450,
     currency: 'USD',
-    images: [img(1518459037462), img(1586023491125)],
+    images: [productImage('10', 1), productImage('10', 2)],
     variants: [
       { id: '10a', name: 'Ash / White Legs', color: '#E8E0D5', material: 'Ash + Steel', priceModifier: 0 },
       { id: '10b', name: 'Ash / Black Legs', color: '#E8E0D5', material: 'Ash + Steel', priceModifier: 0 },
@@ -181,7 +182,11 @@ export const products: Product[] = [
     dimensions: 'W 140 × D 65 × H 75 cm',
     featured: false,
   },
-]
+] 
+
+export const products: Product[] = rawProducts.map((p) =>
+  ProductSchema.parse(withDefaultSeo({ ...p, images: [...p.images] })),
+)
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug)

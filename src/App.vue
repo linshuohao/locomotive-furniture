@@ -1,47 +1,52 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue'
+import { computed, provide, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import AppHeader from '@/components/base/AppHeader.vue'
-import { useLocomotiveScroll } from '@/core/useLocomotiveScroll'
+import AppHeader from '@/components/layout/AppHeader.vue'
+import { scrollInjectionKey, useLocomotiveScroll } from '@/composables/useLocomotiveScroll'
+import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
 
 const route = useRoute()
-const { scrollDirection, isScrolling, init, destroy, update, scrollProgress } =
+const { scrollDirection, isScrolling, init, destroy, scrollProgress, update, scrollTo } =
   useLocomotiveScroll()
+const { capabilities } = useMotionCapabilities()
+
+provide(scrollInjectionKey, { update, scrollTo })
 
 const headerHidden = computed(
-  () =>
-    scrollDirection.value === 'down' &&
-    isScrolling.value &&
-    Boolean(route.meta.scrollEffects),
+  () => scrollDirection.value === 'down' && isScrolling.value,
 )
-
-onMounted(() => {
-  if (route.meta.scrollEffects) init()
-})
 
 watch(
   () => route.path,
-  async () => {
+  (path) => {
     destroy()
-    await update()
-    if (route.meta.scrollEffects) {
-      await init()
+    if (capabilities.value.pageTransition) {
+      document.documentElement.dataset.route = path
+    } else {
+      onPageEnter()
     }
   },
 )
+
+function onPageEnter() {
+  void init().then(() => update())
+}
 </script>
 
 <template>
-  <div
-    class="min-h-screen"
-    :style="{ '--scroll-progress': scrollProgress }"
-  >
+  <div class="min-h-screen" :style="{ '--scroll-progress': scrollProgress }">
     <AppHeader :hidden="headerHidden" />
     <main>
       <RouterView v-slot="{ Component, route: currentRoute }">
-        <Transition name="page" mode="out-in">
+        <Transition
+          v-if="capabilities.pageTransition"
+          name="page"
+          mode="out-in"
+          @after-enter="onPageEnter"
+        >
           <component :is="Component" :key="currentRoute.path" />
         </Transition>
+        <component v-else :is="Component" :key="currentRoute.path" />
       </RouterView>
     </main>
     <footer class="border-t border-brand-200 bg-brand-100 py-12 px-6">

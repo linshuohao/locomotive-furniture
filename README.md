@@ -5,70 +5,140 @@
 ## 快速开始
 
 ```bash
-cd locomotive-furniture
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 访问 http://localhost:5173
 
 ## 功能概览
 
-- **滚动体验**：Locomotive Scroll v5 + Lenis 平滑滚动、分层视差、InView 入场动画
-- **电商闭环**：10 SKU 展示 → 规格选择 → 加购 → 购物车 → 结算（Demo）
-- **工程标准**：Vue 3 + TS + Pinia + TailwindCSS + Vitest + CI/CD
-- **性能降级**：设备分级自动关闭平滑滚动/视差
+- **滚动体验**：Locomotive Scroll v5 + GSAP ScrollTrigger 帧同步、ScrollReveal、Hero 进度条、WebGL 蒙层（高端设备）
+- **电商闭环**：10 SKU → 规格选择 → 加购 → 购物车 → 结算 → 成功页（Demo）
+- **Commerce 层**：`data/providers` 可切换 mock/http + Zod 校验 + 离线 fallback
+- **可观测性**：web-vitals 全量指标、typed 转化漏斗、motion jank 追踪
+- **工程标准**：Vue 3 + TS + Pinia + Vitest + CI（lint / typecheck / test / build）
+- **性能降级**：motion capabilities 分级 + 设备 tier 自动关闭视差/WebGL
 
 ## 页面
 
 | 路由 | 页面 | 滚动动效 |
 |------|------|----------|
-| `/` | 首页（长页叙事） | ✅ |
-| `/products` | 商品列表 | ❌ |
-| `/products/:slug` | 商品详情 | ❌ |
-| `/cart` | 购物车 | ❌ |
-| `/checkout` | 结算 | ❌ |
-| `/about` | 关于我们 | ✅ |
+| `/` | 首页（长页叙事） | ✅ Locomotive |
+| `/products` | 商品列表 | ✅ Hero GSAP + ScrollReveal |
+| `/products/:slug` | 商品详情 | ✅ PDP copy timeline + ScrollReveal |
+| `/cart` | 购物车 | ✅ ScrollReveal |
+| `/checkout` | 结算 | ✅ ScrollReveal |
+| `/checkout/success` | 订单确认 | ✅ Success burst timeline |
+| `/about` | 关于我们 | ✅ Locomotive |
 
 ## 脚本
 
 ```bash
-pnpm dev          # 开发
-pnpm build        # 构建
-pnpm preview      # 预览
-pnpm lint         # 代码检查
-pnpm test         # 单元测试
+npm run dev          # 开发站点
+npm run docs:dev     # 开发文档（VitePress）
+npm run build        # 仅站点
+npm run build:vercel # 站点 + 文档（Vercel 用）
+npm run preview      # 预览
+npm run typecheck    # TypeScript 检查
+npm run lint         # 代码检查
+npm run test         # 单元测试
 ```
+
+## 部署（Vercel）
+
+```bash
+npm run build:vercel   # 本地验证
+npx vercel --prod      # 需先 vercel login
+```
+
+- **站点**：`https://<project>.vercel.app/`
+- **文档**：`https://<project>.vercel.app/docs/`
+
+配置见 `vercel.json` 与 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。
 
 ## 文档
 
 | 文档 | 说明 |
 |------|------|
 | [docs/RESEARCH.md](docs/RESEARCH.md) | Locomotive.ca 调研分析 |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与取舍权衡 |
+| [docs/TRADEOFFS.md](docs/TRADEOFFS.md) | 全项目取舍权衡清单 |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与模块划分 |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 运行/构建/部署 |
 | [docs/COMPONENTS.md](docs/COMPONENTS.md) | 组件库使用 |
 | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | 性能监控手册 |
+| [docs/DELIVERY.md](docs/DELIVERY.md) | 交付清单与验收 |
 
 ## 目录结构
 
 ```
 src/
-├── core/           # 滚动引擎、监控、存储
+├── App.vue                 # 根组件
+├── main.ts                 # 应用入口
+├── router/                 # 路由
+├── assets/                 # 静态资源与全局样式
 ├── components/
-│   ├── base/       # 基础组件
-│   └── business/   # 业务组件
-├── views/          # 页面
-├── store/          # Pinia 状态
-├── data/           # 10 SPU 商品数据
-├── router/         # 路由
-├── types/          # TS 类型
-└── assets/         # 样式与静态资源
+│   ├── layout/             # 布局（AppHeader）
+│   ├── ui/                 # 通用 UI（Button、Skeleton、LazyImage）
+│   ├── product/            # 商品相关（ProductCard、CartItem）
+│   └── scroll/             # 滚动动效（ScrollReveal、WebGL）
+├── composables/            # Vue 组合式函数（scroll、GSAP、motion）
+├── lib/
+│   ├── scroll/             # GSAP 时间轴、Lenis 常量
+│   ├── motion/             # 性能分级、motion capabilities
+│   ├── analytics/          # 埋点与 Web Vitals
+│   └── storage.ts          # localStorage 封装
+├── data/                   # 商品目录 + Zod + 客户端 API
+│   ├── schemas.ts          # 领域类型（Zod 单一来源）
+│   ├── client.ts           # fetch / cache / timeout
+│   ├── config.ts           # 环境变量契约
+│   └── providers/          # mock | http 可切换
+├── store/                  # Pinia 状态（购物车）
+├── types/                  # 共享 TypeScript 类型
+├── views/                  # 页面（按业务域分子目录）
+│   ├── home/
+│   ├── catalog/
+│   ├── cart/
+│   ├── checkout/
+│   └── about/
+└── tests/                  # 单元测试
+scripts/
+└── generate-seo.mjs        # sitemap + robots
 ```
+
+## 环境变量
+
+完整示例见 [`.env.example`](.env.example)。
+
+```bash
+# 动效
+VITE_ENABLE_SMOOTH_SCROLL=true
+VITE_ENABLE_PARALLAX=true
+VITE_ENABLE_ANALYTICS=false
+
+# 商品数据源 — mock（本地 catalog）| http（真实 API）
+VITE_COMMERCE_PROVIDER=mock
+VITE_API_BASE_URL=                    # http 模式必填，如 https://api.example.com
+
+# 支付（Phase 2 预留）
+VITE_PAYMENT_PROVIDER=none            # none | stripe | shopify
+
+VITE_SITE_URL=http://localhost:5173
+```
+
+切换真实 Catalog：设 `VITE_COMMERCE_PROVIDER=http` 并配置 `VITE_API_BASE_URL`。API 约定：
+
+| 方法 | 路径 | 响应 |
+|------|------|------|
+| GET | `/products` | `Product[]` |
+| GET | `/products/:slug` | `Product` |
+| POST | `/checkout` | `{ orderId: string }` |
+
+请求失败时自动 fallback 到本地 `products.ts` 目录。
 
 ## 技术栈
 
-Vue 3 · Vite 5 · TypeScript · TailwindCSS 4 · Locomotive Scroll v5 · Lenis · GSAP · Pinia · Vitest
+Vue 3 · Vite · TypeScript · TailwindCSS 4 · Locomotive Scroll v5 · Lenis · GSAP · Zod · web-vitals · Pinia · Vitest
 
 ## License
 
