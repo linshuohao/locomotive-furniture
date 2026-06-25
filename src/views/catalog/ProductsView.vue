@@ -6,7 +6,7 @@ import ProductCard from '@/components/product/ProductCard.vue'
 import PageSkeleton from '@/components/ui/PageSkeleton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
-import { createHeroEnterTimeline } from '@/lib/scroll/animation'
+import { createHeroEnterTimeline, createScaleFadeReveal } from '@/lib/scroll/animation'
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
 import { useLocale } from '@/composables/useLocale'
 
@@ -21,6 +21,7 @@ const heroRef = ref<HTMLElement | null>(null)
 const eyebrowRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
+const productGridRef = ref<HTMLElement | null>(null)
 
 const categories = computed(() => [
   t('catalog.allCategories'),
@@ -56,6 +57,22 @@ useGsapTimeline(
     })
   },
   { watchSource: computed(() => !loading.value && heroRef.value) },
+)
+
+useGsapTimeline(
+  () => {
+    if (productGridRef.value) {
+      createScaleFadeReveal(productGridRef.value, '[data-product-card]', { stagger: 0.08 })
+    }
+  },
+  {
+    watchSource: computed(
+      () =>
+        !loading.value &&
+        productGridRef.value &&
+        `${activeCategory.value}-${filtered.value.length}`,
+    ),
+  },
 )
 
 watch(activeCategory, async () => {
@@ -115,10 +132,10 @@ const filtered = computed(() => {
           </button>
         </ScrollReveal>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          <ScrollReveal v-for="product in filtered" :key="product.id">
+        <div ref="productGridRef" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <div v-for="product in filtered" :key="product.id" data-product-card>
             <ProductCard :product="product" />
-          </ScrollReveal>
+          </div>
         </div>
       </template>
     </div>

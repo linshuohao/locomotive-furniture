@@ -32,11 +32,17 @@ export function useGsapTimeline(
     ScrollTrigger.refresh()
   }
 
+  function revert() {
+    ctx?.revert()
+    ctx = null
+  }
+
   if (options.watchSource) {
     watch(
       options.watchSource,
       (val) => {
         if (val) void run()
+        else revert()
       },
       { immediate: true },
     )
@@ -46,10 +52,7 @@ export function useGsapTimeline(
     })
   }
 
-  onUnmounted(() => {
-    ctx?.revert()
-    ctx = null
-  })
+  onUnmounted(revert)
 
   return { rebuild: run }
 }

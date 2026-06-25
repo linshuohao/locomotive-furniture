@@ -25,7 +25,7 @@ alwaysApply: false
 
 - 通过 `inject(scrollInjectionKey)` 获取 `update()` / `scrollTo()`
 - async 数据或图片 load 后调用 `scroll?.update()`
-- 入场优先 `ScrollReveal` / `ScrollSection`，避免重复手写 `data-scroll-*`
+- 入场优先 `ScrollReveal` / `MaskReveal` / `ScrollSection`，避免重复手写 `data-scroll-*`
 - 页面级 init/destroy 仅在 `App.vue`
 
 ```vue
@@ -43,4 +43,4 @@ const scroll = inject(scrollInjectionKey, null)
 | `layout/` | AppHeader 等布局 |
 | `ui/` | BaseButton、LazyImage、Skeleton |
 | `product/` | ProductCard、CartItem、VariantSelector |
-| `scroll/` | ScrollReveal、ScrollSection、WebGLRevealMask |
+| `scroll/` | ScrollReveal、MaskReveal、MarqueeBand、CyclingText、ScrollSection、WebGLRevealMask |

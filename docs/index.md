@@ -19,7 +19,7 @@ hero:
 
 features:
   - title: 滚动与动效
-    details: Locomotive Scroll v5 + GSAP ScrollTrigger，含降级策略与 TRADEOFFS 决策记录。
+    details: Locomotive Scroll v5 + GSAP；MaskReveal 遮罩行、MarqueeBand、CyclingText、clip/scale 揭示；含降级策略与 TRADEOFFS 决策记录。
   - title: 电商闭环
     details: 10 SKU → 购物车 → 结算 Demo；data/providers 支持 mock / http 切换。
   - title: 工程化
@@ -28,13 +28,13 @@ features:
 
 ## 文档导航
 
-| 文档                              | 说明                   |
-| --------------------------------- | ---------------------- |
-| [RESEARCH](./RESEARCH.md)         | Locomotive.ca 调研     |
-| [TRADEOFFS](./TRADEOFFS.md)       | 全项目取舍清单         |
-| [ARCHITECTURE](./ARCHITECTURE.md) | 分层架构与扩展路径     |
-| [COMPONENTS](./COMPONENTS.md)     | 组件与 data-scroll API |
-| [PERFORMANCE](./PERFORMANCE.md)   | Web Vitals 与调优      |
-| [DEPLOYMENT](./DEPLOYMENT.md)     | 本地开发、Vercel 部署  |
-| [CONTRIBUTING](./CONTRIBUTING.md) | 代码门禁与提交规范     |
-| [DELIVERY](./DELIVERY.md)         | 交付验收清单           |
+| 文档                              | 说明                              |
+| --------------------------------- | --------------------------------- |
+| [RESEARCH](./RESEARCH.md)         | Locomotive.ca 调研                |
+| [TRADEOFFS](./TRADEOFFS.md)       | 全项目取舍清单                    |
+| [ARCHITECTURE](./ARCHITECTURE.md) | 分层架构与扩展路径                |
+| [COMPONENTS](./COMPONENTS.md)     | 组件、GSAP 工厂与 data-scroll API |
+| [PERFORMANCE](./PERFORMANCE.md)   | Web Vitals 与调优                 |
+| [DEPLOYMENT](./DEPLOYMENT.md)     | 本地开发、Vercel 部署             |
+| [CONTRIBUTING](./CONTRIBUTING.md) | 代码门禁与提交规范                |
+| [DELIVERY](./DELIVERY.md)         | 交付验收清单                      |

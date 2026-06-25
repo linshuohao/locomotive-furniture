@@ -22,7 +22,7 @@ npm run dev
 
 ## 功能概览
 
-- **滚动体验**：Locomotive Scroll v5 + GSAP ScrollTrigger 帧同步、ScrollReveal、Hero 进度条、WebGL 蒙层（高端设备）
+- **滚动体验**：Locomotive Scroll v5 + GSAP ScrollTrigger 帧同步；MaskReveal 逐行遮罩、MarqueeBand 文字带、CyclingText 循环文案、ScrollReveal clip/scale 变体；Hero 进度条、WebGL 蒙层（高端设备）
 - **电商闭环**：10 SKU → 规格选择 → 加购 → 购物车 → 结算 → 成功页（Demo）
 - **Commerce 层**：`data/providers` 可切换 mock/http + Zod 校验 + 离线 fallback
 - **可观测性**：web-vitals 全量指标、typed 转化漏斗、motion jank 追踪
@@ -31,15 +31,15 @@ npm run dev
 
 ## 页面
 
-| 路由                | 页面             | 滚动动效                            |
-| ------------------- | ---------------- | ----------------------------------- |
-| `/`                 | 首页（长页叙事） | ✅ Locomotive                       |
-| `/products`         | 商品列表         | ✅ Hero GSAP + ScrollReveal         |
-| `/products/:slug`   | 商品详情         | ✅ PDP copy timeline + ScrollReveal |
-| `/cart`             | 购物车           | ✅ ScrollReveal                     |
-| `/checkout`         | 结算             | ✅ ScrollReveal                     |
-| `/checkout/success` | 订单确认         | ✅ Success burst timeline           |
-| `/about`            | 关于我们         | ✅ Locomotive                       |
+| 路由                | 页面             | 滚动动效                                      |
+| ------------------- | ---------------- | --------------------------------------------- |
+| `/`                 | 首页（长页叙事） | ✅ 遮罩行 + Marquee + scrub 叙事 + scale 交错 |
+| `/products`         | 商品列表         | ✅ Hero GSAP + scale 交错网格                 |
+| `/products/:slug`   | 商品详情         | ✅ PDP copy timeline + ScrollReveal           |
+| `/cart`             | 购物车           | ✅ ScrollReveal                               |
+| `/checkout`         | 结算             | ✅ form cascade timeline                      |
+| `/checkout/success` | 订单确认         | ✅ Success burst timeline                     |
+| `/about`            | 关于我们         | ✅ MaskReveal + Marquee + clip 图片           |
 
 ## 脚本
 
@@ -112,7 +112,7 @@ src/
 │   ├── layout/             # 布局（AppHeader）
 │   ├── ui/                 # 通用 UI（Button、Skeleton、LazyImage）
 │   ├── product/            # 商品相关（ProductCard、CartItem）
-│   └── scroll/             # 滚动动效（ScrollReveal、WebGL）
+│   └── scroll/             # 滚动动效（ScrollReveal、MaskReveal、MarqueeBand、WebGL）
 ├── composables/            # Vue 组合式函数（scroll、GSAP、motion）
 ├── lib/
 │   ├── scroll/             # GSAP 时间轴、Lenis 常量

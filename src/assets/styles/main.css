@@ -60,6 +60,40 @@ html.scroll-ready [data-scroll-class='is-inview']:not(.is-inview) {
   transition: transform 0.8s var(--ease-brand);
 }
 
+/* Locomotive-style clip reveal variant */
+.scroll-reveal--clip:not(.is-inview) .scroll-reveal__inner {
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(0);
+}
+
+.scroll-reveal--clip.is-inview .scroll-reveal__inner {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1s var(--ease-brand);
+}
+
+.scroll-reveal--scale:not(.is-inview) {
+  opacity: 1;
+  transform: translateY(20px) scale(0.96);
+  transition:
+    transform 0.9s var(--ease-brand),
+    opacity 0.9s var(--ease-brand);
+}
+
+.scroll-reveal--scale.is-inview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Mask line clip containers */
+.mask-line-wrap {
+  overflow: hidden;
+  display: block;
+}
+
+.mask-line-wrap + .mask-line-wrap {
+  margin-top: -0.08em;
+}
+
 [data-scroll-css-progress] {
   --scroll-progress: var(--progress, 0);
 }
@@ -100,6 +134,14 @@ html.scroll-ready [data-scroll-class='is-inview']:not(.is-inview) {
   }
 
   [data-scroll] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scroll-reveal--clip .scroll-reveal__inner,
+  .scroll-reveal--scale {
+    clip-path: none !important;
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

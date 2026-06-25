@@ -50,8 +50,8 @@ watch(itemCount, (next, prev) => {
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          class="text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950 transition-colors"
-          active-class="text-brand-950"
+          class="nav-link text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950 transition-colors"
+          active-class="text-brand-950 nav-link--active"
         >
           {{ link.label }}
         </RouterLink>
@@ -88,6 +88,28 @@ watch(itemCount, (next, prev) => {
 
 .cart-badge--bump {
   animation: cart-badge-pop 0.65s var(--ease-brand);
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-brand);
+}
+
+.nav-link:hover::after,
+.nav-link--active::after {
+  transform: scaleX(1);
 }
 
 @keyframes cart-badge-pop {

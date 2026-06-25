@@ -19,17 +19,17 @@
 
 ## 2. 技术栈选型
 
-| 类别 | 选型 | 理由 |
-|------|------|------|
-| 框架 | Vue 3 + Vite + TS | 快速构建、类型安全 |
-| 样式 | TailwindCSS 4 | 设计 Token 集中管理 |
-| 滚动 | Locomotive Scroll v5 + Lenis | 对标参考站 |
-| 动画 | GSAP ScrollTrigger + ticker | 与 Lenis 帧同步 |
-| 数据 | Zod + 静态 catalog | 运行时校验 |
+| 类别     | 选型                              | 理由                       |
+| -------- | --------------------------------- | -------------------------- |
+| 框架     | Vue 3 + Vite + TS                 | 快速构建、类型安全         |
+| 样式     | TailwindCSS 4                     | 设计 Token 集中管理        |
+| 滚动     | Locomotive Scroll v5 + Lenis      | 对标参考站                 |
+| 动画     | GSAP ScrollTrigger + ticker       | 与 Lenis 帧同步            |
+| 数据     | Zod + 静态 catalog                | 运行时校验                 |
 | Commerce | `data/api.ts` + `data/providers/` | mock/http 可切换，Zod 校验 |
-| 状态 | Pinia + localStorage | 购物车持久化 |
-| 可观测 | web-vitals + typed analytics | 全链路指标 |
-| 测试 | Vitest + CI typecheck | 质量门禁 |
+| 状态     | Pinia + localStorage              | 购物车持久化               |
+| 可观测   | web-vitals + typed analytics      | 全链路指标                 |
+| 测试     | Vitest + CI typecheck             | 质量门禁                   |
 
 ## 3. Trade-off 清单
 
@@ -39,8 +39,10 @@
 
 - Locomotive + GSAP ticker（非双 RAF）
 - 全站 Locomotive init；首页/About 叙事视差最重
+- Locomotive 风格增强：逐行遮罩（`MaskReveal`）、Marquee 文字带、Hero 循环文案、clip/scale 揭示
+- GSAP 工厂集中于 `lib/scroll/animation.ts`，页面通过 `useGsapTimeline` 挂载
 - `motionCapabilities`：`full | reduced | static`
-- WebGL Hero 仅 `tier.full`
+- WebGL Hero 仅 `tier.full`；Marquee 在 `prefers-reduced-motion` 下静止
 
 ### 3.2 业务 vs 视觉
 
@@ -55,19 +57,20 @@
 
 ## 4. 核心模块
 
-| 模块 | 路径 |
-|------|------|
-| 应用入口 | `src/main.ts` |
-| Locomotive 封装 | `src/composables/useLocomotiveScroll.ts` |
-| GSAP 时间轴 | `src/lib/scroll/animation.ts` |
-| 滚动常量 | `src/lib/scroll/scrollConstants.ts` |
-| Motion 能力分级 | `src/lib/motion/motionCapabilities.ts` |
-| 商品 API | `src/data/api.ts`（facade） |
-| Provider 切换 | `src/data/providers/` + `VITE_COMMERCE_PROVIDER` |
-| 领域类型 | `src/data/schemas.ts`（Zod 单一来源） |
-| 基础设施类型 | `src/types/`（滚动、性能 tier） |
-| Analytics | `src/lib/analytics/analytics.ts` |
-| Web Vitals | `src/lib/analytics/webVitals.ts` |
+| 模块            | 路径                                             |
+| --------------- | ------------------------------------------------ |
+| 应用入口        | `src/main.ts`                                    |
+| Locomotive 封装 | `src/composables/useLocomotiveScroll.ts`         |
+| GSAP 时间轴     | `src/lib/scroll/animation.ts`                    |
+| GSAP 生命周期   | `src/composables/useGsapTimeline.ts`             |
+| 滚动常量        | `src/lib/scroll/scrollConstants.ts`              |
+| Motion 能力分级 | `src/lib/motion/motionCapabilities.ts`           |
+| 商品 API        | `src/data/api.ts`（facade）                      |
+| Provider 切换   | `src/data/providers/` + `VITE_COMMERCE_PROVIDER` |
+| 领域类型        | `src/data/schemas.ts`（Zod 单一来源）            |
+| 基础设施类型    | `src/types/`（滚动、性能 tier）                  |
+| Analytics       | `src/lib/analytics/analytics.ts`                 |
+| Web Vitals      | `src/lib/analytics/webVitals.ts`                 |
 
 ## 5. 扩展路径
 
