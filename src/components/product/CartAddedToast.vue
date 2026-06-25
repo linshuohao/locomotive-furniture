@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useCartStore } from '@/store/cart'
 import { formatPrice } from '@/data/products'
+import { useLocale } from '@/composables/useLocale'
+import { resolveCartLine } from '@/composables/useCartLine'
 
 const cart = useCartStore()
+const { t, locale, localizedPath } = useLocale()
 const visible = ref(false)
 let hideTimer: ReturnType<typeof setTimeout> | undefined
+
+const recentLine = computed(() =>
+  cart.recentAdd ? resolveCartLine(cart.recentAdd, locale.value) : null,
+)
 
 watch(
   () => cart.recentAdd,
@@ -37,7 +44,7 @@ onUnmounted(() => clearTimeout(hideTimer))
   <Teleport to="body">
     <Transition name="cart-toast">
       <aside
-        v-if="visible && cart.recentAdd"
+        v-if="visible && cart.recentAdd && recentLine"
         class="cart-toast fixed z-[100] bottom-6 right-6 left-6 sm:left-auto sm:w-[22rem] bg-brand-900 text-brand-50 shadow-2xl border border-brand-700/50 p-4"
         role="status"
         aria-live="polite"
@@ -45,25 +52,28 @@ onUnmounted(() => clearTimeout(hideTimer))
         <div class="flex gap-4">
           <img
             :src="cart.recentAdd.image"
-            :alt="cart.recentAdd.name"
+            :alt="recentLine.name"
             class="h-16 w-16 shrink-0 object-cover bg-brand-800"
           />
           <div class="min-w-0 flex-1">
-            <p class="text-[10px] uppercase tracking-[0.2em] text-brand-300">Added to cart</p>
+            <p class="text-[10px] uppercase tracking-[0.2em] text-brand-300">
+              {{ t('cart.toastAdded') }}
+            </p>
             <p class="font-display text-lg leading-tight mt-0.5 truncate">
-              {{ cart.recentAdd.name }}
+              {{ recentLine.name }}
             </p>
             <p class="text-xs text-brand-300 mt-1">
-              {{ cart.recentAdd.variantName }} · Qty {{ cart.recentAdd.quantity }}
+              {{ recentLine.variantName }} · {{ t('cart.toastQty') }}
+              {{ cart.recentAdd.quantity }}
             </p>
             <p class="text-sm mt-1 tabular-nums">
-              {{ formatPrice(cart.recentAdd.price * cart.recentAdd.quantity) }}
+              {{ formatPrice(cart.recentAdd.price * cart.recentAdd.quantity, 'USD', locale) }}
             </p>
           </div>
           <button
             type="button"
             class="shrink-0 text-brand-400 hover:text-brand-50 text-xl leading-none"
-            aria-label="Dismiss"
+            :aria-label="t('cart.toastDismiss')"
             @click="dismiss"
           >
             ×
@@ -71,18 +81,18 @@ onUnmounted(() => clearTimeout(hideTimer))
         </div>
         <div class="mt-4 flex gap-2">
           <RouterLink
-            to="/cart"
+            :to="localizedPath('/cart')"
             class="flex-1 text-center text-xs uppercase tracking-widest bg-brand-50 text-brand-900 py-2.5 hover:bg-white transition-colors"
             @click="dismiss"
           >
-            View cart ({{ cart.itemCount }})
+            {{ t('cart.toastViewCart', { count: cart.itemCount }) }}
           </RouterLink>
           <button
             type="button"
             class="flex-1 text-xs uppercase tracking-widest border border-brand-600 py-2.5 hover:bg-brand-800 transition-colors"
             @click="dismiss"
           >
-            Continue
+            {{ t('cart.toastContinue') }}
           </button>
         </div>
       </aside>

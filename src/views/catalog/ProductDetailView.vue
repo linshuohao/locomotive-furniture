@@ -13,9 +13,12 @@ import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import { createPdpTimeline } from '@/lib/scroll/animation'
+import { useLocale } from '@/composables/useLocale'
+
 const route = useRoute()
 const router = useRouter()
 const cart = useCartStore()
+const { t, locale, localizedPath } = useLocale()
 
 const product = ref<Product | null>(null)
 const loading = ref(true)
@@ -32,7 +35,7 @@ async function loadProduct(slug: string) {
     product.value = result.data
     selectedVariant.value = result.data.variants[0]?.id ?? ''
   } else {
-    router.replace('/products')
+    router.replace(localizedPath('/products'))
   }
   loading.value = false
 }
@@ -47,6 +50,11 @@ watch(
     if (typeof slug === 'string') void loadProduct(slug)
   },
 )
+
+watch(locale, () => {
+  const slug = route.params.slug
+  if (typeof slug === 'string') void loadProduct(slug)
+})
 
 useGsapTimeline(
   () => {
@@ -83,7 +91,9 @@ watch(selectedVariant, () => {
 watch(
   () => route.params.slug,
   (slug) => {
-    if (!loading.value && !getProductBySlug(slug as string)) router.replace('/products')
+    if (!loading.value && !getProductBySlug(slug as string, locale.value)) {
+      router.replace(localizedPath('/products'))
+    }
   },
 )
 </script>
@@ -106,7 +116,9 @@ watch(
       <ProductViewTracker :product="product" />
 
       <ScrollReveal class="text-sm text-brand-500 mb-8" tag="nav">
-        <RouterLink to="/products" class="hover:text-brand-900">Collection</RouterLink>
+        <RouterLink :to="localizedPath('/products')" class="hover:text-brand-900">
+          {{ t('nav.collection') }}
+        </RouterLink>
         <span class="mx-2">/</span>
         <span class="text-brand-900">{{ product.name }}</span>
       </ScrollReveal>
@@ -130,9 +142,11 @@ watch(
           <h1 data-pdp-reveal class="font-display text-4xl md:text-5xl text-brand-900 mt-2">
             {{ product.name }}
           </h1>
-          <p data-pdp-reveal class="text-brand-600 mt-4">{{ product.tagline }}</p>
+          <p data-pdp-reveal class="text-brand-600 mt-4">
+            {{ product.tagline }}
+          </p>
           <p data-pdp-reveal class="font-display text-2xl text-brand-900 mt-6">
-            {{ formatPrice(currentPrice, product.currency) }}
+            {{ formatPrice(currentPrice, product.currency, locale) }}
           </p>
 
           <div class="mt-8 space-y-6">
@@ -141,7 +155,9 @@ watch(
             </div>
 
             <div data-pdp-reveal class="flex items-center gap-4">
-              <p class="text-xs uppercase tracking-widest text-brand-500">Quantity</p>
+              <p class="text-xs uppercase tracking-widest text-brand-500">
+                {{ t('product.quantity') }}
+              </p>
               <div class="flex items-center gap-3">
                 <button
                   type="button"
@@ -178,16 +194,16 @@ watch(
                       clip-rule="evenodd"
                     />
                   </svg>
-                  Added — view cart below
+                  {{ t('product.addedToCart') }}
                 </span>
-                <span v-else>Add to Cart</span>
+                <span v-else>{{ t('product.addToCart') }}</span>
               </BaseButton>
             </div>
 
             <div data-pdp-reveal>
-              <RouterLink to="/cart">
+              <RouterLink :to="localizedPath('/cart')">
                 <BaseButton variant="secondary" size="lg" class="w-full mt-3">
-                  View Cart
+                  {{ t('product.viewCart') }}
                 </BaseButton>
               </RouterLink>
             </div>
@@ -195,12 +211,20 @@ watch(
 
           <div class="mt-12 space-y-6 border-t border-brand-200 pt-8">
             <div data-pdp-reveal>
-              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">Description</h2>
-              <p class="text-brand-600 leading-relaxed">{{ product.description }}</p>
+              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">
+                {{ t('product.description') }}
+              </h2>
+              <p class="text-brand-600 leading-relaxed">
+                {{ product.description }}
+              </p>
             </div>
             <div data-pdp-reveal>
-              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">Dimensions</h2>
-              <p class="text-brand-600">{{ product.dimensions }}</p>
+              <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-2">
+                {{ t('product.dimensions') }}
+              </h2>
+              <p class="text-brand-600">
+                {{ product.dimensions }}
+              </p>
             </div>
           </div>
         </div>

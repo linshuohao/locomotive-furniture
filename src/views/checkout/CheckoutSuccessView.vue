@@ -6,8 +6,10 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import { createSuccessTimeline } from '@/lib/scroll/animation'
+import { useLocale } from '@/composables/useLocale'
 
 const route = useRoute()
+const { t, localizedPath } = useLocale()
 const orderId = (route.query.orderId as string) ?? ''
 const containerRef = ref<HTMLElement | null>(null)
 
@@ -34,18 +36,20 @@ useGsapTimeline(
       </ScrollReveal>
 
       <p data-success-item class="text-xs uppercase tracking-widest text-brand-500 mb-4">
-        Order confirmed
+        {{ t('checkoutSuccess.eyebrow') }}
       </p>
-      <h1 data-success-item class="font-display text-4xl text-brand-900 mb-4">Thank you</h1>
+      <h1 data-success-item class="font-display text-4xl text-brand-900 mb-4">
+        {{ t('checkoutSuccess.title') }}
+      </h1>
       <p v-if="orderId" data-success-item class="text-brand-600 mb-2">
-        Your order number is <strong>{{ orderId }}</strong>
+        {{ t('checkoutSuccess.orderNumber', { orderId }) }}
       </p>
       <p data-success-item class="text-brand-500 text-sm mb-10">
-        This is a demo checkout — no payment was processed.
+        {{ t('checkoutSuccess.demoNote') }}
       </p>
       <div data-success-item>
-        <RouterLink to="/products">
-          <BaseButton>Continue Shopping</BaseButton>
+        <RouterLink :to="localizedPath('/products')">
+          <BaseButton>{{ t('cart.continueShopping') }}</BaseButton>
         </RouterLink>
       </div>
     </div>

@@ -7,7 +7,7 @@ const root = join(__dirname, '..')
 
 const siteUrl = process.env.VITE_SITE_URL || 'http://localhost:5173'
 
-/** Product slugs — keep in sync with src/data/products.ts */
+/** Product slugs — keep in sync with src/data/productCatalog.ts */
 const productSlugs = [
   'nordic-lounge-chair',
   'horizon-dining-table',
@@ -21,32 +21,51 @@ const productSlugs = [
   'studio-desk',
 ]
 
-const staticRoutes = [
-  { loc: '/', priority: '1.0', changefreq: 'weekly' },
-  { loc: '/products', priority: '0.9', changefreq: 'weekly' },
-  { loc: '/about', priority: '0.7', changefreq: 'monthly' },
-  { loc: '/cart', priority: '0.5', changefreq: 'monthly' },
+const locales = [
+  { prefix: '', hreflang: 'en' },
+  { prefix: '/zh', hreflang: 'zh-CN' },
 ]
 
+const staticRoutes = [
+  { path: '/', priority: '1.0', changefreq: 'weekly' },
+  { path: '/products', priority: '0.9', changefreq: 'weekly' },
+  { path: '/about', priority: '0.7', changefreq: 'monthly' },
+  { path: '/cart', priority: '0.5', changefreq: 'monthly' },
+]
+
+function absoluteUrl(prefix, path) {
+  const normalizedPath = path === '/' && prefix ? prefix : `${prefix}${path === '/' ? '' : path}`
+  return `${siteUrl}${normalizedPath || '/'}`
+}
+
+function alternateLinks(path) {
+  return locales
+    .map(
+      (locale) =>
+        `    <xhtml:link rel="alternate" hreflang="${locale.hreflang}" href="${absoluteUrl(locale.prefix, path)}" />`,
+    )
+    .join('\n')
+}
+
+function urlEntry(path, priority, changefreq) {
+  const primary = absoluteUrl('', path)
+  return `  <url>
+    <loc>${primary}</loc>
+${alternateLinks(path)}
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`
+}
+
 const urls = [
-  ...staticRoutes.map(
-    (r) => `  <url>
-    <loc>${siteUrl}${r.loc}</loc>
-    <changefreq>${r.changefreq}</changefreq>
-    <priority>${r.priority}</priority>
-  </url>`,
-  ),
-  ...productSlugs.map(
-    (slug) => `  <url>
-    <loc>${siteUrl}/products/${slug}</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`,
+  ...staticRoutes.map((route) => urlEntry(route.path, route.priority, route.changefreq)),
+  ...productSlugs.map((slug) =>
+    urlEntry(`/products/${slug}`, '0.8', 'weekly'),
   ),
 ]
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.join('\n')}
 </urlset>
 `

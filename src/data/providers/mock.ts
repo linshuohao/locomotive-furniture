@@ -3,9 +3,11 @@ import { catalogFallback, offlineProductBySlug, offlineProducts } from '@/data/f
 import type { Product } from '@/data/schemas'
 import type { CheckoutPayload, CommerceResponse } from '@/data/types'
 import type { CommerceProvider } from '@/data/providers/types'
+import { getCurrentLocale } from '@/i18n'
 
 async function fetchProductsMock(): Promise<CommerceResponse<Product[]>> {
-  const cacheKey = 'products:all'
+  const locale = getCurrentLocale()
+  const cacheKey = `products:all:${locale}`
   const cached = getCached<Product[]>(cacheKey)
   if (cached) {
     return { data: cached, error: null, meta: { latencyMs: 0, source: 'cache' } }
@@ -13,7 +15,7 @@ async function fetchProductsMock(): Promise<CommerceResponse<Product[]>> {
 
   const start = performance.now()
   try {
-    const data = await withTimeout(() => simulateLatency(offlineProducts()))
+    const data = await withTimeout(() => simulateLatency(offlineProducts(locale)))
     setCache(cacheKey, data)
     return {
       data,
@@ -21,12 +23,13 @@ async function fetchProductsMock(): Promise<CommerceResponse<Product[]>> {
       meta: { latencyMs: Math.round(performance.now() - start), source: 'api' },
     }
   } catch {
-    return catalogFallback(offlineProducts())
+    return catalogFallback(offlineProducts(locale))
   }
 }
 
 async function fetchProductBySlugMock(slug: string): Promise<CommerceResponse<Product>> {
-  const cacheKey = `product:${slug}`
+  const locale = getCurrentLocale()
+  const cacheKey = `product:${slug}:${locale}`
   const cached = getCached<Product>(cacheKey)
   if (cached) {
     return { data: cached, error: null, meta: { latencyMs: 0, source: 'cache' } }
@@ -35,7 +38,7 @@ async function fetchProductBySlugMock(slug: string): Promise<CommerceResponse<Pr
   const start = performance.now()
   try {
     const product = await withTimeout(() => {
-      const p = offlineProductBySlug(slug)
+      const p = offlineProductBySlug(slug, locale)
       if (!p) throw new Error('NOT_FOUND')
       return simulateLatency(p)
     })
@@ -46,7 +49,7 @@ async function fetchProductBySlugMock(slug: string): Promise<CommerceResponse<Pr
       meta: { latencyMs: Math.round(performance.now() - start), source: 'api' },
     }
   } catch (err) {
-    const fallback = offlineProductBySlug(slug)
+    const fallback = offlineProductBySlug(slug, locale)
     if (fallback) {
       return catalogFallback(fallback)
     }

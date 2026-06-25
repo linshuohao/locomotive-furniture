@@ -39,10 +39,8 @@ export const CartItemSchema = z.object({
   variantId: z.string(),
   quantity: z.number().int().min(1).max(99),
   slug: z.string(),
-  name: z.string(),
   price: z.number(),
   image: z.string(),
-  variantName: z.string(),
 })
 
 export type CartItem = z.infer<typeof CartItemSchema>

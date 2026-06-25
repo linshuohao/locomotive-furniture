@@ -55,8 +55,8 @@ onMounted(() => {
       Image unavailable
     </div>
     <img
-      ref="imgRef"
       v-show="!error"
+      ref="imgRef"
       :src="src"
       :alt="alt"
       :loading="lazy ? 'lazy' : 'eager'"

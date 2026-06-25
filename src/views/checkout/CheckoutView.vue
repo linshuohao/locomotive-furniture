@@ -7,9 +7,12 @@ import type { CheckoutForm } from '@/types'
 import { trackBeginCheckout } from '@/lib/analytics/analytics'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
+import { useLocale } from '@/composables/useLocale'
+import { resolveCartLine } from '@/composables/useCartLine'
 
 const cart = useCartStore()
 const router = useRouter()
+const { t, locale, localizedPath } = useLocale()
 
 const form = ref<CheckoutForm>({
   email: '',
@@ -37,18 +40,18 @@ const isValid = computed(() => {
 })
 
 onMounted(() => {
-  if (cart.items.length === 0) router.replace('/cart')
+  if (cart.items.length === 0) router.replace(localizedPath('/cart'))
 })
 
 function validate(): boolean {
   errors.value = {}
-  if (!form.value.email.includes('@')) errors.value.email = 'Valid email required'
-  if (!form.value.firstName.trim()) errors.value.firstName = 'Required'
-  if (!form.value.lastName.trim()) errors.value.lastName = 'Required'
-  if (!form.value.address.trim()) errors.value.address = 'Required'
-  if (!form.value.city.trim()) errors.value.city = 'Required'
-  if (!form.value.country.trim()) errors.value.country = 'Required'
-  if (!form.value.postalCode.trim()) errors.value.postalCode = 'Required'
+  if (!form.value.email.includes('@')) errors.value.email = t('checkout.errors.email')
+  if (!form.value.firstName.trim()) errors.value.firstName = t('checkout.errors.required')
+  if (!form.value.lastName.trim()) errors.value.lastName = t('checkout.errors.required')
+  if (!form.value.address.trim()) errors.value.address = t('checkout.errors.required')
+  if (!form.value.city.trim()) errors.value.city = t('checkout.errors.required')
+  if (!form.value.country.trim()) errors.value.country = t('checkout.errors.required')
+  if (!form.value.postalCode.trim()) errors.value.postalCode = t('checkout.errors.required')
   return Object.keys(errors.value).length === 0
 }
 
@@ -60,32 +63,39 @@ async function submit() {
   try {
     const result = await cart.submitCheckout(form.value)
     await router.push({
-      name: 'checkout-success',
+      path: localizedPath('/checkout/success'),
       query: { orderId: result.orderId, subtotal: String(subtotalBefore) },
     })
   } catch (err) {
-    errors.value.email = err instanceof Error ? err.message : 'Checkout failed'
+    errors.value.email = err instanceof Error ? err.message : t('checkout.errors.failed')
   } finally {
     submitting.value = false
   }
 }
 
-const fields: { key: keyof CheckoutForm; label: string; type?: string }[] = [
-  { key: 'email', label: 'Email', type: 'email' },
-  { key: 'firstName', label: 'First Name' },
-  { key: 'lastName', label: 'Last Name' },
-  { key: 'address', label: 'Address' },
-  { key: 'city', label: 'City' },
-  { key: 'country', label: 'Country' },
-  { key: 'postalCode', label: 'Postal Code' },
-]
+const fields = computed(() => [
+  { key: 'email' as const, label: t('checkout.email'), type: 'email' },
+  { key: 'firstName' as const, label: t('checkout.firstName') },
+  { key: 'lastName' as const, label: t('checkout.lastName') },
+  { key: 'address' as const, label: t('checkout.address') },
+  { key: 'city' as const, label: t('checkout.city') },
+  { key: 'country' as const, label: t('checkout.country') },
+  { key: 'postalCode' as const, label: t('checkout.postalCode') },
+])
+
+const resolvedItems = computed(() =>
+  cart.items.map((item) => ({
+    ...item,
+    ...resolveCartLine(item, locale.value),
+  })),
+)
 </script>
 
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
     <div class="mx-auto max-w-4xl px-6 py-16">
       <ScrollReveal tag="h1" class="font-display text-4xl text-brand-900 mb-12">
-        Checkout
+        {{ t('checkout.title') }}
       </ScrollReveal>
 
       <div class="grid lg:grid-cols-5 gap-12">
@@ -110,26 +120,32 @@ const fields: { key: keyof CheckoutForm; label: string; type?: string }[] = [
 
           <ScrollReveal>
             <BaseButton type="submit" size="lg" class="w-full" :disabled="!isValid || submitting">
-              {{ submitting ? 'Processing...' : 'Place Order (Demo)' }}
+              {{ submitting ? t('checkout.processing') : t('checkout.placeOrder') }}
             </BaseButton>
           </ScrollReveal>
         </form>
 
         <ScrollReveal class="lg:col-span-2 bg-brand-100 p-8 h-fit">
-          <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-6">Order Summary</h2>
+          <h2 class="text-xs uppercase tracking-widest text-brand-900 mb-6">
+            {{ t('checkout.orderSummary') }}
+          </h2>
           <ul class="space-y-4 mb-6">
             <li
-              v-for="item in cart.items"
+              v-for="item in resolvedItems"
               :key="`${item.productId}-${item.variantId}`"
               class="flex justify-between text-sm"
             >
               <span class="text-brand-700">{{ item.name }} × {{ item.quantity }}</span>
-              <span>{{ formatPrice(item.price * item.quantity) }}</span>
+              <span>{{ formatPrice(item.price * item.quantity, 'USD', locale) }}</span>
             </li>
           </ul>
           <div class="border-t border-brand-300 pt-4 flex justify-between">
-            <span class="uppercase tracking-widest text-xs text-brand-500">Total</span>
-            <span class="font-display text-xl">{{ formatPrice(cart.subtotal) }}</span>
+            <span class="uppercase tracking-widest text-xs text-brand-500">{{
+              t('checkout.total')
+            }}</span>
+            <span class="font-display text-xl">{{
+              formatPrice(cart.subtotal, 'USD', locale)
+            }}</span>
           </div>
         </ScrollReveal>
       </div>

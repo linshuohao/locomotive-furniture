@@ -5,8 +5,10 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 import CartAddedToast from '@/components/product/CartAddedToast.vue'
 import { scrollInjectionKey, useLocomotiveScroll } from '@/composables/useLocomotiveScroll'
 import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
+import { useLocale } from '@/composables/useLocale'
 
 const route = useRoute()
+const { t, localizedPath } = useLocale()
 const { scrollDirection, isScrolling, init, destroy, scrollProgress, update, scrollTo } =
   useLocomotiveScroll()
 const { capabilities } = useMotionCapabilities()
@@ -46,31 +48,43 @@ function onPageEnter() {
         >
           <component :is="Component" :key="currentRoute.path" />
         </Transition>
-        <component v-else :is="Component" :key="currentRoute.path" />
+        <component :is="Component" v-else :key="currentRoute.path" />
       </RouterView>
     </main>
     <footer class="border-t border-brand-200 bg-brand-100 py-12 px-6">
       <div class="mx-auto max-w-7xl flex flex-col md:flex-row justify-between gap-8">
         <div>
-          <p class="font-display text-2xl text-brand-900">Atelier</p>
+          <p class="font-display text-2xl text-brand-900">
+            {{ t('brand.name') }}
+          </p>
           <p class="text-sm text-brand-600 mt-2 max-w-xs">
-            Curated furniture for modern living. Crafted with intention, shipped worldwide.
+            {{ t('footer.tagline') }}
           </p>
         </div>
         <div class="flex gap-12 text-sm text-brand-600">
           <div class="space-y-2">
-            <p class="uppercase tracking-widest text-brand-900 text-xs">Shop</p>
-            <RouterLink to="/products" class="block hover:text-brand-900">Collection</RouterLink>
-            <RouterLink to="/cart" class="block hover:text-brand-900">Cart</RouterLink>
+            <p class="uppercase tracking-widest text-brand-900 text-xs">
+              {{ t('footer.shop') }}
+            </p>
+            <RouterLink :to="localizedPath('/products')" class="block hover:text-brand-900">
+              {{ t('nav.collection') }}
+            </RouterLink>
+            <RouterLink :to="localizedPath('/cart')" class="block hover:text-brand-900">
+              {{ t('nav.cart') }}
+            </RouterLink>
           </div>
           <div class="space-y-2">
-            <p class="uppercase tracking-widest text-brand-900 text-xs">Brand</p>
-            <RouterLink to="/about" class="block hover:text-brand-900">About</RouterLink>
+            <p class="uppercase tracking-widest text-brand-900 text-xs">
+              {{ t('footer.brand') }}
+            </p>
+            <RouterLink :to="localizedPath('/about')" class="block hover:text-brand-900">
+              {{ t('nav.about') }}
+            </RouterLink>
           </div>
         </div>
       </div>
       <p class="text-center text-xs text-brand-500 mt-12">
-        © {{ new Date().getFullYear() }} Atelier Furniture. All rights reserved.
+        © {{ new Date().getFullYear() }} {{ t('brand.fullName') }}. {{ t('footer.rights') }}
       </p>
     </footer>
   </div>

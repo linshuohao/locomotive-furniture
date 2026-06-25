@@ -41,6 +41,7 @@
     "locomotive-scroll": "^5.0.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.38",
+    "vue-i18n": "^11.4.6",
     "vue-router": "^4.6.4",
     "web-vitals": "^5.3.0",
     "zod": "^4.4.3"

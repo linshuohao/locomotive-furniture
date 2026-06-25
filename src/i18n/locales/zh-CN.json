@@ -1,0 +1,133 @@
+{
+  "brand": {
+    "name": "Atelier",
+    "fullName": "Atelier 家具"
+  },
+  "nav": {
+    "home": "首页",
+    "collection": "系列",
+    "about": "关于",
+    "cart": "购物车"
+  },
+  "meta": {
+    "home": "首页",
+    "collection": "系列",
+    "product": "商品",
+    "cart": "购物车",
+    "checkout": "结算",
+    "checkoutSuccess": "订单确认",
+    "about": "关于"
+  },
+  "footer": {
+    "tagline": "为现代生活精选的家具。匠心制作，全球配送。",
+    "shop": "选购",
+    "brand": "品牌",
+    "rights": "保留所有权利。"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "跨境家具",
+      "title": "与你共居的设计",
+      "subtitle": "十件精选单品。永恒造型、可持续材质，直送到家。",
+      "cta": "探索系列",
+      "imageAlt": "极简奢华客厅"
+    },
+    "philosophy": {
+      "eyebrow": "我们的理念",
+      "titleLine1": "更少杂物。",
+      "titleLine2": "更多个性。",
+      "body": "我们相信，少而精才是更好的选择。系列中的每一件家具，都因工艺、耐久与为空间带来的从容气质而被选中。",
+      "imageAlt": "工艺细节"
+    },
+    "featured": {
+      "eyebrow": "精选",
+      "title": "系列",
+      "viewAll": "查看全部 10 件"
+    },
+    "narrative": {
+      "eyebrow": "全球匠作",
+      "title": "从工坊到你的家",
+      "body": "携手欧洲与亚洲合作工坊。低碳物流配送。部分地区提供白手套送装服务。",
+      "imageAlt": "工作室中的沙发"
+    },
+    "cta": {
+      "title": "开启你的空间",
+      "body": "十件家具，无限组合。从打动你的那一件开始。",
+      "button": "立即选购"
+    }
+  },
+  "catalog": {
+    "eyebrow": "10 款 SPU 系列",
+    "title": "系列",
+    "subtitle": "为现代生活精选的家具。每一件都与系列中的其他作品相得益彰。",
+    "allCategories": "全部"
+  },
+  "product": {
+    "quantity": "数量",
+    "addToCart": "加入购物车",
+    "addedToCart": "已添加 — 可在下方查看购物车",
+    "viewCart": "查看购物车",
+    "description": "描述",
+    "dimensions": "尺寸",
+    "selectVariant": "选择规格"
+  },
+  "cart": {
+    "title": "购物车",
+    "item": "件商品",
+    "items": "件商品",
+    "empty": "购物车是空的。",
+    "continueShopping": "继续购物",
+    "subtotal": "小计",
+    "shippingNote": "运费与税费将在结算时计算。",
+    "checkout": "前往结算",
+    "remove": "移除",
+    "toastAdded": "已加入购物车",
+    "toastQty": "数量",
+    "toastViewCart": "查看购物车（{count}）",
+    "toastContinue": "继续浏览",
+    "toastDismiss": "关闭"
+  },
+  "checkout": {
+    "title": "结算",
+    "email": "邮箱",
+    "firstName": "名",
+    "lastName": "姓",
+    "address": "地址",
+    "city": "城市",
+    "country": "国家/地区",
+    "postalCode": "邮编",
+    "processing": "处理中...",
+    "placeOrder": "提交订单（演示）",
+    "orderSummary": "订单摘要",
+    "total": "合计",
+    "errors": {
+      "email": "请输入有效邮箱",
+      "required": "必填",
+      "failed": "结算失败"
+    }
+  },
+  "checkoutSuccess": {
+    "eyebrow": "订单已确认",
+    "title": "感谢购买",
+    "orderNumber": "您的订单号为 {orderId}",
+    "demoNote": "这是演示结算 — 未进行真实支付。"
+  },
+  "about": {
+    "eyebrow": "关于 Atelier",
+    "title": "有温度的家具",
+    "storyTitle": "我们的故事",
+    "storyP1": "Atelier 源于一个简单信念：你的家值得更少、更好的物件。我们与欧洲和亚洲的独立工坊合作，为你带来十件精心甄选的家具 — 每一件都因工艺、可持续与永恒设计而被选中。",
+    "storyP2": "我们通过低碳物流全球配送。每一单都精心包装，部分地区提供白手套送装服务。",
+    "imageAlt": "Atelier 展厅",
+    "ctaTitle": "准备好探索了吗？",
+    "ctaButton": "查看系列"
+  },
+  "locale": {
+    "switchTo": "切换至{language}",
+    "en": "English",
+    "zh": "中文"
+  },
+  "fallback": {
+    "offlineCatalog": "正在使用离线目录备用数据"
+  }
+}

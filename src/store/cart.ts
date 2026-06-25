@@ -7,7 +7,7 @@ import { getStorageItem, setStorageItem } from '@/lib/storage'
 import { submitCheckout as submitCheckoutApi } from '@/data/api'
 import { trackAddToCart } from '@/lib/analytics/analytics'
 
-const CART_KEY = 'atelier-cart-v1'
+const CART_KEY = 'atelier-cart-v2'
 const MAX_QUANTITY = 99
 
 function getVariantPrice(basePrice: number, priceModifier: number): number {
@@ -44,10 +44,8 @@ export const useCartStore = defineStore('cart', () => {
       variantId,
       quantity: Math.min(MAX_QUANTITY, quantity),
       slug: product.slug,
-      name: product.name,
       price: unitPrice,
       image: product.images[0],
-      variantName: variant.name,
     } satisfies CartItem
   }
 

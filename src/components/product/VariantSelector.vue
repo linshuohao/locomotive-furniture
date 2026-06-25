@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ProductVariant } from '@/types'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   variants: ProductVariant[]
@@ -9,11 +10,15 @@ defineProps<{
 defineEmits<{
   'update:modelValue': [value: string]
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="space-y-3">
-    <p class="text-xs uppercase tracking-widest text-brand-500">Select variant</p>
+    <p class="text-xs uppercase tracking-widest text-brand-500">
+      {{ t('product.selectVariant') }}
+    </p>
     <div class="flex flex-wrap gap-2">
       <button
         v-for="variant in variants"

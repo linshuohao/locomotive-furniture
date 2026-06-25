@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, watch, nextTick, inject } from 'vue'
 import { fetchProducts } from '@/data/api'
 import type { Product } from '@/data/schemas'
 import ProductCard from '@/components/product/ProductCard.vue'
@@ -8,9 +8,10 @@ import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import { createHeroEnterTimeline } from '@/lib/scroll/animation'
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
-import { inject } from 'vue'
+import { useLocale } from '@/composables/useLocale'
 
 const scroll = inject(scrollInjectionKey, null)
+const { t, locale } = useLocale()
 
 const products = ref<Product[]>([])
 const loading = ref(true)
@@ -21,22 +22,29 @@ const eyebrowRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
 
-const categories = computed(() => ['All', ...new Set(products.value.map((p) => p.category))])
-const activeCategory = ref('All')
+const categories = computed(() => [
+  t('catalog.allCategories'),
+  ...new Set(products.value.map((product) => product.category)),
+])
+const activeCategory = ref('')
 
-const filtered = computed(() =>
-  activeCategory.value === 'All'
-    ? products.value
-    : products.value.filter((p) => p.category === activeCategory.value),
-)
-
-onMounted(async () => {
+async function loadProducts() {
+  loading.value = true
+  activeCategory.value = t('catalog.allCategories')
   const result = await fetchProducts()
   if (result.data) products.value = result.data
   if (result.error) fallbackNotice.value = result.error
   loading.value = false
   await nextTick()
   await scroll?.update()
+}
+
+onMounted(() => {
+  void loadProducts()
+})
+
+watch(locale, () => {
+  void loadProducts()
 })
 
 useGsapTimeline(
@@ -54,6 +62,13 @@ watch(activeCategory, async () => {
   await nextTick()
   await scroll?.update()
 })
+
+const filtered = computed(() => {
+  const allLabel = t('catalog.allCategories')
+  return activeCategory.value === allLabel || !activeCategory.value
+    ? products.value
+    : products.value.filter((product) => product.category === activeCategory.value)
+})
 </script>
 
 <template>
@@ -65,15 +80,17 @@ watch(activeCategory, async () => {
 
       <div class="mx-auto max-w-7xl relative">
         <p ref="eyebrowRef" class="text-xs uppercase tracking-widest text-brand-500 mb-2">
-          10 SPU Collection
+          {{ t('catalog.eyebrow') }}
         </p>
         <h1 ref="titleRef" class="font-display text-4xl md:text-6xl text-brand-900 max-w-2xl">
-          The Collection
+          {{ t('catalog.title') }}
         </h1>
         <p ref="subtitleRef" class="text-brand-600 mt-4 max-w-xl">
-          Curated furniture for modern living. Each piece designed to complement the others.
+          {{ t('catalog.subtitle') }}
         </p>
-        <p v-if="fallbackNotice" class="text-brand-500 text-xs mt-2">{{ fallbackNotice }}</p>
+        <p v-if="fallbackNotice" class="text-brand-500 text-xs mt-2">
+          {{ fallbackNotice }}
+        </p>
       </div>
     </section>
 
