@@ -8,14 +8,14 @@ npm install   # 自动执行 husky prepare，安装 Git hooks
 
 首次克隆仓库后务必执行 `npm install`，否则本地不会启用提交门禁。
 
-## 2. 代码门禁（三层）
+## 2. 代码门禁
 
-| 层级           | 触发时机            | 检查项                                                |
-| -------------- | ------------------- | ----------------------------------------------------- |
-| **pre-commit** | `git commit`        | lint-staged：暂存区文件 ESLint + Prettier             |
-| **commit-msg** | 写入 commit message | commitlint：Conventional Commits 格式                 |
-| **pre-push**   | `git push`          | `npm run check`（lint + typecheck + test）            |
-| **CI**         | push / PR           | 同 `check` + `build`（见 `.github/workflows/ci.yml`） |
+| 层级           | 触发时机            | 检查项                                               |
+| -------------- | ------------------- | ---------------------------------------------------- |
+| **pre-commit** | `git commit`        | lint-staged：暂存区文件 ESLint + Prettier            |
+| **commit-msg** | 写入 commit message | commitlint：Conventional Commits 格式                |
+| **pre-push**   | `git push`          | `npm run check`（lint + typecheck + Vitest）         |
+| **CI**         | push / PR           | `check` + `build:e2e` + Playwright E2E（见 CI 配置） |
 
 跳过 hooks（仅限紧急情况）：
 
@@ -31,8 +31,12 @@ npm run lint          # ESLint + Prettier 检查
 npm run lint:fix      # 自动修复
 npm run typecheck     # TypeScript 类型检查
 npm run test          # Vitest 单元测试
+npm run e2e:install   # 首次安装 Playwright Chromium
+npm run e2e           # E2E（build:e2e + Playwright）
+npm run e2e:ui        # Playwright UI 调试模式
 npm run check         # lint + typecheck + test（推送前门禁）
-npm run build         # 生产构建（CI 额外执行）
+npm run build         # 生产构建
+npm run build:e2e     # E2E 专用构建（mock commerce、关闭动效）
 ```
 
 推送前建议：

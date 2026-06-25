@@ -190,18 +190,36 @@ server {
 2. `npm run lint`
 3. `npm run typecheck`
 4. `npm run test`
-5. `npm run build`
+5. `npm run build:e2e`
+6. `npx playwright install --with-deps chromium`
+7. `playwright test`
 
 CI 负责代码质量门禁；生产部署由 Vercel Git 集成触发。
 
-## 10. E2E 测试（可选扩展）
+## 10. E2E 测试（Playwright）
+
+项目使用 Playwright 覆盖浏览器内电商主流程，与 Vitest 单元测试分层：
+
+| 目录         | 工具       | 范围                          |
+| ------------ | ---------- | ----------------------------- |
+| `src/tests/` | Vitest     | store、commerce、storage 逻辑 |
+| `e2e/`       | Playwright | 加购 → 购物车 → 结算 → 成功页 |
+
+### 本地运行
 
 ```bash
-npm install -D cypress
-npx cypress open
+npm run e2e:install   # 首次克隆后安装 Chromium
+npm run e2e           # build:e2e + playwright test
+npm run e2e:ui        # UI 模式调试
 ```
 
-建议覆盖：加购 → 购物车 → 结算完整流程。
+`build:e2e` 会关闭平滑滚动/视差，并强制 `VITE_COMMERCE_PROVIDER=mock`，避免生产 `.env.production` 的 http provider 导致超时。
+
+### CI
+
+GitHub Actions `build` job 在单元测试后执行 `build:e2e` → `playwright install --with-deps chromium` → `playwright test`。E2E 失败会阻断 PR 合并。
+
+配置见根目录 [`playwright.config.ts`](../playwright.config.ts)。
 
 ## 11. 线上动画动态开关
 

@@ -23,7 +23,10 @@
     "deploy:preview": "vercel",
     "deploy:docs": "vercel --prod --project locomotive-furniture-docs",
     "deploy:all": "npm run deploy && npm run deploy:docs",
-    "e2e": "echo 'E2E: install Cypress separately — see docs/DEPLOYMENT.md'",
+    "build:e2e": "VITE_ENABLE_SMOOTH_SCROLL=false VITE_ENABLE_PARALLAX=false VITE_COMMERCE_PROVIDER=mock VITE_API_BASE_URL= VITE_ENABLE_ANALYTICS=false npm run build",
+    "e2e": "npm run build:e2e && playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:install": "playwright install chromium",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -49,6 +52,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.1.0",
     "@commitlint/config-conventional": "^21.1.0",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.3.1",
     "@types/node": "^24.13.2",
     "@typescript-eslint/eslint-plugin": "^8.62.0",

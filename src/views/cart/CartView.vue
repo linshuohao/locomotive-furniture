@@ -63,7 +63,7 @@ const isEmpty = computed(() => cart.items.length === 0)
 
             <div class="mt-8 flex flex-col sm:flex-row gap-4">
               <RouterLink :to="localizedPath('/checkout')" class="flex-1">
-                <BaseButton size="lg" class="w-full">
+                <BaseButton data-testid="cart-checkout" size="lg" class="w-full">
                   {{ t('cart.checkout') }}
                 </BaseButton>
               </RouterLink>

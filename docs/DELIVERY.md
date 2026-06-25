@@ -82,4 +82,4 @@ pnpm lint     # 代码规范
 - 真实支付网关对接
 - 后端库存 API
 - 多语言 / 多币种（预留扩展路径见 ARCHITECTURE.md）
-- Cypress E2E（脚本占位，见 DEPLOYMENT.md 扩展说明）
+- Playwright E2E（`e2e/checkout-flow.spec.ts`，CI 门禁）
