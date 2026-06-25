@@ -105,11 +105,93 @@ git commit -m "Fixed the scroll bug"
 
 提交时 lint-staged 会对暂存的 `.ts` / `.vue` 自动 eslint --fix + prettier --write。
 
-## 6. 分支与 PR
+## 6. GitHub Flow 分支管理
 
-- 功能分支从 `main`（或 `master`）切出
-- PR 使用 `.github/pull_request_template.md` 模板
-- 合并前 CI 须全部通过：lint → typecheck → test → build
+本项目采用 [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)：仅维护一条长期分支 `main`，所有变更通过短期功能分支 + Pull Request 合并。
+
+### 6.1 流程概览
+
+```
+main (可部署) ──► feat/xxx ──► PR ──► CI ──► Review ──► Squash merge ──► main ──► Vercel Production
+                              └── Preview 部署（PR 阶段）
+```
+
+### 6.2 操作步骤
+
+```bash
+# 1. 同步主干
+git checkout main
+git pull origin main
+
+# 2. 创建功能分支（命名见 6.3）
+git checkout -b feat/cart-stepper
+
+# 3. 小步提交（Conventional Commits）
+git add .
+git commit -m "feat(cart): add quantity stepper"
+
+# 4. 推送并开 PR
+git push -u origin HEAD
+gh pr create --base main
+
+# 5. CI 通过后 Squash merge，删除远程分支
+gh pr merge --squash --delete-branch
+```
+
+### 6.3 分支命名
+
+格式：`<type>/<short-description>`
+
+| type       | 用途     |
+| ---------- | -------- |
+| `feat`     | 新功能   |
+| `fix`      | 缺陷修复 |
+| `docs`     | 文档     |
+| `refactor` | 重构     |
+| `perf`     | 性能     |
+| `test`     | 测试     |
+| `ci`       | CI 配置  |
+| `chore`    | 杂项     |
+
+示例：`feat/i18n-routes`、`fix/scroll-double-init`、`docs/github-flow`
+
+### 6.4 PR 要求
+
+- 目标分支：`main`
+- 使用 `.github/pull_request_template.md` 模板
+- CI 须全部通过：lint → typecheck → test → build（`build` check）
+- 推荐 **Squash merge**，保持 `main` 历史清晰
+- 建议为 `main` 启用分支保护（见 6.6），禁止直接 push 功能代码
+
+### 6.5 部署关联
+
+| 事件          | 主站       | 文档       |
+| ------------- | ---------- | ---------- |
+| PR 打开/更新  | Preview    | Preview    |
+| 合并到 `main` | Production | Production |
+
+详见 [DEPLOYMENT.md](./DEPLOYMENT.md)。
+
+### 6.6 分支保护（仓库管理员）
+
+在 GitHub 仓库 **Settings → Branches → Branch protection rules** 为 `main` 启用：
+
+- Require a pull request before merging
+- Require status checks to pass：`build`（CI workflow）
+- Do not allow bypassing the above settings
+- 禁止 force push
+
+或使用 CLI（需 `repo` 权限）：
+
+```bash
+gh api --method PUT repos/linshuohao/locomotive-furniture/branches/main/protection \
+  -f required_status_checks='{"strict":true,"checks":[{"context":"build"}]}' \
+  -f enforce_admins=true \
+  -f required_pull_request_reviews='{"required_approving_review_count":0,"dismiss_stale_reviews":true}' \
+  -f restrictions=null \
+  -f allow_force_pushes=false \
+  -f allow_deletions=false
+```
 
 ## 7. 相关文件
 

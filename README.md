@@ -59,7 +59,7 @@ npm run deploy:all   # 主站 + 文档一并部署
 npm run deploy:preview  # 主站 Preview 部署
 ```
 
-本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check`。详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
+本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check`。分支管理采用 **GitHub Flow**（`main` + 功能分支 + PR），详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
 
 ## 部署（Vercel）
 
@@ -86,16 +86,16 @@ npm run deploy:preview   # 主站 Preview
 
 ## 文档
 
-| 文档                                         | 说明                   |
-| -------------------------------------------- | ---------------------- |
-| [docs/RESEARCH.md](docs/RESEARCH.md)         | Locomotive.ca 调研分析 |
-| [docs/TRADEOFFS.md](docs/TRADEOFFS.md)       | 全项目取舍权衡清单     |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与模块划分         |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)     | 运行/构建/部署         |
-| [docs/COMPONENTS.md](docs/COMPONENTS.md)     | 组件库使用             |
-| [docs/PERFORMANCE.md](docs/PERFORMANCE.md)   | 性能监控手册           |
-| [docs/DELIVERY.md](docs/DELIVERY.md)         | 交付清单与验收         |
-| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | 代码门禁与提交规范     |
+| 文档                                         | 说明                            |
+| -------------------------------------------- | ------------------------------- |
+| [docs/RESEARCH.md](docs/RESEARCH.md)         | Locomotive.ca 调研分析          |
+| [docs/TRADEOFFS.md](docs/TRADEOFFS.md)       | 全项目取舍权衡清单              |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与模块划分                  |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)     | 运行/构建/部署                  |
+| [docs/COMPONENTS.md](docs/COMPONENTS.md)     | 组件库使用                      |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md)   | 性能监控手册                    |
+| [docs/DELIVERY.md](docs/DELIVERY.md)         | 交付清单与验收                  |
+| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | GitHub Flow、代码门禁与提交规范 |
 
 ## 目录结构
 
