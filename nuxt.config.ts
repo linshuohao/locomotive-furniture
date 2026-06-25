@@ -1,31 +1,25 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-  srcDir: 'src',
   compatibilityDate: '2025-06-01',
   devtools: { enabled: false },
-  ssr: true,
 
   modules: ['@pinia/nuxt', '@nuxtjs/i18n'],
 
-  css: ['~/assets/styles/main.css'],
+  css: ['~/assets/css/main.css'],
 
   pinia: {
     storesDirs: ['store'],
   },
 
   i18n: {
-    restructureDir: false,
-    bundle: {
-      optimizeTranslationDirective: false,
-    },
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json' },
       { code: 'zh', language: 'zh-CN', file: 'zh-CN.json' },
     ],
     defaultLocale: 'en',
     strategy: 'prefix_except_default',
-    langDir: 'i18n/locales',
+    langDir: 'locales',
     detectBrowserLanguage: false,
   },
 
@@ -46,6 +40,9 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['three'],
+    },
     build: {
       rollupOptions: {
         output: {
@@ -53,6 +50,9 @@ export default defineNuxtConfig({
             if (id.includes('node_modules')) {
               if (id.includes('locomotive-scroll') || id.includes('gsap') || id.includes('lenis')) {
                 return 'scroll'
+              }
+              if (id.includes('three')) {
+                return 'three'
               }
               if (id.includes('vue') || id.includes('pinia') || id.includes('vue-router')) {
                 return 'vendor'
@@ -68,6 +68,12 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
+      ignore: ['/images/**', '/favicon.svg', '/icons.svg'],
+    },
+    routeRules: {
+      '/images/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+      '/favicon.svg': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+      '/icons.svg': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     },
   },
 

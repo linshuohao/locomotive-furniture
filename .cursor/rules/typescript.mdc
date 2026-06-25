@@ -1,6 +1,6 @@
 ---
 description: TypeScript 类型与环境变量规范
-globs: "src/**/*.ts"
+globs: "app/**/*.ts"
 alwaysApply: false
 ---
 

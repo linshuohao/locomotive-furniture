@@ -1,0 +1,204 @@
+{
+  "brand": {
+    "name": "Atelier",
+    "fullName": "Atelier 家具"
+  },
+  "nav": {
+    "home": "首页",
+    "collection": "系列",
+    "about": "关于",
+    "cart": "购物车",
+    "primary": "主导航",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
+  },
+  "meta": {
+    "home": "首页",
+    "collection": "系列",
+    "product": "商品",
+    "cart": "购物车",
+    "checkout": "结算",
+    "checkoutSuccess": "订单确认",
+    "about": "关于"
+  },
+  "footer": {
+    "tagline": "为现代生活精选的家具。匠心制作，全球配送。",
+    "shop": "选购",
+    "brand": "品牌",
+    "rights": "保留所有权利。"
+  },
+  "home": {
+    "intro": {
+      "cycling1": "永恒",
+      "cycling2": "永恒设计",
+      "cycling3": "永恒生活，历久弥新"
+    },
+    "hero": {
+      "cycling1a": "永恒",
+      "cycling1b": "永恒设计",
+      "cycling1c": "永恒生活",
+      "cycling2a": "精选",
+      "cycling2b": "全球甄选",
+      "cycling2c": "为现代生活精选",
+      "titleMark": "◆",
+      "titleMarkEnd": "◆",
+      "titleLine1": "Atelier®",
+      "titleLine2": "跨境家具工坊",
+      "copyright": "©2018–2026",
+      "imageAlt": "极简奢华客厅"
+    },
+    "marquee": {
+      "talent": "始终在寻找下一件永恒之作",
+      "craftsmanship": "匠心工艺",
+      "sustainability": "可持续",
+      "shipping": "全球配送",
+      "curated": "精选生活",
+      "artisan": "手工制作"
+    },
+    "manifesto": {
+      "mark": "◆",
+      "markEnd": "◆",
+      "body": "工艺与材质只是表达的工具。我们的系列之所以与众不同，在于意图。我们是一群策展人，为你和你的空间量身打造居所环境。"
+    },
+    "agency": {
+      "body": "从选品到配送与养护，我们是一站式家具解决方案。多年来，Atelier® 已成为有意义、有创新、有结果的室内陈设之选。新鲜保证。",
+      "collection": "系列",
+      "about": "关于"
+    },
+    "featured": {
+      "title": "精选作品",
+      "allWork": "全部作品",
+      "viewAll": "查看全部",
+      "readMore": "查看详情"
+    },
+    "dynasty": {
+      "years": "七年匠心 2018–2024",
+      "tagline": "匠心传承"
+    },
+    "extras": {
+      "title": "更多 (13)",
+      "articles": {
+        "heading": "文章",
+        "items": {
+          "a1": "Atelier x Vitra：当传承遇见现代生活",
+          "a2": "Atelier x Cassina：不止于合作",
+          "a3": "我该为家投资一件设计经典吗？",
+          "a4": "为什么我们精选更少，而非更多",
+          "a5": "客厅空间的演变",
+          "a6": "室内设计师可以向建筑师学到的事"
+        }
+      },
+      "culture": {
+        "heading": "文化",
+        "items": {
+          "c1": "(2024) Atelier 米兰之行",
+          "c2": "(2023) Atelier 哥本哈根之行",
+          "c3": "(2022) Atelier 东京之行",
+          "c4": "(2019) Atelier 巴塞尔之行",
+          "c5": "(2018) Atelier 伦敦之行",
+          "c6": "(2017) Atelier 巴黎之行"
+        }
+      },
+      "store": {
+        "heading": "商店",
+        "link": "探索精选系列",
+        "buyNow": "立即购买→"
+      }
+    }
+  },
+  "catalog": {
+    "eyebrow": "精选系列",
+    "title": "系列",
+    "subtitle": "为现代生活精选的家具。每一件都与系列中的其他作品相得益彰。",
+    "allCategories": "全部"
+  },
+  "product": {
+    "quantity": "数量",
+    "addToCart": "加入购物车",
+    "addToBag": "加入购物袋",
+    "addedToCart": "已添加 — 可在下方查看购物车",
+    "viewCart": "查看购物车",
+    "viewProduct": "查看商品",
+    "outOfStock": "缺货",
+    "new": "新品",
+    "description": "描述",
+    "dimensions": "尺寸",
+    "selectVariant": "选择规格"
+  },
+  "cart": {
+    "title": "购物车",
+    "item": "件商品",
+    "items": "件商品",
+    "empty": "购物车是空的。",
+    "continueShopping": "继续购物",
+    "subtotal": "小计",
+    "shippingNote": "运费与税费将在结算时计算。",
+    "checkout": "前往结算",
+    "remove": "移除",
+    "toastAdded": "已加入购物车",
+    "toastQty": "数量",
+    "toastViewCart": "查看购物车（{count}）",
+    "toastContinue": "继续浏览",
+    "toastDismiss": "关闭",
+    "addFailed": "无法加入购物车 — 商品可能已售罄"
+  },
+  "checkout": {
+    "title": "结算",
+    "email": "邮箱",
+    "firstName": "名",
+    "lastName": "姓",
+    "address": "地址",
+    "city": "城市",
+    "country": "国家/地区",
+    "postalCode": "邮编",
+    "processing": "处理中...",
+    "placeOrder": "提交订单（演示）",
+    "orderSummary": "订单摘要",
+    "total": "合计",
+    "paymentDemoNote": "已配置支付提供商 {provider}，但结算仍为演示模式。",
+    "errors": {
+      "email": "请输入有效邮箱",
+      "required": "必填",
+      "failed": "结算失败"
+    }
+  },
+  "checkoutSuccess": {
+    "eyebrow": "订单已确认",
+    "title": "感谢购买",
+    "orderNumber": "您的订单号为 {orderId}",
+    "demoNote": "这是演示结算 — 未进行真实支付。"
+  },
+  "about": {
+    "eyebrow": "关于 Atelier",
+    "title": "有温度的家具",
+    "storyTitle": "我们的故事",
+    "storyP1": "Atelier 源于一个简单信念：你的家值得更少、更好的物件。我们与欧洲和亚洲的独立工坊合作，为你带来精心甄选的家具系列 — 每一件都因工艺、可持续与永恒设计而被选中。",
+    "storyP2": "我们通过低碳物流全球配送。每一单都精心包装，部分地区提供白手套送装服务。",
+    "imageAlt": "Atelier 展厅",
+    "ctaTitle": "准备好探索了吗？",
+    "ctaButton": "查看系列",
+    "teamEyebrow": "工作室",
+    "teamTitle": "器物成形之处",
+    "teamBody": "一小群策展人、设计师与工匠 — 共同相信家具应自然融入你的空间，而非强加于其上。"
+  },
+  "locale": {
+    "switchTo": "切换至{language}",
+    "en": "English",
+    "zh": "中文"
+  },
+  "fallback": {
+    "offlineCatalog": "正在使用离线目录备用数据",
+    "apiTimeout": "请求超时 — 正在显示缓存目录",
+    "apiError": "无法连接服务器",
+    "apiNotConfigured": "API 未配置",
+    "productNotFound": "未找到该商品"
+  },
+  "ui": {
+    "imageUnavailable": "图片不可用"
+  },
+  "error": {
+    "title": "出了点问题",
+    "body": "页面加载失败，请稍后重试。",
+    "backHome": "返回首页"
+  }
+}

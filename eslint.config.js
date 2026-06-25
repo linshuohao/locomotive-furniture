@@ -50,4 +50,24 @@ export default [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
+  {
+    files: ['app/components/ui/**/*.vue', 'app/components/product/ProductCardMedia.vue'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@/composables/useLocomotiveScroll',
+              message: 'Use useLayoutInvalidation instead of scroll composable in UI layers.',
+            },
+            {
+              name: '@/store/cart',
+              message: 'Emit quick-add events; use useProductQuickAdd in container components.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]

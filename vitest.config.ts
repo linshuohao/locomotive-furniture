@@ -7,12 +7,12 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(__dirname, 'app'),
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.ts'],
+    include: ['app/**/*.{test,spec}.ts'],
   },
 })

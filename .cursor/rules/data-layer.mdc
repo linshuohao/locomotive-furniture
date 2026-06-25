@@ -1,6 +1,6 @@
 ---
 description: Zod Schema、Commerce Provider 与 API facade
-globs: "src/data/**"
+globs: "app/data/**"
 alwaysApply: false
 ---
 
@@ -29,13 +29,14 @@ export type Product = z.infer<typeof ProductSchema>
 ```ts
 interface CommerceResponse<T> {
   data: T | null
-  error: string | null
+  error: string | null // i18n key，见 errors.ts
   meta?: { latencyMs: number; source: 'api' | 'cache' | 'fallback' }
 }
 ```
 
 - 失败自动 fallback 到 `fallback.ts` / `products.ts`
-- Page 层展示 `result.error` 提示
+- HTTP / checkout 错误 key 定义在 `@/data/errors.ts`；Page 层用 `translateErrorKey(t, te, key)` 翻译
+- `switchLocale()` 时调用 `clearCache()` 清空 commerce 内存缓存
 
 ## REST 约定（http 模式）
 

@@ -1,48 +1,62 @@
-# 项目运行 & 构建 & 部署说明书
+# 项目运行、构建与部署
+
+| 字段     | 内容                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------- |
+| 适用范围 | 本地开发、生产构建、Vercel 双项目、E2E、环境变量                                                    |
+| 关联文档 | [DELIVERY](./DELIVERY.md) · [CONTRIBUTING](./CONTRIBUTING.md) · [VISUAL-DESIGN](./VISUAL-DESIGN.md) |
+| 更新日期 | 2026-06-25                                                                                          |
+
+本页覆盖**从本地开发到线上部署**的完整流程。Git 协作规范与提交门禁见 [CONTRIBUTING](./CONTRIBUTING.md)。
 
 ## 1. 环境依赖
 
-- **Node.js** 22（与 CI 一致；lockfile 需 npm 10+）
-- **包管理器**：npm / pnpm / yarn 任选
+- **Node.js** 22（与 CI 一致）
+- **包管理器**：npm（推荐，与 lockfile 对齐）
 
 ## 2. 本地开发
 
 ```bash
-pnpm install    # 或 npm install
-pnpm dev        # 启动 http://localhost:3000
+npm install
+npm run dev        # http://localhost:3000
 ```
 
 开发环境特性：
 
 - 热更新（Nuxt HMR）
-- 控制台输出滚动 FPS（Web Vitals 埋点 debug 模式）
+- 控制台输出滚动 FPS（开发模式）
 - `.env.development` 自动加载
+
+### 动效与微交互预览
+
+动效验收清单见 [VISUAL-DESIGN §七](./VISUAL-DESIGN.md#七验收与调试)。开关变量：`.env.development` 中 `NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL` / `NUXT_PUBLIC_ENABLE_PARALLAX`。
 
 ## 3. 代码质量
 
 ```bash
-pnpm lint       # ESLint + Prettier 检查
-pnpm lint:fix   # 自动修复
-pnpm typecheck  # nuxt typecheck
-pnpm test       # Vitest 单元测试
-pnpm test:coverage
+npm run lint
+npm run lint:fix
+npm run typecheck
+npm run test
+npm run test:coverage
 ```
 
 ## 4. 生产构建
 
 ```bash
-pnpm build              # Nuxt SSR 构建 → .output/
-pnpm preview            # 预览站点（默认端口 3000）
-pnpm generate           # 可选：静态预渲染
+npm run build
+npm run preview
+npm run generate    # 可选：静态预渲染
 ```
 
 文档（独立站点）：
 
 ```bash
-npm run docs:dev        # 本地文档开发
+npm run docs:dev        # 本地文档开发（Mermaid 图表在浏览器端渲染）
 npm run docs:build      # → docs/.vitepress/dist
 npm run docs:preview    # 预览文档站
 ```
+
+架构图等 Mermaid 内容见 [ARCHITECTURE](./ARCHITECTURE.md)、[RESEARCH](./RESEARCH.md)；编写约定见 [CONTRIBUTING §8.1](./CONTRIBUTING.md#81-mermaid-图表)。
 
 构建优化：
 
@@ -152,17 +166,11 @@ VITE_SITE_URL=https://locomotive-furniture.vercel.app
 
 ## 9. CI/CD 与代码门禁
 
+本地 Git hooks 与提交规范详见 [CONTRIBUTING](./CONTRIBUTING.md)。本节仅列 CI 流水线步骤。
+
 ### 本地 Git Hooks（Husky）
 
-`npm install` 后自动启用：
-
-| Hook       | 检查                                                             |
-| ---------- | ---------------------------------------------------------------- |
-| pre-commit | lint-staged（ESLint + Prettier，仅暂存文件）                     |
-| commit-msg | commitlint（Conventional Commits）                               |
-| pre-push   | `npm run check:changed`（增量；配置/依赖变更时自动全量 `check`） |
-
-提交规范与完整说明见 [docs/CONTRIBUTING.md](./CONTRIBUTING.md)。
+`npm install` 后自动启用 pre-commit（lint-staged）、commit-msg（commitlint）、pre-push（`check:changed`）。
 
 ### GitHub Actions
 
@@ -182,10 +190,19 @@ CI 负责代码质量门禁；生产部署由 Vercel Git 集成触发。
 
 项目使用 Playwright 覆盖浏览器内电商主流程，与 Vitest 单元测试分层：
 
-| 目录         | 工具       | 范围                          |
-| ------------ | ---------- | ----------------------------- |
-| `src/tests/` | Vitest     | store、commerce、storage 逻辑 |
-| `e2e/`       | Playwright | 加购 → 购物车 → 结算 → 成功页 |
+| 目录         | 工具       | 范围                                                                       |
+| ------------ | ---------- | -------------------------------------------------------------------------- |
+| `app/tests/` | Vitest     | cart、commerce、checkout、motionCapabilities、jankGuard、translateError 等 |
+| `e2e/`       | Playwright | 电商主流程、空购物车守卫、locale 路由、首屏 scroll init                    |
+
+### E2E 用例
+
+| 文件                      | 场景                                    |
+| ------------------------- | --------------------------------------- |
+| `checkout-flow.spec.ts`   | 加购 → 购物车 → 结算 → 成功页           |
+| `checkout-guards.spec.ts` | 空购物车访问 `/checkout` 重定向         |
+| `locale-routing.spec.ts`  | 中英文前缀切换与目录标题                |
+| `scroll-init.spec.ts`     | 首屏 `scroll-ready` 与 CSS 滚动进度变量 |
 
 ### 本地运行
 
@@ -206,3 +223,12 @@ GitHub Actions `build` job 在单元测试后执行 `build:e2e` → `playwright 
 ## 11. 线上动画动态开关
 
 通过环境变量注入 `NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL=false` 可在不重新开发的情况下关闭平滑滚动。
+
+---
+
+## 下一步阅读
+
+- 常见问题排错 → [FAQ](./FAQ.md)
+- Git 协作与提交规范 → [CONTRIBUTING](./CONTRIBUTING.md)
+- 性能指标与降级策略 → [PERFORMANCE](./PERFORMANCE.md)
+- Demo 交付范围 → [DELIVERY](./DELIVERY.md)

@@ -7,11 +7,11 @@ const root = join(__dirname, '..')
 
 const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || process.env.VITE_SITE_URL || 'http://localhost:3000'
 
-const catalogSource = readFileSync(join(root, 'src', 'data', 'productCatalog.ts'), 'utf8')
+const catalogSource = readFileSync(join(root, 'app', 'data', 'productCatalog.ts'), 'utf8')
 const productSlugs = [...catalogSource.matchAll(/^\s+slug:\s*'([^']+)'/gm)].map((match) => match[1])
 
 if (productSlugs.length === 0) {
-  throw new Error('[generate-seo] No product slugs found in src/data/productCatalog.ts')
+  throw new Error('[generate-seo] No product slugs found in app/data/productCatalog.ts')
 }
 
 const locales = [
@@ -69,8 +69,8 @@ Allow: /
 Sitemap: ${siteUrl}/sitemap.xml
 `
 
-mkdirSync(join(root, 'src', 'public'), { recursive: true })
-writeFileSync(join(root, 'src', 'public', 'sitemap.xml'), sitemap)
-writeFileSync(join(root, 'src', 'public', 'robots.txt'), robots)
+mkdirSync(join(root, 'public'), { recursive: true })
+writeFileSync(join(root, 'public', 'sitemap.xml'), sitemap)
+writeFileSync(join(root, 'public', 'robots.txt'), robots)
 
-console.log('[generate-seo] Wrote src/public/sitemap.xml and src/public/robots.txt')
+console.log('[generate-seo] Wrote public/sitemap.xml and public/robots.txt')

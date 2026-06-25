@@ -1,6 +1,6 @@
 ---
 description: Pinia setup store 与持久化规范
-globs: "src/store/**"
+globs: "app/store/**"
 alwaysApply: false
 ---
 
