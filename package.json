@@ -63,6 +63,7 @@
     "@typescript-eslint/parser": "^8.62.0",
     "@vitest/coverage-v8": "^4.1.9",
     "@vue/test-utils": "^2.4.11",
+    "commander": "^13.1.0",
     "eslint": "^10.5.0",
     "eslint-plugin-vue": "^10.9.2",
     "husky": "^9.1.7",
