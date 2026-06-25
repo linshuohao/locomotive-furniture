@@ -39,6 +39,47 @@ npm run lint | lint:fix | typecheck
 
 **不要**使用 `--no-verify` 除非用户明确要求。
 
+## GitHub Flow
+
+`main` 为唯一长期分支，始终可部署。所有变更经短期功能分支 + PR 合并。
+
+### 日常流程
+
+```bash
+git checkout main && git pull
+git checkout -b feat/cart-stepper    # 命名见下表
+# … 开发、小步提交 …
+git push -u origin HEAD
+gh pr create                         # 或 GitHub Web 开 PR
+# CI 通过 → Review → Squash merge → 删除远程分支
+```
+
+### 分支命名
+
+`<type>/<short-description>`，`type` 对齐 Conventional Commits：
+
+| type | 用途 |
+|------|------|
+| `feat` | 新功能 |
+| `fix` | 缺陷修复 |
+| `docs` | 文档 |
+| `refactor` / `perf` / `test` / `ci` / `chore` | 对应 commit type |
+
+示例：`feat/i18n-routes`、`fix/scroll-double-init`
+
+### 合并与部署
+
+- PR 目标分支固定为 `main`
+- CI（`build`）须全部通过后方可合并
+- 推荐 **Squash merge**，保持 `main` 历史线性
+- 合并后 Vercel 自动部署 Production；PR 阶段有 Preview
+
+### 禁止
+
+- 在 `main` 上直接开发功能
+- 直接向 `main` push 功能提交（紧急 hotfix 需团队共识）
+- 长期存活的功能分支（>1 周应拆分 PR）
+
 ## 构建与部署
 
 - `prebuild` → `scripts/generate-seo.mjs`
