@@ -4,9 +4,9 @@
 
 | 路径 | 说明 |
 |------|------|
-| `locomotive-furniture/` | Vue3 + Vite + TS 完整前端项目 |
-| `locomotive-furniture/src/` | 源码（lib / components / views / data / store） |
-| `locomotive-furniture/dist/` | 生产构建产物（`pnpm build` 后生成） |
+| 项目根目录 | Vue3 + Vite + TS 完整前端项目 |
+| `src/` | 源码（lib / components / views / data / store） |
+| `dist/` | 生产构建产物（`pnpm build` 后生成） |
 
 ## 2. 文档类交付物
 
@@ -49,7 +49,6 @@
 ## 5. 验收命令
 
 ```bash
-cd locomotive-furniture
 pnpm install
 pnpm dev      # 本地开发
 pnpm build    # 生产构建 ✅

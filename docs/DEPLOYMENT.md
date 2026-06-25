@@ -8,7 +8,6 @@
 ## 2. 本地开发
 
 ```bash
-cd locomotive-furniture
 pnpm install    # 或 npm install
 pnpm dev        # 启动 http://localhost:5173
 ```
@@ -58,7 +57,7 @@ npm run docs:preview    # 预览文档站
 
 ### 主站项目
 
-1. 导入仓库，Root Directory 设为 `2/locomotive-furniture`（monorepo 时）
+1. 导入本仓库（使用仓库根目录）
 2. 使用默认 `vercel.json`
 3. 环境变量（Production）：
 
@@ -74,11 +73,10 @@ vercel --prod
 
 ### 文档项目
 
-1. **同一仓库**再新建一个 Vercel Project
-2. Root Directory 同上
-3. **Project Settings → General → Build & Development Settings**：
+1. **同一仓库**再新建一个 Vercel Project（同样使用仓库根目录）
+2. **Project Settings → General → Build & Development Settings**：
    - 或在 CLI 使用：`vercel --local-config vercel.docs.json`
-4. 环境变量（Production）— 用于导航栏「返回站点」链接：
+3. 环境变量（Production）— 用于导航栏「返回站点」链接：
 
 ```bash
 VITE_SITE_URL=https://your-app.vercel.app
