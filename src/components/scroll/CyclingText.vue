@@ -76,7 +76,11 @@ watch(
 
 <template>
   <span class="cycling-text inline-flex overflow-hidden align-bottom">
-    <component :is="tag" ref="rootRef" class="cycling-text__inner block">
+    <component
+      :is="tag"
+      ref="rootRef"
+      class="cycling-text__inner block"
+    >
       {{ displayText }}
     </component>
   </span>

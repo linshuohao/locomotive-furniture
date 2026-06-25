@@ -27,7 +27,10 @@ const isEmpty = computed(() => cart.items.length === 0)
         </p>
       </ScrollReveal>
 
-      <ScrollReveal v-if="isEmpty" class="text-center py-24">
+      <ScrollReveal
+        v-if="isEmpty"
+        class="text-center py-24"
+      >
         <p class="text-brand-600 mb-8">
           {{ t('cart.empty') }}
         </p>
@@ -38,7 +41,10 @@ const isEmpty = computed(() => cart.items.length === 0)
 
       <template v-else>
         <div>
-          <ScrollReveal v-for="item in cart.items" :key="`${item.productId}-${item.variantId}`">
+          <ScrollReveal
+            v-for="item in cart.items"
+            :key="`${item.productId}-${item.variantId}`"
+          >
             <CartItemRow
               :item="item"
               @update-quantity="(q) => cart.updateQuantity(item.productId, item.variantId, q)"
@@ -63,13 +69,24 @@ const isEmpty = computed(() => cart.items.length === 0)
             </p>
 
             <div class="mt-8 flex flex-col sm:flex-row gap-4">
-              <NuxtLink :to="localizedPath('/checkout')" class="flex-1">
-                <BaseButton data-testid="cart-checkout" size="lg" class="w-full">
+              <NuxtLink
+                :to="localizedPath('/checkout')"
+                class="flex-1"
+              >
+                <BaseButton
+                  data-testid="cart-checkout"
+                  size="lg"
+                  class="w-full"
+                >
                   {{ t('cart.checkout') }}
                 </BaseButton>
               </NuxtLink>
               <NuxtLink :to="localizedPath('/products')">
-                <BaseButton variant="secondary" size="lg" class="w-full">
+                <BaseButton
+                  variant="secondary"
+                  size="lg"
+                  class="w-full"
+                >
                   {{ t('cart.continueShopping') }}
                 </BaseButton>
               </NuxtLink>

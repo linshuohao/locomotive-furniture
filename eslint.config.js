@@ -39,6 +39,14 @@ export default [
     },
     rules: {
       'vue/multi-word-component-names': 'off',
+      'vue/html-self-closing': [
+        'warn',
+        {
+          html: { void: 'always', normal: 'never', component: 'always' },
+          svg: 'always',
+          math: 'always',
+        },
+      ],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },

@@ -96,22 +96,40 @@ const filtered = computed(() => {
 
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
-    <section ref="heroRef" class="relative mb-12 py-16 px-6 overflow-hidden">
-      <ScrollReveal :speed="-0.2" class="absolute inset-0 -z-10 pointer-events-none">
-        <div class="h-full w-full bg-gradient-to-br from-brand-200 via-brand-100 to-brand-50" />
+    <section
+      ref="heroRef"
+      class="relative mb-12 py-16 px-6 overflow-hidden"
+    >
+      <ScrollReveal
+        :speed="-0.2"
+        class="absolute inset-0 -z-10 pointer-events-none"
+      >
+        <div class="h-full w-full bg-gradient-to-br from-brand-200 via-brand-100 to-brand-50"></div>
       </ScrollReveal>
 
       <div class="mx-auto max-w-7xl relative">
-        <p ref="eyebrowRef" class="text-xs uppercase tracking-widest text-brand-500 mb-2">
+        <p
+          ref="eyebrowRef"
+          class="text-xs uppercase tracking-widest text-brand-500 mb-2"
+        >
           {{ t('catalog.eyebrow') }}
         </p>
-        <h1 ref="titleRef" class="font-display text-4xl md:text-6xl text-brand-900 max-w-2xl">
+        <h1
+          ref="titleRef"
+          class="font-display text-4xl md:text-6xl text-brand-900 max-w-2xl"
+        >
           {{ t('catalog.title') }}
         </h1>
-        <p ref="subtitleRef" class="text-brand-600 mt-4 max-w-xl">
+        <p
+          ref="subtitleRef"
+          class="text-brand-600 mt-4 max-w-xl"
+        >
           {{ t('catalog.subtitle') }}
         </p>
-        <p v-if="fallbackNotice" class="text-brand-500 text-xs mt-2">
+        <p
+          v-if="fallbackNotice"
+          class="text-brand-500 text-xs mt-2"
+        >
           {{ fallbackNotice }}
         </p>
       </div>
@@ -138,8 +156,15 @@ const filtered = computed(() => {
           </button>
         </ScrollReveal>
 
-        <div ref="productGridRef" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          <div v-for="product in filtered" :key="product.id" data-product-card>
+        <div
+          ref="productGridRef"
+          class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+        >
+          <div
+            v-for="product in filtered"
+            :key="product.id"
+            data-product-card
+          >
             <ProductCard :product="product" />
           </div>
         </div>

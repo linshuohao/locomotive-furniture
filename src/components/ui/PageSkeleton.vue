@@ -10,7 +10,10 @@ import ProductCardSkeleton from '@/components/ui/ProductCardSkeleton.vue'
       <Skeleton class="h-10 w-64" />
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-      <ProductCardSkeleton v-for="i in 6" :key="i" />
+      <ProductCardSkeleton
+        v-for="i in 6"
+        :key="i"
+      />
     </div>
   </div>
 </template>

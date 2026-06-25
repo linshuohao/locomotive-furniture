@@ -62,7 +62,10 @@ watch(
 </script>
 
 <template>
-  <div class="min-h-screen" :style="{ '--scroll-progress': scrollProgress }">
+  <div
+    class="min-h-screen"
+    :style="{ '--scroll-progress': scrollProgress }"
+  >
     <AppHeader :hidden="headerHidden" />
     <CartAddedToast />
     <main>
@@ -83,10 +86,16 @@ watch(
             <p class="uppercase tracking-widest text-brand-900 text-xs">
               {{ t('footer.shop') }}
             </p>
-            <NuxtLink :to="localizedPath('/products')" class="block hover:text-brand-900">
+            <NuxtLink
+              :to="localizedPath('/products')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.collection') }}
             </NuxtLink>
-            <NuxtLink :to="localizedPath('/cart')" class="block hover:text-brand-900">
+            <NuxtLink
+              :to="localizedPath('/cart')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.cart') }}
             </NuxtLink>
           </div>
@@ -94,7 +103,10 @@ watch(
             <p class="uppercase tracking-widest text-brand-900 text-xs">
               {{ t('footer.brand') }}
             </p>
-            <NuxtLink :to="localizedPath('/about')" class="block hover:text-brand-900">
+            <NuxtLink
+              :to="localizedPath('/about')"
+              class="block hover:text-brand-900"
+            >
               {{ t('nav.about') }}
             </NuxtLink>
           </div>

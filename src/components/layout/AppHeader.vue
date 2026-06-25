@@ -62,7 +62,10 @@ onUnmounted(() => {
         {{ t('brand.name') }}
       </NuxtLink>
 
-      <nav class="hidden md:flex items-center gap-8" :aria-label="t('nav.primary')">
+      <nav
+        class="hidden md:flex items-center gap-8"
+        :aria-label="t('nav.primary')"
+      >
         <NuxtLink
           v-for="link in links"
           :key="link.to"
@@ -114,7 +117,10 @@ onUnmounted(() => {
       :aria-label="t('nav.primary')"
     >
       <ul class="space-y-3">
-        <li v-for="link in links" :key="link.to">
+        <li
+          v-for="link in links"
+          :key="link.to"
+        >
           <NuxtLink
             :to="link.to"
             class="block py-2 text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950"

@@ -46,11 +46,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative overflow-hidden bg-brand-200" :style="{ aspectRatio: aspect }">
+  <div
+    class="relative overflow-hidden bg-brand-200"
+    :style="{ aspectRatio: aspect }"
+  >
     <div
       v-if="!loaded"
       class="absolute inset-0 animate-pulse bg-gradient-to-r from-brand-200 via-brand-100 to-brand-200"
-    />
+    ></div>
     <div
       v-if="error"
       class="absolute inset-0 flex items-center justify-center bg-brand-200 text-brand-500 text-sm"

@@ -43,9 +43,12 @@ onMounted(() => {
     class="scroll-reveal"
     :class="variant !== 'default' ? `scroll-reveal--${variant}` : undefined"
   >
-    <div v-if="variant === 'clip'" class="scroll-reveal__inner">
-      <slot />
+    <div
+      v-if="variant === 'clip'"
+      class="scroll-reveal__inner"
+    >
+      <slot></slot>
     </div>
-    <slot v-else />
+    <slot v-else></slot>
   </component>
 </template>

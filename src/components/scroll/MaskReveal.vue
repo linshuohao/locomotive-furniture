@@ -35,8 +35,12 @@ useGsapTimeline(
 </script>
 
 <template>
-  <component :is="tag" ref="rootRef" class="mask-reveal">
-    <slot />
+  <component
+    :is="tag"
+    ref="rootRef"
+    class="mask-reveal"
+  >
+    <slot></slot>
   </component>
 </template>
 

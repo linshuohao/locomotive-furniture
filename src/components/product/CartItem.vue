@@ -22,7 +22,11 @@ const line = useCartLine(() => props.item)
 <template>
   <div class="flex gap-6 py-6 border-b border-brand-200">
     <div class="w-24 shrink-0">
-      <LazyImage :src="item.image" :alt="line.name" aspect="1/1" />
+      <LazyImage
+        :src="item.image"
+        :alt="line.name"
+        aspect="1/1"
+      />
     </div>
     <div class="flex flex-1 flex-col justify-between">
       <div>
@@ -56,7 +60,11 @@ const line = useCartLine(() => props.item)
         </p>
       </div>
     </div>
-    <BaseButton variant="ghost" size="sm" @click="emit('remove')">
+    <BaseButton
+      variant="ghost"
+      size="sm"
+      @click="emit('remove')"
+    >
       {{ t('cart.remove') }}
     </BaseButton>
   </div>

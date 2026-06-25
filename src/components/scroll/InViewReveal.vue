@@ -29,8 +29,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="root" class="inview-reveal">
-    <slot />
+  <div
+    ref="root"
+    class="inview-reveal"
+  >
+    <slot></slot>
   </div>
 </template>
 

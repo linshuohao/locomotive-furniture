@@ -47,20 +47,35 @@ useGsapTimeline(
       ref="containerRef"
       class="relative mx-auto max-w-2xl px-6 py-24 text-center"
     >
-      <ScrollReveal :speed="-0.1" class="absolute inset-0 -z-10 opacity-30 pointer-events-none">
-        <div class="h-full w-full bg-gradient-to-b from-brand-100 to-brand-50" />
+      <ScrollReveal
+        :speed="-0.1"
+        class="absolute inset-0 -z-10 opacity-30 pointer-events-none"
+      >
+        <div class="h-full w-full bg-gradient-to-b from-brand-100 to-brand-50"></div>
       </ScrollReveal>
 
-      <p data-success-item class="text-xs uppercase tracking-widest text-brand-500 mb-4">
+      <p
+        data-success-item
+        class="text-xs uppercase tracking-widest text-brand-500 mb-4"
+      >
         {{ t('checkoutSuccess.eyebrow') }}
       </p>
-      <h1 data-success-item class="font-display text-4xl text-brand-900 mb-4">
+      <h1
+        data-success-item
+        class="font-display text-4xl text-brand-900 mb-4"
+      >
         {{ t('checkoutSuccess.title') }}
       </h1>
-      <p data-success-item class="text-brand-600 mb-2">
+      <p
+        data-success-item
+        class="text-brand-600 mb-2"
+      >
         {{ t('checkoutSuccess.orderNumber', { orderId: verifiedSession.orderId }) }}
       </p>
-      <p data-success-item class="text-brand-500 text-sm mb-10">
+      <p
+        data-success-item
+        class="text-brand-500 text-sm mb-10"
+      >
         {{ t('checkoutSuccess.demoNote') }}
       </p>
       <div data-success-item>

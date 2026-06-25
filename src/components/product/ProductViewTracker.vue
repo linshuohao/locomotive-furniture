@@ -18,7 +18,10 @@ watch(() => props.product.slug, report)
 </script>
 
 <template>
-  <span class="sr-only" aria-hidden="true" />
+  <span
+    class="sr-only"
+    aria-hidden="true"
+  ></span>
 </template>
 
 <style scoped>

@@ -84,7 +84,10 @@ watch(selectedVariant, () => {
 
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
-    <div v-if="loading" class="mx-auto max-w-7xl px-6 py-12">
+    <div
+      v-if="loading"
+      class="mx-auto max-w-7xl px-6 py-12"
+    >
       <div class="grid lg:grid-cols-2 gap-12">
         <Skeleton class="aspect-[4/5] w-full" />
         <div class="space-y-4">
@@ -96,11 +99,20 @@ watch(selectedVariant, () => {
       </div>
     </div>
 
-    <div v-else-if="product" class="mx-auto max-w-7xl px-6 py-12">
+    <div
+      v-else-if="product"
+      class="mx-auto max-w-7xl px-6 py-12"
+    >
       <ProductViewTracker :product="product" />
 
-      <ScrollReveal class="text-sm text-brand-500 mb-8" tag="nav">
-        <NuxtLink :to="localizedPath('/products')" class="hover:text-brand-900">
+      <ScrollReveal
+        class="text-sm text-brand-500 mb-8"
+        tag="nav"
+      >
+        <NuxtLink
+          :to="localizedPath('/products')"
+          class="hover:text-brand-900"
+        >
           {{ t('nav.collection') }}
         </NuxtLink>
         <span class="mx-2">/</span>
@@ -110,35 +122,71 @@ watch(selectedVariant, () => {
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
         <div class="space-y-4">
           <ScrollReveal :speed="-0.08">
-            <LazyImage :src="product.images[0]" :alt="product.name" aspect="4/5" />
+            <LazyImage
+              :src="product.images[0]"
+              :alt="product.name"
+              aspect="4/5"
+            />
           </ScrollReveal>
-          <div v-if="product.images[1]" class="grid grid-cols-2 gap-4">
-            <ScrollReveal v-for="(img, i) in product.images.slice(1)" :key="i" :speed="0.06">
-              <LazyImage :src="img" :alt="`${product.name} detail ${i + 2}`" aspect="1/1" />
+          <div
+            v-if="product.images[1]"
+            class="grid grid-cols-2 gap-4"
+          >
+            <ScrollReveal
+              v-for="(img, i) in product.images.slice(1)"
+              :key="i"
+              :speed="0.06"
+            >
+              <LazyImage
+                :src="img"
+                :alt="`${product.name} detail ${i + 2}`"
+                aspect="1/1"
+              />
             </ScrollReveal>
           </div>
         </div>
 
-        <div ref="copyColRef" class="lg:py-8">
-          <p data-pdp-reveal class="text-xs uppercase tracking-widest text-brand-500">
+        <div
+          ref="copyColRef"
+          class="lg:py-8"
+        >
+          <p
+            data-pdp-reveal
+            class="text-xs uppercase tracking-widest text-brand-500"
+          >
             {{ product.category }}
           </p>
-          <h1 data-pdp-reveal class="font-display text-4xl md:text-5xl text-brand-900 mt-2">
+          <h1
+            data-pdp-reveal
+            class="font-display text-4xl md:text-5xl text-brand-900 mt-2"
+          >
             {{ product.name }}
           </h1>
-          <p data-pdp-reveal class="text-brand-600 mt-4">
+          <p
+            data-pdp-reveal
+            class="text-brand-600 mt-4"
+          >
             {{ product.tagline }}
           </p>
-          <p data-pdp-reveal class="font-display text-2xl text-brand-900 mt-6">
+          <p
+            data-pdp-reveal
+            class="font-display text-2xl text-brand-900 mt-6"
+          >
             {{ formatPrice(currentPrice, product.currency, locale) }}
           </p>
 
           <div class="mt-8 space-y-6">
             <div data-pdp-reveal>
-              <VariantSelector v-model="selectedVariant" :variants="product.variants" />
+              <VariantSelector
+                v-model="selectedVariant"
+                :variants="product.variants"
+              />
             </div>
 
-            <div data-pdp-reveal class="flex items-center gap-4">
+            <div
+              data-pdp-reveal
+              class="flex items-center gap-4"
+            >
               <p class="text-xs uppercase tracking-widest text-brand-500">
                 {{ t('product.quantity') }}
               </p>
@@ -171,8 +219,16 @@ watch(selectedVariant, () => {
                 :disabled="!canAdd"
                 @click="addToCart"
               >
-                <span v-if="added" class="inline-flex items-center justify-center gap-2">
-                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <span
+                  v-if="added"
+                  class="inline-flex items-center justify-center gap-2"
+                >
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M16.704 5.29a1 1 0 0 1 0 1.42l-7.25 7.25a1 1 0 0 1-1.42 0l-3.25-3.25a1 1 0 1 1 1.42-1.42l2.54 2.54 6.54-6.54a1 1 0 0 1 1.42 0Z"
@@ -187,7 +243,11 @@ watch(selectedVariant, () => {
 
             <div data-pdp-reveal>
               <NuxtLink :to="localizedPath('/cart')">
-                <BaseButton variant="secondary" size="lg" class="w-full mt-3">
+                <BaseButton
+                  variant="secondary"
+                  size="lg"
+                  class="w-full mt-3"
+                >
                   {{ t('product.viewCart') }}
                 </BaseButton>
               </NuxtLink>

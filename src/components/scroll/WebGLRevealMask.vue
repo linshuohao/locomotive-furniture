@@ -102,5 +102,5 @@ onUnmounted(() => {
     class="pointer-events-none absolute inset-0 h-full w-full"
     :class="$props.class"
     aria-hidden="true"
-  />
+  ></canvas>
 </template>

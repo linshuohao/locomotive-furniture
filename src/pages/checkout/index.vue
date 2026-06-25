@@ -91,13 +91,22 @@ const resolvedItems = computed(() =>
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
     <div class="mx-auto max-w-4xl px-6 py-16">
-      <ScrollReveal tag="h1" class="font-display text-4xl text-brand-900 mb-12">
+      <ScrollReveal
+        tag="h1"
+        class="font-display text-4xl text-brand-900 mb-12"
+      >
         {{ t('checkout.title') }}
       </ScrollReveal>
 
       <div class="grid lg:grid-cols-5 gap-12">
-        <form class="lg:col-span-3 space-y-6" @submit.prevent="submit">
-          <ScrollReveal v-for="field in fields" :key="field.key">
+        <form
+          class="lg:col-span-3 space-y-6"
+          @submit.prevent="submit"
+        >
+          <ScrollReveal
+            v-for="field in fields"
+            :key="field.key"
+          >
             <label
               :for="field.key"
               class="block text-xs uppercase tracking-widest text-brand-500 mb-2"
@@ -110,7 +119,10 @@ const resolvedItems = computed(() =>
               :type="field.type || 'text'"
               class="w-full border border-brand-300 bg-white px-4 py-3 text-brand-900 focus:border-brand-900 focus:outline-none transition-colors"
             />
-            <p v-if="errors[field.key]" class="text-red-600 text-xs mt-1">
+            <p
+              v-if="errors[field.key]"
+              class="text-red-600 text-xs mt-1"
+            >
               {{ errors[field.key] }}
             </p>
           </ScrollReveal>

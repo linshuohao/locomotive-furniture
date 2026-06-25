@@ -5,5 +5,9 @@ defineProps<{
 </script>
 
 <template>
-  <div class="animate-pulse bg-brand-200" :class="$props.class" aria-hidden="true" />
+  <div
+    class="animate-pulse bg-brand-200"
+    :class="$props.class"
+    aria-hidden="true"
+  ></div>
 </template>
