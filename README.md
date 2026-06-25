@@ -9,7 +9,7 @@
 | **主站** | https://locomotive-furniture.vercel.app      | `locomotive-furniture`      |
 | **文档** | https://locomotive-furniture-docs.vercel.app | `locomotive-furniture-docs` |
 
-站点元数据见 [`sites.json`](sites.json)。推送到 `main` 分支后，两个 Vercel 项目会自动部署。
+站点元数据见 [`sites.json`](sites.json)。推送到 `main` 后，主站 Vercel 项目会自动部署；文档项目需完成一次 Git 关联（见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)）。
 
 ## 快速开始
 

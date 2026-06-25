@@ -18,17 +18,18 @@ npm run dev
 | **主站** | https://locomotive-furniture.vercel.app      |
 | **文档** | https://locomotive-furniture-docs.vercel.app |
 
-元数据见仓库根目录 [`sites.json`](../sites.json)。推送到 `main` 后 Vercel 自动部署两个项目。
+元数据见仓库根目录 [`sites.json`](../sites.json)。推送到 `main` 后主站自动部署；文档项目 Git 关联见 [DEPLOYMENT](./DEPLOYMENT.md)。
 
 ## 主要脚本
 
-| 命令                  | 说明           |
-| --------------------- | -------------- |
-| `npm run dev`         | 开发主站       |
-| `npm run docs:dev`    | 开发文档站     |
-| `npm run build`       | 构建主站       |
-| `npm run docs:build`  | 构建文档站     |
-| `npm run deploy`      | 手动部署主站   |
-| `npm run deploy:docs` | 手动部署文档站 |
+| 命令                  | 说明                |
+| --------------------- | ------------------- |
+| `npm run dev`         | 开发主站            |
+| `npm run docs:dev`    | 开发文档站          |
+| `npm run build`       | 构建主站            |
+| `npm run docs:build`  | 构建文档站          |
+| `npm run deploy`      | 手动部署主站        |
+| `npm run deploy:docs` | 手动部署文档站      |
+| `npm run deploy:all`  | 主站 + 文档一并部署 |
 
 详见 [DEPLOYMENT](./DEPLOYMENT.md)。
