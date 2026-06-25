@@ -22,15 +22,15 @@ npm run dev
 
 ## 页面
 
-| 路由 | 页面 | 滚动动效 |
-|------|------|----------|
-| `/` | 首页（长页叙事） | ✅ Locomotive |
-| `/products` | 商品列表 | ✅ Hero GSAP + ScrollReveal |
-| `/products/:slug` | 商品详情 | ✅ PDP copy timeline + ScrollReveal |
-| `/cart` | 购物车 | ✅ ScrollReveal |
-| `/checkout` | 结算 | ✅ ScrollReveal |
-| `/checkout/success` | 订单确认 | ✅ Success burst timeline |
-| `/about` | 关于我们 | ✅ Locomotive |
+| 路由                | 页面             | 滚动动效                            |
+| ------------------- | ---------------- | ----------------------------------- |
+| `/`                 | 首页（长页叙事） | ✅ Locomotive                       |
+| `/products`         | 商品列表         | ✅ Hero GSAP + ScrollReveal         |
+| `/products/:slug`   | 商品详情         | ✅ PDP copy timeline + ScrollReveal |
+| `/cart`             | 购物车           | ✅ ScrollReveal                     |
+| `/checkout`         | 结算             | ✅ ScrollReveal                     |
+| `/checkout/success` | 订单确认         | ✅ Success burst timeline           |
+| `/about`            | 关于我们         | ✅ Locomotive                       |
 
 ## 脚本
 
@@ -43,7 +43,10 @@ npm run preview      # 预览主站
 npm run typecheck    # TypeScript 检查
 npm run lint         # 代码检查
 npm run test         # 单元测试
+npm run check        # 推送前门禁（lint + typecheck + test）
 ```
+
+本地 Git hooks（Husky）：提交时 lint-staged + commitlint，推送前 `check`。详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
 
 ## 部署（Vercel）
 
@@ -61,15 +64,16 @@ vercel --local-config vercel.docs.json --prod          # 文档
 
 ## 文档
 
-| 文档 | 说明 |
-|------|------|
-| [docs/RESEARCH.md](docs/RESEARCH.md) | Locomotive.ca 调研分析 |
-| [docs/TRADEOFFS.md](docs/TRADEOFFS.md) | 全项目取舍权衡清单 |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与模块划分 |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 运行/构建/部署 |
-| [docs/COMPONENTS.md](docs/COMPONENTS.md) | 组件库使用 |
-| [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | 性能监控手册 |
-| [docs/DELIVERY.md](docs/DELIVERY.md) | 交付清单与验收 |
+| 文档                                         | 说明                   |
+| -------------------------------------------- | ---------------------- |
+| [docs/RESEARCH.md](docs/RESEARCH.md)         | Locomotive.ca 调研分析 |
+| [docs/TRADEOFFS.md](docs/TRADEOFFS.md)       | 全项目取舍权衡清单     |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构与模块划分         |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)     | 运行/构建/部署         |
+| [docs/COMPONENTS.md](docs/COMPONENTS.md)     | 组件库使用             |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md)   | 性能监控手册           |
+| [docs/DELIVERY.md](docs/DELIVERY.md)         | 交付清单与验收         |
+| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | 代码门禁与提交规范     |
 
 ## 目录结构
 
@@ -130,11 +134,11 @@ VITE_SITE_URL=http://localhost:5173
 
 切换真实 Catalog：设 `VITE_COMMERCE_PROVIDER=http` 并配置 `VITE_API_BASE_URL`。API 约定：
 
-| 方法 | 路径 | 响应 |
-|------|------|------|
-| GET | `/products` | `Product[]` |
-| GET | `/products/:slug` | `Product` |
-| POST | `/checkout` | `{ orderId: string }` |
+| 方法 | 路径              | 响应                  |
+| ---- | ----------------- | --------------------- |
+| GET  | `/products`       | `Product[]`           |
+| GET  | `/products/:slug` | `Product`             |
+| POST | `/checkout`       | `{ orderId: string }` |
 
 请求失败时自动 fallback 到本地 `products.ts` 目录。
 

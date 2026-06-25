@@ -23,17 +23,18 @@ features:
   - title: 电商闭环
     details: 10 SKU → 购物车 → 结算 Demo；data/providers 支持 mock / http 切换。
   - title: 工程化
-    details: Vue 3 + TS + Vitest + CI；VitePress 文档与 Vercel 一键部署。
+    details: Vue 3 + TS + Vitest + CI + Husky 门禁；Conventional Commits 提交规范。
 ---
 
 ## 文档导航
 
-| 文档 | 说明 |
-|------|------|
-| [RESEARCH](./RESEARCH.md) | Locomotive.ca 调研 |
-| [TRADEOFFS](./TRADEOFFS.md) | 全项目取舍清单 |
-| [ARCHITECTURE](./ARCHITECTURE.md) | 分层架构与扩展路径 |
-| [COMPONENTS](./COMPONENTS.md) | 组件与 data-scroll API |
-| [PERFORMANCE](./PERFORMANCE.md) | Web Vitals 与调优 |
-| [DEPLOYMENT](./DEPLOYMENT.md) | 本地开发、Vercel 部署 |
-| [DELIVERY](./DELIVERY.md) | 交付验收清单 |
+| 文档                              | 说明                   |
+| --------------------------------- | ---------------------- |
+| [RESEARCH](./RESEARCH.md)         | Locomotive.ca 调研     |
+| [TRADEOFFS](./TRADEOFFS.md)       | 全项目取舍清单         |
+| [ARCHITECTURE](./ARCHITECTURE.md) | 分层架构与扩展路径     |
+| [COMPONENTS](./COMPONENTS.md)     | 组件与 data-scroll API |
+| [PERFORMANCE](./PERFORMANCE.md)   | Web Vitals 与调优      |
+| [DEPLOYMENT](./DEPLOYMENT.md)     | 本地开发、Vercel 部署  |
+| [CONTRIBUTING](./CONTRIBUTING.md) | 代码门禁与提交规范     |
+| [DELIVERY](./DELIVERY.md)         | 交付验收清单           |

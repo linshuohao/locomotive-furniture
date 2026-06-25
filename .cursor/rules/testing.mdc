@@ -1,0 +1,32 @@
+---
+description: Vitest 单元测试规范
+globs: "**/*.{spec,test}.ts"
+alwaysApply: false
+---
+
+# 测试规范
+
+- 文件：`src/tests/*.spec.ts` 或 `src/**/*.spec.ts`
+- Vitest + jsdom，`globals: true`
+- 覆盖核心业务（cart、commerce、products、storage），不测试纯 UI 渲染
+
+## Pinia 测试
+
+```ts
+beforeEach(() => {
+  setActivePinia(createPinia())
+  localStorage.clear()
+})
+```
+
+## Commerce 测试
+
+```ts
+import { resetCommerceProvider } from '@/data/providers'
+
+beforeEach(() => {
+  resetCommerceProvider()
+})
+```
+
+推送前：`npm run check`（lint + typecheck + test）

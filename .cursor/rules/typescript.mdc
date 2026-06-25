@@ -1,0 +1,42 @@
+---
+description: TypeScript 类型与环境变量规范
+globs: "src/**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript 规范
+
+## 类型来源
+
+- **领域模型**（Product、CartItem）：`@/data/schemas`（`z.infer`）
+- **基础设施**（LocomotiveScrollOptions、PerformanceTier）：`@/types`
+- `types/index.ts` 仅 re-export，不重复定义领域类型
+
+```ts
+// ✅ 领域类型从 Schema 推导
+export type Product = z.infer<typeof ProductSchema>
+
+// ❌ 不要在多处手写相同 interface
+interface Product { ... }
+```
+
+## 编译与 Lint
+
+- `noUnusedLocals` / `noUnusedParameters` 开启
+- 未使用参数前缀 `_`
+- 窄化校验用 `satisfies`（如 cart `resolveLine`）
+
+## 环境变量
+
+- 所有 `VITE_*` 在 `src/env.d.ts` 声明
+- 读取集中在 `data/config.ts` 或 composable 门控
+- 新增变量同步 `.env.example`
+
+## 导入
+
+始终 `@/` 绝对路径：
+
+```ts
+import { fetchProducts } from '@/data/api'
+import type { Product } from '@/data/schemas'
+```

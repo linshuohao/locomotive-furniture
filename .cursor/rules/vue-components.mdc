@@ -1,0 +1,46 @@
+---
+description: Vue 组件编写规范（script setup、模板、复用）
+globs: "**/*.vue"
+alwaysApply: false
+---
+
+# Vue 组件规范
+
+## 脚本
+
+- 统一 `<script setup lang="ts">`
+- Props：`defineProps` + TS 类型；默认值 `withDefaults`
+- 无 UI 逻辑组件（如 ProductViewTracker）放对应域目录
+- 单文件组件名允许单词（`vue/multi-word-component-names: off`）
+
+## 模板与样式
+
+- 样式优先 Tailwind；设计 Token 用 `brand-*`（`main.css` `@theme`）
+- 展示字体 `font-display`，正文 `font-body`
+- 按钮 → `BaseButton`，图片 → `LazyImage`
+- 加载态 → `Skeleton` / `PageSkeleton` / `ProductCardSkeleton`
+- 无 `<style>` 块时优先纯 Tailwind，不写 SCSS
+
+## 滚动动效（组件侧）
+
+- 通过 `inject(scrollInjectionKey)` 获取 `update()` / `scrollTo()`
+- async 数据或图片 load 后调用 `scroll?.update()`
+- 入场优先 `ScrollReveal` / `ScrollSection`，避免重复手写 `data-scroll-*`
+- 页面级 init/destroy 仅在 `App.vue`
+
+```vue
+<script setup lang="ts">
+import { inject } from 'vue'
+import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
+const scroll = inject(scrollInjectionKey, null)
+</script>
+```
+
+## 组件分层
+
+| 目录 | 用途 |
+|------|------|
+| `layout/` | AppHeader 等布局 |
+| `ui/` | BaseButton、LazyImage、Skeleton |
+| `product/` | ProductCard、CartItem、VariantSelector |
+| `scroll/` | ScrollReveal、ScrollSection、WebGLRevealMask |

@@ -8,11 +8,7 @@ export default defineConfig({
   base: '/',
   cleanUrls: true,
   lastUpdated: true,
-  ignoreDeadLinks: [
-    /^https?:\/\/localhost/,
-    /^\.\.\/README/,
-    /^\.\.\/\.env\.example/,
-  ],
+  ignoreDeadLinks: [/^https?:\/\/localhost/, /^\.\.\/README/, /^\.\.\/\.env\.example/],
   themeConfig: {
     logo: '/favicon.svg',
     siteTitle: 'Atelier Docs',
@@ -44,6 +40,7 @@ export default defineConfig({
           { text: '组件库', link: '/COMPONENTS' },
           { text: '性能监控', link: '/PERFORMANCE' },
           { text: '运行与部署', link: '/DEPLOYMENT' },
+          { text: '贡献指南', link: '/CONTRIBUTING' },
         ],
       },
     ],

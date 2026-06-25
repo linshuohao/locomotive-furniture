@@ -1,0 +1,38 @@
+---
+description: Pinia setup store 与持久化规范
+globs: "src/store/**"
+alwaysApply: false
+---
+
+# Pinia Store 规范
+
+- 使用 setup store：`defineStore('name', () => { ... })`
+- 持久化通过 `@/lib/storage.ts`，不直接操作 `localStorage`
+- 副作用（埋点）在 action 内调用 `@/lib/analytics/analytics`
+- 输入校验用 Zod `safeParse`（如 `CartItemInputSchema`）
+
+```ts
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { getStorageItem, setStorageItem } from '@/lib/storage'
+import { CartItemInputSchema } from '@/data/schemas'
+
+export const useCartStore = defineStore('cart', () => {
+  const items = ref<CartItem[]>(getStorageItem(CART_KEY, []))
+
+  function persist() {
+    setStorageItem(CART_KEY, items.value)
+  }
+
+  return { items, addItem, persist }
+})
+```
+
+## 测试
+
+```ts
+beforeEach(() => {
+  setActivePinia(createPinia())
+  localStorage.clear()
+})
+```

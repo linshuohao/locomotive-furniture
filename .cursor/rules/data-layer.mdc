@@ -1,0 +1,46 @@
+---
+description: Zod Schema、Commerce Provider 与 API facade
+globs: "src/data/**"
+alwaysApply: false
+---
+
+# 数据层规范
+
+## Zod 单一来源
+
+```ts
+export const ProductSchema = z.object({ ... })
+export type Product = z.infer<typeof ProductSchema>
+```
+
+- HTTP 响应：`Schema.parse()` 校验
+- Store/表单输入：`safeParse` 防御性校验
+
+## Commerce Provider
+
+- 对外 facade：`@/data/api.ts`（View/Store 不直接 import provider）
+- 实现：`providers/mock.ts` | `http.ts`
+- 切换：`VITE_COMMERCE_PROVIDER=mock|http`
+- 新增 Provider：实现 `CommerceProvider` → `providers/index.ts` 注册
+- 测试：`resetCommerceProvider()` 重置缓存
+
+## 响应格式
+
+```ts
+interface CommerceResponse<T> {
+  data: T | null
+  error: string | null
+  meta?: { latencyMs: number; source: 'api' | 'cache' | 'fallback' }
+}
+```
+
+- 失败自动 fallback 到 `fallback.ts` / `products.ts`
+- View 层展示 `result.error` 提示
+
+## REST 约定（http 模式）
+
+| 方法 | 路径 | 响应 |
+|------|------|------|
+| GET | `/products` | `Product[]` |
+| GET | `/products/:slug` | `Product` |
+| POST | `/checkout` | `{ orderId: string }` |

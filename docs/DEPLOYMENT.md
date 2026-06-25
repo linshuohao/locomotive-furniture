@@ -13,6 +13,7 @@ pnpm dev        # 启动 http://localhost:5173
 ```
 
 开发环境特性：
+
 - 热更新
 - 控制台输出滚动 FPS（Web Vitals 埋点 debug 模式）
 - `.env.development` 自动加载
@@ -42,6 +43,7 @@ npm run docs:preview    # 预览文档站
 ```
 
 构建优化：
+
 - 代码分包（vendor / scroll）
 - TS 类型剔除
 - 路由懒加载
@@ -50,9 +52,9 @@ npm run docs:preview    # 预览文档站
 
 站点与文档为**两个独立 Vercel 项目**，互不干扰；主站 Header 不展示文档入口。
 
-| 项目 | 配置文件 | 构建命令 | 输出目录 |
-|------|----------|----------|----------|
-| 主站 | `vercel.json` | `npm run build` | `dist` |
+| 项目 | 配置文件           | 构建命令             | 输出目录               |
+| ---- | ------------------ | -------------------- | ---------------------- |
+| 主站 | `vercel.json`      | `npm run build`      | `dist`                 |
 | 文档 | `vercel.docs.json` | `npm run docs:build` | `docs/.vitepress/dist` |
 
 ### 主站项目
@@ -94,10 +96,10 @@ vercel --local-config vercel.docs.json --prod
 
 `dist/` 为纯静态资源，亦支持：
 
-| 平台 | 方式 |
-|------|------|
-| Nginx | root 指向 dist，history fallback |
-| Netlify | `_redirects` 或 netlify.toml |
+| 平台    | 方式                                       |
+| ------- | ------------------------------------------ |
+| Nginx   | root 指向 dist，history fallback           |
+| Netlify | `_redirects` 或 netlify.toml               |
 | OSS/CDN | 分别上传 `dist/` 与 `docs/.vitepress/dist` |
 
 ### Nginx 示例
@@ -124,13 +126,14 @@ server {
 
 ## 7. 环境切换
 
-| 文件 | 用途 |
-|------|------|
-| `.env.development` | 本地开发 |
-| `.env.test` | 测试环境（关闭视差） |
-| `.env.production` | 生产环境 |
+| 文件               | 用途                 |
+| ------------------ | -------------------- |
+| `.env.development` | 本地开发             |
+| `.env.test`        | 测试环境（关闭视差） |
+| `.env.production`  | 生产环境             |
 
 关键变量：
+
 - `VITE_ENABLE_SMOOTH_SCROLL` — 平滑滚动开关
 - `VITE_ENABLE_PARALLAX` — 视差开关
 - `VITE_ENABLE_ANALYTICS` — 埋点开关
@@ -140,14 +143,29 @@ server {
 
 详见项目根目录 `.env.example` 文件。
 
-## 8. CI/CD
+## 8. CI/CD 与代码门禁
 
-GitHub Actions 配置见 `.github/workflows/ci.yml`：
+### 本地 Git Hooks（Husky）
+
+`npm install` 后自动启用：
+
+| Hook       | 检查                                         |
+| ---------- | -------------------------------------------- |
+| pre-commit | lint-staged（ESLint + Prettier，仅暂存文件） |
+| commit-msg | commitlint（Conventional Commits）           |
+| pre-push   | `npm run check`（lint + typecheck + test）   |
+
+提交规范与完整说明见 [docs/CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+### GitHub Actions
+
+配置见 `.github/workflows/ci.yml`：
 
 1. `npm ci`
 2. `npm run lint`
-3. `npm run test`
-4. `npm run build`
+3. `npm run typecheck`
+4. `npm run test`
+5. `npm run build`
 
 ## 9. E2E 测试（可选扩展）
 

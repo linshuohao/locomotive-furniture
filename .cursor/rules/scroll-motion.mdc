@@ -1,0 +1,43 @@
+---
+description: Locomotive Scroll、GSAP 动效与性能降级
+globs: "src/{composables,lib/scroll,lib/motion,components/scroll}/**"
+alwaysApply: false
+---
+
+# 滚动与动效
+
+## 生命周期
+
+- `App.vue`：`useLocomotiveScroll` init/destroy
+- 路由切换必须 `destroy()`，防止内存泄漏
+- DOM 变更后 `update()`；子组件 inject `scrollInjectionKey`
+
+## GSAP
+
+- 时间轴工厂放 `lib/scroll/animation.ts`
+- 页面挂载用 `useGsapTimeline`
+- GSAP ticker 与 Lenis 帧同步（非双 RAF）
+
+## 性能门控
+
+- `motionCapabilities`：`full | reduced | static`
+- `detectPerformanceTier()`：低端关闭视差/WebGL
+- `prefers-reduced-motion` 跳过平滑滚动
+- 环境变量：`VITE_ENABLE_SMOOTH_SCROLL`、`VITE_ENABLE_PARALLAX`
+
+## data-scroll 属性
+
+| 属性 | 用途 |
+|------|------|
+| `data-scroll` | InView |
+| `data-scroll-speed` | 视差 |
+| `data-scroll-class` | 进入视口 class（`is-inview`） |
+| `data-scroll-sticky` | Sticky |
+| `data-scroll-css-progress` | Hero 进度条 |
+
+## 性能目标
+
+- 限制 `data-scroll-speed` DOM 数量
+- 避免 scale 动画导致 CLS
+- `LazyImage` load 后 `scroll.update()`
+- LCP < 2.5s · CLS < 0.1 · FPS ≥ 60

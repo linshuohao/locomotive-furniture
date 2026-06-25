@@ -17,8 +17,9 @@
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.config.ts",
+    "check": "npm run lint && npm run typecheck && npm run test",
     "e2e": "echo 'E2E: install Cypress separately — see docs/DEPLOYMENT.md'",
-    "prepare": "husky || true"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,vue}": [

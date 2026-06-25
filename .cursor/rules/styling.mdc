@@ -1,0 +1,23 @@
+---
+description: TailwindCSS 4 设计 Token 与全局样式
+globs: "**/*.{css,vue}"
+alwaysApply: false
+---
+
+# 样式规范
+
+- TailwindCSS 4：`@import 'tailwindcss'` + `@theme` 定义 Token（`src/assets/styles/main.css`）
+- 品牌色：`brand-50` ~ `brand-950`
+- 字体：`font-display`（Cormorant Garamond）、`font-body`（Inter）
+- 动效缓动：`--ease-brand`
+- 全局动效 / Lenis 覆盖放 `main.css`，不写独立 SCSS
+
+```css
+@theme {
+  --color-brand-900: #514337;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --ease-brand: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+```
+
+组件内优先 Tailwind 工具类，复用已有 Token，不硬编码色值。

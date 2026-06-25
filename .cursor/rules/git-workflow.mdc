@@ -1,0 +1,47 @@
+---
+description: 代码风格、Git hooks 与 Conventional Commits
+alwaysApply: true
+---
+
+# 代码风格与 Git 规范
+
+## Prettier + EditorConfig
+
+| 规则 | 值 |
+|------|-----|
+| 引号 | 单引号 |
+| 分号 | 无 |
+| 尾逗号 | all |
+| 行宽 | 100 |
+| 缩进 | 2 空格 · LF · UTF-8 |
+
+```bash
+npm run lint | lint:fix | typecheck
+```
+
+## Conventional Commits
+
+```
+<type>(<scope>): <subject>
+```
+
+- type：`feat` `fix` `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert`
+- subject：祈使句、小写、无句号、≤100 字符
+
+## Hooks
+
+| Hook | 检查 |
+|------|------|
+| pre-commit | lint-staged（ESLint + Prettier） |
+| commit-msg | commitlint |
+| pre-push | `npm run check` |
+| CI | check + build |
+
+**不要**使用 `--no-verify` 除非用户明确要求。
+
+## 构建与部署
+
+- `prebuild` → `scripts/generate-seo.mjs`
+- 构建：`vue-tsc -b && vite build`
+- Rollup 分包：`scroll`、`vendor`
+- Vercel SPA rewrite（`vercel.json`）
