@@ -174,7 +174,10 @@ export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
     document.documentElement.classList.remove('scroll-ready', 'lenis')
   }
 
-  const scrollTo = (target: string | number, scrollOptions?: { offset?: number; duration?: number }) => {
+  const scrollTo = (
+    target: string | number,
+    scrollOptions?: { offset?: number; duration?: number },
+  ) => {
     scrollInstance.value?.scrollTo?.(target, scrollOptions)
   }
 

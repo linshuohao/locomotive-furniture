@@ -22,9 +22,7 @@ export function clearCache(): void {
 export async function withTimeout<T>(fn: () => Promise<T>, ms = API_TIMEOUT_MS): Promise<T> {
   return Promise.race([
     fn(),
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('API_TIMEOUT')), ms),
-    ),
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error('API_TIMEOUT')), ms)),
   ])
 }
 

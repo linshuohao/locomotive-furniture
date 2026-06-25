@@ -1,5 +1,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { getMotionCapabilitiesSnapshot, type MotionCapabilities } from '@/lib/motion/motionCapabilities'
+import {
+  getMotionCapabilitiesSnapshot,
+  type MotionCapabilities,
+} from '@/lib/motion/motionCapabilities'
 
 export function useMotionCapabilities() {
   const capabilities = ref<MotionCapabilities>(getMotionCapabilitiesSnapshot())

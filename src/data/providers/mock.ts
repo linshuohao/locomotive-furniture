@@ -1,10 +1,4 @@
-import {
-  getCached,
-  setCache,
-  withTimeout,
-  simulateLatency,
-  API_TIMEOUT_MS,
-} from '@/data/client'
+import { getCached, setCache, withTimeout, simulateLatency, API_TIMEOUT_MS } from '@/data/client'
 import { catalogFallback, offlineProductBySlug, offlineProducts } from '@/data/fallback'
 import type { Product } from '@/data/schemas'
 import type { CheckoutPayload, CommerceResponse } from '@/data/types'

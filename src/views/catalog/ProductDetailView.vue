@@ -117,16 +117,8 @@ watch(
             <LazyImage :src="product.images[0]" :alt="product.name" aspect="4/5" />
           </ScrollReveal>
           <div v-if="product.images[1]" class="grid grid-cols-2 gap-4">
-            <ScrollReveal
-              v-for="(img, i) in product.images.slice(1)"
-              :key="i"
-              :speed="0.06"
-            >
-              <LazyImage
-                :src="img"
-                :alt="`${product.name} detail ${i + 2}`"
-                aspect="1/1"
-              />
+            <ScrollReveal v-for="(img, i) in product.images.slice(1)" :key="i" :speed="0.06">
+              <LazyImage :src="img" :alt="`${product.name} detail ${i + 2}`" aspect="1/1" />
             </ScrollReveal>
           </div>
         </div>
@@ -135,10 +127,7 @@ watch(
           <p data-pdp-reveal class="text-xs uppercase tracking-widest text-brand-500">
             {{ product.category }}
           </p>
-          <h1
-            data-pdp-reveal
-            class="font-display text-4xl md:text-5xl text-brand-900 mt-2"
-          >
+          <h1 data-pdp-reveal class="font-display text-4xl md:text-5xl text-brand-900 mt-2">
             {{ product.name }}
           </h1>
           <p data-pdp-reveal class="text-brand-600 mt-4">{{ product.tagline }}</p>

@@ -33,16 +33,12 @@ import { RouterLink } from 'vue-router'
             curated pieces — each selected for craftsmanship, sustainability, and timeless design.
           </p>
           <p class="text-brand-600 leading-relaxed">
-            We ship worldwide with carbon-conscious logistics. Every order is packed with care,
-            and white-glove delivery is available in select regions.
+            We ship worldwide with carbon-conscious logistics. Every order is packed with care, and
+            white-glove delivery is available in select regions.
           </p>
         </ScrollReveal>
         <ScrollReveal :speed="0.2">
-          <LazyImage
-            src="/images/about.jpg"
-            alt="Atelier showroom"
-            aspect="4/5"
-          />
+          <LazyImage src="/images/about.jpg" alt="Atelier showroom" aspect="4/5" />
         </ScrollReveal>
       </div>
     </ScrollSection>

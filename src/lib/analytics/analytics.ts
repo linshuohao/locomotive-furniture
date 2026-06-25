@@ -34,11 +34,7 @@ export function trackPageView(path: string): void {
   track({ name: 'page_view', path })
 }
 
-export function trackAddToCart(payload: {
-  slug: string
-  variantId: string
-  price: number
-}): void {
+export function trackAddToCart(payload: { slug: string; variantId: string; price: number }): void {
   track({ name: 'add_to_cart', ...payload })
   trackFunnelStep('add_cart', { slug: payload.slug })
 }

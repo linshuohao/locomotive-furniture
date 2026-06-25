@@ -46,11 +46,7 @@ function initWebGL(canvas: HTMLCanvasElement) {
 
   const buffer = ctx.createBuffer()
   ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer)
-  ctx.bufferData(
-    ctx.ARRAY_BUFFER,
-    new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-    ctx.STATIC_DRAW,
-  )
+  ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), ctx.STATIC_DRAW)
   const loc = ctx.getAttribLocation(program, 'a_position')
   ctx.enableVertexAttribArray(loc)
   ctx.vertexAttribPointer(loc, 2, ctx.FLOAT, false, 0, 0)

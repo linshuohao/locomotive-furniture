@@ -57,8 +57,7 @@ html.scroll-ready [data-scroll-class='is-inview']:not(.is-inview) {
   /* Keep content visible — only shift; avoids blank pages when IO lags */
   opacity: 1;
   transform: translateY(16px);
-  transition:
-    transform 0.8s var(--ease-brand);
+  transition: transform 0.8s var(--ease-brand);
 }
 
 [data-scroll-css-progress] {

@@ -17,8 +17,20 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('1', 1), productImage('1', 2)],
     variants: [
-      { id: '1a', name: 'Natural / Wool Grey', color: '#C4B8A8', material: 'Ash + Wool', priceModifier: 0 },
-      { id: '1b', name: 'Walnut / Wool Charcoal', color: '#3D2B1F', material: 'Walnut + Wool', priceModifier: 150 },
+      {
+        id: '1a',
+        name: 'Natural / Wool Grey',
+        color: '#C4B8A8',
+        material: 'Ash + Wool',
+        priceModifier: 0,
+      },
+      {
+        id: '1b',
+        name: 'Walnut / Wool Charcoal',
+        color: '#3D2B1F',
+        material: 'Walnut + Wool',
+        priceModifier: 150,
+      },
     ],
     dimensions: 'W 78 × D 82 × H 72 cm',
     featured: true,
@@ -53,7 +65,13 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('3', 1), productImage('3', 2)],
     variants: [
-      { id: '3a', name: 'Brass / Linen', color: '#B8860B', material: 'Brass + Linen', priceModifier: 0 },
+      {
+        id: '3a',
+        name: 'Brass / Linen',
+        color: '#B8860B',
+        material: 'Brass + Linen',
+        priceModifier: 0,
+      },
     ],
     dimensions: 'H 180 × Reach 120 cm',
     featured: true,
@@ -105,7 +123,13 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('6', 1), productImage('6', 2)],
     variants: [
-      { id: '6a', name: 'Travertine / Steel', color: '#E8E0D5', material: 'Travertine', priceModifier: 0 },
+      {
+        id: '6a',
+        name: 'Travertine / Steel',
+        color: '#E8E0D5',
+        material: 'Travertine',
+        priceModifier: 0,
+      },
     ],
     dimensions: 'W 120 × D 60 × H 35 cm',
     featured: false,
@@ -140,8 +164,20 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('8', 1), productImage('8', 2)],
     variants: [
-      { id: '8a', name: 'Queen / Natural Oak', color: '#D4A574', material: 'Oak', priceModifier: 0 },
-      { id: '8b', name: 'King / Natural Oak', color: '#D4A574', material: 'Oak', priceModifier: 400 },
+      {
+        id: '8a',
+        name: 'Queen / Natural Oak',
+        color: '#D4A574',
+        material: 'Oak',
+        priceModifier: 0,
+      },
+      {
+        id: '8b',
+        name: 'King / Natural Oak',
+        color: '#D4A574',
+        material: 'Oak',
+        priceModifier: 400,
+      },
     ],
     dimensions: 'Queen: W 160 × L 210 cm',
     featured: false,
@@ -158,8 +194,20 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('9', 1), productImage('9', 2)],
     variants: [
-      { id: '9a', name: 'Clear Glass', color: '#E8F4F8', material: 'Glass + Brass', priceModifier: 0 },
-      { id: '9b', name: 'Smoked Glass', color: '#4A5568', material: 'Glass + Brass', priceModifier: 80 },
+      {
+        id: '9a',
+        name: 'Clear Glass',
+        color: '#E8F4F8',
+        material: 'Glass + Brass',
+        priceModifier: 0,
+      },
+      {
+        id: '9b',
+        name: 'Smoked Glass',
+        color: '#4A5568',
+        material: 'Glass + Brass',
+        priceModifier: 80,
+      },
     ],
     dimensions: 'Ø 30 × H 35 cm',
     featured: false,
@@ -176,13 +224,25 @@ const rawProducts = [
     currency: 'USD',
     images: [productImage('10', 1), productImage('10', 2)],
     variants: [
-      { id: '10a', name: 'Ash / White Legs', color: '#E8E0D5', material: 'Ash + Steel', priceModifier: 0 },
-      { id: '10b', name: 'Ash / Black Legs', color: '#E8E0D5', material: 'Ash + Steel', priceModifier: 0 },
+      {
+        id: '10a',
+        name: 'Ash / White Legs',
+        color: '#E8E0D5',
+        material: 'Ash + Steel',
+        priceModifier: 0,
+      },
+      {
+        id: '10b',
+        name: 'Ash / Black Legs',
+        color: '#E8E0D5',
+        material: 'Ash + Steel',
+        priceModifier: 0,
+      },
     ],
     dimensions: 'W 140 × D 65 × H 75 cm',
     featured: false,
   },
-] 
+]
 
 export const products: Product[] = rawProducts.map((p) =>
   ProductSchema.parse(withDefaultSeo({ ...p, images: [...p.images] })),

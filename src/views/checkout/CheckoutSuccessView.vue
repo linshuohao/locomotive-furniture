@@ -28,10 +28,7 @@ useGsapTimeline(
 
 <template>
   <div class="pt-[var(--header-height)] min-h-screen">
-    <div
-      ref="containerRef"
-      class="relative mx-auto max-w-2xl px-6 py-24 text-center"
-    >
+    <div ref="containerRef" class="relative mx-auto max-w-2xl px-6 py-24 text-center">
       <ScrollReveal :speed="-0.1" class="absolute inset-0 -z-10 opacity-30 pointer-events-none">
         <div class="h-full w-full bg-gradient-to-b from-brand-100 to-brand-50" />
       </ScrollReveal>

@@ -21,10 +21,7 @@ const eyebrowRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
 
-const categories = computed(() => [
-  'All',
-  ...new Set(products.value.map((p) => p.category)),
-])
+const categories = computed(() => ['All', ...new Set(products.value.map((p) => p.category))])
 const activeCategory = ref('All')
 
 const filtered = computed(() =>
@@ -102,10 +99,7 @@ watch(activeCategory, async () => {
         </ScrollReveal>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          <ScrollReveal
-            v-for="product in filtered"
-            :key="product.id"
-          >
+          <ScrollReveal v-for="product in filtered" :key="product.id">
             <ProductCard :product="product" />
           </ScrollReveal>
         </div>

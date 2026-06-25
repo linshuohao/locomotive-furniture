@@ -55,9 +55,7 @@ export const useCartStore = defineStore('cart', () => {
     const line = resolveLine(productId, variantId, quantity)
     if (!line) return false
 
-    const existing = items.value.find(
-      (i) => i.productId === productId && i.variantId === variantId,
-    )
+    const existing = items.value.find((i) => i.productId === productId && i.variantId === variantId)
 
     if (existing) {
       existing.quantity = Math.min(MAX_QUANTITY, existing.quantity + line.quantity)
@@ -76,9 +74,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function updateQuantity(productId: string, variantId: string, quantity: number) {
-    const item = items.value.find(
-      (i) => i.productId === productId && i.variantId === variantId,
-    )
+    const item = items.value.find((i) => i.productId === productId && i.variantId === variantId)
     if (!item) return
 
     if (quantity <= 0) {

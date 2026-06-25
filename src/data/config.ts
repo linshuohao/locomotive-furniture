@@ -8,8 +8,7 @@ export interface CommerceEnvConfig {
 }
 
 export function getCommerceConfig(): CommerceEnvConfig {
-  const provider =
-    import.meta.env.VITE_COMMERCE_PROVIDER === 'http' ? 'http' : 'mock'
+  const provider = import.meta.env.VITE_COMMERCE_PROVIDER === 'http' ? 'http' : 'mock'
 
   const paymentRaw = import.meta.env.VITE_PAYMENT_PROVIDER
   const paymentProvider: PaymentProviderName =

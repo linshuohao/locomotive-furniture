@@ -1,11 +1,5 @@
 import { z } from 'zod'
-import {
-  fetchJson,
-  getCached,
-  setCache,
-  withTimeout,
-  API_TIMEOUT_MS,
-} from '@/data/client'
+import { fetchJson, getCached, setCache, withTimeout, API_TIMEOUT_MS } from '@/data/client'
 import { catalogFallback, offlineProductBySlug, offlineProducts } from '@/data/fallback'
 import { ProductSchema } from '@/data/schemas'
 import type { Product } from '@/data/schemas'

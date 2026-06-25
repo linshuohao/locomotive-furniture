@@ -47,7 +47,11 @@ useGsapTimeline(
     <!-- Hero -->
     <section class="relative min-h-screen flex items-end pb-24 px-6">
       <WebGLRevealMask />
-      <ScrollReveal tag="div" :speed="-0.35" class="absolute inset-0 z-0 min-h-screen overflow-hidden">
+      <ScrollReveal
+        tag="div"
+        :speed="-0.35"
+        class="absolute inset-0 z-0 min-h-screen overflow-hidden"
+      >
         <LazyImage
           src="/images/hero.jpg"
           alt="Minimal luxury living room"
@@ -55,14 +59,13 @@ useGsapTimeline(
           aspect="4/3"
           class="!h-full min-h-screen w-full"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-brand-950/60 via-brand-950/20 to-transparent" />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-brand-950/60 via-brand-950/20 to-transparent"
+        />
       </ScrollReveal>
       <!-- Hero copy: plain elements for GSAP (not wrapped in ScrollReveal to avoid double-hide) -->
       <div class="relative z-10 mx-auto max-w-7xl w-full">
-        <p
-          ref="heroEyebrowRef"
-          class="text-brand-200 text-sm uppercase tracking-[0.3em] mb-4"
-        >
+        <p ref="heroEyebrowRef" class="text-brand-200 text-sm uppercase tracking-[0.3em] mb-4">
           Cross-border furniture
         </p>
         <h1
@@ -99,11 +102,7 @@ useGsapTimeline(
           </p>
         </ScrollReveal>
         <ScrollReveal :speed="0.15">
-          <LazyImage
-            src="/images/philosophy.jpg"
-            alt="Craftsmanship detail"
-            aspect="4/5"
-          />
+          <LazyImage src="/images/philosophy.jpg" alt="Craftsmanship detail" aspect="4/5" />
         </ScrollReveal>
       </div>
     </ScrollSection>
@@ -153,11 +152,7 @@ useGsapTimeline(
             </p>
           </ScrollReveal>
           <ScrollReveal :speed="0.12" class="hidden md:block">
-            <LazyImage
-              src="/images/narrative-sofa.jpg"
-              alt="Sofa in studio"
-              aspect="4/3"
-            />
+            <LazyImage src="/images/narrative-sofa.jpg" alt="Sofa in studio" aspect="4/3" />
           </ScrollReveal>
         </div>
       </section>

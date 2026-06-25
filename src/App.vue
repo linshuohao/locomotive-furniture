@@ -13,9 +13,7 @@ const { capabilities } = useMotionCapabilities()
 
 provide(scrollInjectionKey, { update, scrollTo })
 
-const headerHidden = computed(
-  () => scrollDirection.value === 'down' && isScrolling.value,
-)
+const headerHidden = computed(() => scrollDirection.value === 'down' && isScrolling.value)
 
 watch(
   () => route.path,

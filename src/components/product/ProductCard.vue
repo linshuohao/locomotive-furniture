@@ -10,10 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <RouterLink
-    :to="`/products/${product.slug}`"
-    class="group block"
-  >
+  <RouterLink :to="`/products/${product.slug}`" class="group block">
     <div class="overflow-hidden">
       <LazyImage
         :src="product.images[0]"

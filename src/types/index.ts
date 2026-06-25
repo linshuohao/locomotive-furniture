@@ -20,10 +20,4 @@ export interface WebVitalsMetric {
 }
 
 /** Re-export domain types from Zod schemas (single source of truth) */
-export type {
-  Product,
-  ProductVariant,
-  CartItem,
-  CheckoutForm,
-  CartItemInput,
-} from '@/data/schemas'
+export type { Product, ProductVariant, CartItem, CheckoutForm, CartItemInput } from '@/data/schemas'
