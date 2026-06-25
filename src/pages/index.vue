@@ -9,7 +9,6 @@ import MarqueeBand from '@/components/scroll/MarqueeBand.vue'
 import CyclingText from '@/components/scroll/CyclingText.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
-import { RouterLink } from 'vue-router'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import {
   createHeroEnterTimeline,
@@ -19,6 +18,8 @@ import {
   createScaleFadeReveal,
 } from '@/lib/scroll/animation'
 import { useLocale } from '@/composables/useLocale'
+
+usePageSeo('meta.home')
 
 const WebGLRevealMask = defineAsyncComponent(
   () => import('@/components/scroll/WebGLRevealMask.vue'),
@@ -92,8 +93,10 @@ useGsapTimeline(
 
 <template>
   <div class="pt-[var(--header-height)]">
-    <section class="relative min-h-screen flex items-end pb-24 px-6">
-      <WebGLRevealMask />
+    <section class="relative min-h-screen overflow-hidden flex items-end pb-24 px-6">
+      <ClientOnly>
+        <WebGLRevealMask />
+      </ClientOnly>
       <ScrollReveal
         tag="div"
         :speed="-0.35"
@@ -131,11 +134,11 @@ useGsapTimeline(
           {{ t('home.hero.subtitle') }}
         </p>
         <div ref="heroCtaRef" class="mt-10 flex gap-4">
-          <RouterLink :to="localizedPath('/products')">
+          <NuxtLink :to="localizedPath('/products')">
             <BaseButton size="lg">
               {{ t('home.hero.cta') }}
             </BaseButton>
-          </RouterLink>
+          </NuxtLink>
         </div>
       </div>
       <div class="absolute bottom-0 left-0 right-0 z-10 h-0.5 bg-white/20">
@@ -195,11 +198,11 @@ useGsapTimeline(
           </div>
         </div>
         <ScrollReveal variant="scale" class="text-center mt-16">
-          <RouterLink :to="localizedPath('/products')">
+          <NuxtLink :to="localizedPath('/products')">
             <BaseButton variant="secondary">
               {{ t('home.featured.viewAll') }}
             </BaseButton>
-          </RouterLink>
+          </NuxtLink>
         </ScrollReveal>
       </div>
     </section>
@@ -251,11 +254,11 @@ useGsapTimeline(
         <p class="text-brand-600 mb-10">
           {{ t('home.cta.body') }}
         </p>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton size="lg">
             {{ t('home.cta.button') }}
           </BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </MaskReveal>
     </section>
   </div>

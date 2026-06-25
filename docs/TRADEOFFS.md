@@ -33,14 +33,14 @@
 
 ## 维度三：电商业务 vs 品牌体验
 
-| 选项                | 选择    | 理由                                                |
-| ------------------- | ------- | --------------------------------------------------- |
-| 10 SKU + Zod 校验   | ✅ 是   | 运行时数据完整性                                    |
-| 客户端 commerce API | ✅ 是   | `data/providers` mock/http + timeout/cache/fallback |
-| localStorage 购物车 | ✅ 是   | MVP 闭环；key `atelier-cart-v1`                     |
-| 真实支付            | ❌ 否   | Demo checkout + 转化漏斗埋点                        |
-| Checkout 独立成功页 | ✅ 是   | `/checkout/success?orderId=`                        |
-| SPA SEO             | ⚠️ 部分 | 构建时 `sitemap.xml` + `robots.txt`                 |
+| 选项                | 选择  | 理由                                                  |
+| ------------------- | ----- | ----------------------------------------------------- |
+| 10 SKU + Zod 校验   | ✅ 是 | 运行时数据完整性                                      |
+| 客户端 commerce API | ✅ 是 | `data/providers` mock/http + timeout/cache/fallback   |
+| localStorage 购物车 | ✅ 是 | MVP 闭环；key `atelier-cart-v1`                       |
+| 真实支付            | ❌ 否 | Demo checkout + 转化漏斗埋点                          |
+| Checkout 独立成功页 | ✅ 是 | `/checkout/success?orderId=`                          |
+| SSR + 构建时 SEO    | ✅ 是 | Nuxt SSR + `usePageSeo`；`sitemap.xml` + `robots.txt` |
 
 **转化优先级**：PDP 加购 ≤ 2 次点击；Cart → Checkout → Success ≤ 3 步
 
@@ -48,23 +48,25 @@
 
 ## 维度四：可观测性 vs 包体积
 
-| 选项                  | 选择   | 理由                                 |
-| --------------------- | ------ | ------------------------------------ |
-| `web-vitals` 全量指标 | ✅ 是  | LCP/INP/CLS/FCP/TTFB                 |
-| Typed analytics 漏斗  | ✅ 是  | product_view → purchase              |
-| motion:jank 事件      | ✅ 是  | GSAP ticker 帧差检测                 |
-| 真实 analytics 上报   | ⏸ 预留 | `VITE_ENABLE_ANALYTICS` + fetch stub |
+| 选项                  | 选择   | 理由                                        |
+| --------------------- | ------ | ------------------------------------------- |
+| `web-vitals` 全量指标 | ✅ 是  | LCP/INP/CLS/FCP/TTFB                        |
+| Typed analytics 漏斗  | ✅ 是  | product_view → purchase                     |
+| motion:jank 事件      | ✅ 是  | GSAP ticker 帧差检测                        |
+| 真实 analytics 上报   | ⏸ 预留 | `NUXT_PUBLIC_ENABLE_ANALYTICS` + fetch stub |
 
 ---
 
-## 维度五：框架选型（Vue SPA）
+## 维度五：框架选型（Nuxt SSR）
 
-| 选项                  | 选择  | 理由                                     |
-| --------------------- | ----- | ---------------------------------------- |
-| Vue 3 + Vite SPA      | ✅ 是 | 轻量、Locomotive 集成成熟                |
-| Next.js SSR           | ❌ 否 | 作业范围 Vue 栈；SEO 用静态 sitemap 补偿 |
-| Pinia                 | ✅ 是 | 购物车持久化                             |
-| Vitest + CI typecheck | ✅ 是 | lint → typecheck → test → build          |
+| 选项                  | 选择  | 理由                                           |
+| --------------------- | ----- | ---------------------------------------------- |
+| Vue 3 + Nuxt 3 SSR    | ✅ 是 | SEO 首屏 HTML；文件路由；Locomotive 客户端水合 |
+| Vue 3 + Vite SPA      | ❌ 否 | 纯客户端渲染，首屏 SEO 与可索引性不足          |
+| Next.js SSR           | ❌ 否 | 项目选型聚焦 Vue 生态                          |
+| Pinia                 | ✅ 是 | 购物车持久化                                   |
+| @nuxtjs/i18n          | ✅ 是 | en / zh 路由前缀                               |
+| Vitest + CI typecheck | ✅ 是 | lint → typecheck → test → build → e2e          |
 
 ---
 

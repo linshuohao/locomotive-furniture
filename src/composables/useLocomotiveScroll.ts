@@ -29,26 +29,29 @@ let lastScrollRef = 0
 let lastFrameTime = 0
 let jankTicker: ((time: number) => void) | null = null
 
-function isSmoothScrollEnabled(): boolean {
-  if (import.meta.env.VITE_ENABLE_SMOOTH_SCROLL === 'false') return false
+function isSmoothScrollEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
+  if (config.public.enableSmoothScroll === 'false') return false
   if (!getMotionCapabilitiesSnapshot().smoothScroll) return false
   const tier = detectPerformanceTier()
   return tier.smoothScroll
 }
 
-function isParallaxEnabled(): boolean {
-  if (import.meta.env.VITE_ENABLE_PARALLAX === 'false') return false
+function isParallaxEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
+  if (config.public.enableParallax === 'false') return false
   if (!getMotionCapabilitiesSnapshot().parallax) return false
   const tier = detectPerformanceTier()
   return tier.parallax
 }
 
 export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
+  const runtimeConfig = useRuntimeConfig()
   const tier = detectPerformanceTier()
-  const enableSmooth = options.enableSmooth ?? isSmoothScrollEnabled()
-  const enableParallax = options.enableParallax ?? isParallaxEnabled()
+  const enableSmooth = options.enableSmooth ?? isSmoothScrollEnabled(runtimeConfig)
+  const enableParallax = options.enableParallax ?? isParallaxEnabled(runtimeConfig)
 
   const init = async () => {
+    if (import.meta.server) return
+
     await nextTick()
 
     if (scrollInstance.value) {
@@ -141,7 +144,7 @@ export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
         })
       })
 
-      if (import.meta.env.DEV) {
+      if (import.meta.dev) {
         fpsMonitor = new FpsMonitor()
         fpsMonitor.start(trackScrollFps)
       }

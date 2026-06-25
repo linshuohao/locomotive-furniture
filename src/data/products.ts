@@ -2,7 +2,7 @@ import type { Product } from '@/data/schemas'
 import { ProductSchema, withDefaultSeo } from '@/data/schemas'
 import { productCatalog } from '@/data/productCatalog'
 import { getProductTranslation } from '@/data/productTranslations'
-import { getCurrentLocale } from '@/i18n'
+import { getCurrentLocale } from '@/lib/i18n/currentLocale'
 import type { AppLocale } from '@/lib/i18n/constants'
 import { DEFAULT_LOCALE, LOCALE_INTL } from '@/lib/i18n/constants'
 

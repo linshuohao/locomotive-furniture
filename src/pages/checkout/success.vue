@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { trackPurchase } from '@/lib/analytics/analytics'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import { createSuccessTimeline } from '@/lib/scroll/animation'
 import { useLocale } from '@/composables/useLocale'
+
+usePageSeo('meta.checkoutSuccess')
 
 const route = useRoute()
 const { t, localizedPath } = useLocale()
@@ -48,9 +49,9 @@ useGsapTimeline(
         {{ t('checkoutSuccess.demoNote') }}
       </p>
       <div data-success-item>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton>{{ t('cart.continueShopping') }}</BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
   </div>

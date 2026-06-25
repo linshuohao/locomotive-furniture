@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted, computed } from 'vue'
-import { RouterLink } from 'vue-router'
 import { useCartStore } from '@/store/cart'
 import { formatPrice } from '@/data/products'
 import { useLocale } from '@/composables/useLocale'
@@ -80,13 +79,13 @@ onUnmounted(() => clearTimeout(hideTimer))
           </button>
         </div>
         <div class="mt-4 flex gap-2">
-          <RouterLink
+          <NuxtLink
             :to="localizedPath('/cart')"
             class="flex-1 text-center text-xs uppercase tracking-widest bg-brand-50 text-brand-900 py-2.5 hover:bg-white transition-colors"
             @click="dismiss"
           >
             {{ t('cart.toastViewCart', { count: cart.itemCount }) }}
-          </RouterLink>
+          </NuxtLink>
           <button
             type="button"
             class="flex-1 text-xs uppercase tracking-widest border border-brand-600 py-2.5 hover:bg-brand-800 transition-colors"

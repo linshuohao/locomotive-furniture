@@ -9,12 +9,12 @@
 
 ```bash
 pnpm install    # 或 npm install
-pnpm dev        # 启动 http://localhost:5173
+pnpm dev        # 启动 http://localhost:3000
 ```
 
 开发环境特性：
 
-- 热更新
+- 热更新（Nuxt HMR）
 - 控制台输出滚动 FPS（Web Vitals 埋点 debug 模式）
 - `.env.development` 自动加载
 
@@ -23,6 +23,7 @@ pnpm dev        # 启动 http://localhost:5173
 ```bash
 pnpm lint       # ESLint + Prettier 检查
 pnpm lint:fix   # 自动修复
+pnpm typecheck  # nuxt typecheck
 pnpm test       # Vitest 单元测试
 pnpm test:coverage
 ```
@@ -30,8 +31,9 @@ pnpm test:coverage
 ## 4. 生产构建
 
 ```bash
-pnpm build              # 站点 → dist/
-pnpm preview            # 预览站点
+pnpm build              # Nuxt SSR 构建 → .output/
+pnpm preview            # 预览站点（默认端口 3000）
+pnpm generate           # 可选：静态预渲染
 ```
 
 文档（独立站点）：
@@ -44,9 +46,9 @@ npm run docs:preview    # 预览文档站
 
 构建优化：
 
-- 代码分包（vendor / scroll）
-- TS 类型剔除
-- 路由懒加载
+- 代码分包（vendor / scroll，见 `nuxt.config.ts` vite.rollupOptions）
+- TS 类型剔除（`nuxt typecheck`）
+- 页面级代码分割（Nuxt 自动）
 
 ## 5. 在线地址
 
@@ -61,15 +63,15 @@ npm run docs:preview    # 预览文档站
 
 站点与文档为**两个独立 Vercel 项目**，共用同一 GitHub 仓库；主站 Header 不展示文档入口。
 
-| 项目 | 配置文件           | 构建命令               | 输出目录 |
+| 项目 | 配置文件           | 构建命令               | 框架     |
 | ---- | ------------------ | ---------------------- | -------- |
-| 主站 | `vercel.json`      | `npm run vercel-build` | `dist`   |
-| 文档 | `vercel.docs.json` | `npm run vercel-build` | `dist`   |
+| 主站 | `vercel.json`      | `npm run vercel-build` | `nuxtjs` |
+| 文档 | `vercel.docs.json` | `npm run vercel-build` | 静态     |
 
 `scripts/vercel-build.mjs` 根据环境变量 `VERCEL_PROJECT_NAME` 分流：
 
 - 项目名含 `docs` → `npm run docs:build`，产物复制到 `dist/`
-- 否则 → `npm run build`（主站）
+- 否则 → `npm run build`（Nuxt SSR，Vercel 自动识别 `.output/`）
 
 ### Git 自动部署（推荐）
 
@@ -104,9 +106,9 @@ npm run deploy:preview   # 主站 Preview
 **主站**：
 
 ```bash
-VITE_SITE_URL=https://locomotive-furniture.vercel.app
-VITE_COMMERCE_PROVIDER=mock
-VITE_ENABLE_ANALYTICS=true
+NUXT_PUBLIC_SITE_URL=https://locomotive-furniture.vercel.app
+NUXT_PUBLIC_COMMERCE_PROVIDER=mock
+NUXT_PUBLIC_ENABLE_ANALYTICS=true
 ```
 
 **文档**（导航栏「返回站点」链接）：
@@ -119,35 +121,14 @@ VITE_SITE_URL=https://locomotive-furniture.vercel.app
 
 ## 7. 其他平台部署
 
-`dist/` 为纯静态资源，亦支持：
+主站为 Nuxt SSR，推荐 Node 运行时或支持 Nuxt 的平台（Vercel、Netlify、Nitro preset）。文档站为纯静态资源：
 
-| 平台    | 方式                                       |
-| ------- | ------------------------------------------ |
-| Nginx   | root 指向 dist，history fallback           |
-| Netlify | `_redirects` 或 netlify.toml               |
-| OSS/CDN | 分别上传 `dist/` 与 `docs/.vitepress/dist` |
-
-### Nginx 示例
-
-```nginx
-server {
-  listen 80;
-  root /var/www/atelier/dist;
-  index index.html;
-
-  gzip on;
-  gzip_types text/css application/javascript application/json;
-
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
-
-  location ~* \.(js|css|png|jpg|webp|svg|woff2)$ {
-    expires 30d;
-    add_header Cache-Control "public, immutable";
-  }
-}
-```
+| 平台    | 主站                                         | 文档站                       |
+| ------- | -------------------------------------------- | ---------------------------- |
+| Vercel  | `framework: nuxtjs`（推荐）                  | 静态 `dist/`                 |
+| Netlify | Nitro `netlify` preset                       | `_redirects` 或 netlify.toml |
+| Node    | `node .output/server/index.mjs`              | —                            |
+| OSS/CDN | 需 SSR 运行时；或使用 `nuxt generate` 静态化 | 上传 `docs/.vitepress/dist`  |
 
 ## 8. 环境切换
 
@@ -157,16 +138,17 @@ server {
 | `.env.test`        | 测试环境（关闭视差） |
 | `.env.production`  | 生产环境             |
 
-关键变量：
+关键变量（`NUXT_PUBLIC_` 前缀）：
 
-- `VITE_ENABLE_SMOOTH_SCROLL` — 平滑滚动开关
-- `VITE_ENABLE_PARALLAX` — 视差开关
-- `VITE_ENABLE_ANALYTICS` — 埋点开关
-- `VITE_COMMERCE_PROVIDER` — 商品数据源（`mock` | `http`）
-- `VITE_API_BASE_URL` — REST API 根地址（http 模式必填）
-- `VITE_PAYMENT_PROVIDER` — 支付集成预留（`none` | `stripe` | `shopify`）
+- `NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL` — 平滑滚动开关
+- `NUXT_PUBLIC_ENABLE_PARALLAX` — 视差开关
+- `NUXT_PUBLIC_ENABLE_ANALYTICS` — 埋点开关
+- `NUXT_PUBLIC_COMMERCE_PROVIDER` — 商品数据源（`mock` | `http`）
+- `NUXT_PUBLIC_API_BASE_URL` — REST API 根地址（http 模式必填）
+- `NUXT_PUBLIC_PAYMENT_PROVIDER` — 支付集成预留（`none` | `stripe` | `shopify`）
+- `NUXT_PUBLIC_SITE_URL` — 站点根 URL（SEO、sitemap）
 
-详见项目根目录 `.env.example` 文件。
+详见项目根目录 `.env.example` 与 `nuxt.config.ts` → `runtimeConfig.public`。
 
 ## 9. CI/CD 与代码门禁
 
@@ -213,7 +195,7 @@ npm run e2e           # build:e2e + playwright test
 npm run e2e:ui        # UI 模式调试
 ```
 
-`build:e2e` 会关闭平滑滚动/视差，并强制 `VITE_COMMERCE_PROVIDER=mock`，避免生产 `.env.production` 的 http provider 导致超时。
+`build:e2e` 会关闭平滑滚动/视差，并强制 `NUXT_PUBLIC_COMMERCE_PROVIDER=mock`，避免生产 `.env.production` 的 http provider 导致超时。Playwright 通过 `nuxt preview --port 3000` 启动预览服务。
 
 ### CI
 
@@ -223,4 +205,4 @@ GitHub Actions `build` job 在单元测试后执行 `build:e2e` → `playwright 
 
 ## 11. 线上动画动态开关
 
-通过环境变量或后台配置注入 `VITE_ENABLE_SMOOTH_SCROLL=false` 可在不重新开发的情况下关闭平滑滚动。
+通过环境变量注入 `NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL=false` 可在不重新开发的情况下关闭平滑滚动。

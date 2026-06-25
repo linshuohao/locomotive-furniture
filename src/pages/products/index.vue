@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick, inject } from 'vue'
+import { ref, computed, watch, nextTick, inject } from 'vue'
 import { fetchProducts } from '@/data/api'
 import type { Product } from '@/data/schemas'
 import ProductCard from '@/components/product/ProductCard.vue'
@@ -10,12 +10,19 @@ import { createHeroEnterTimeline, createScaleFadeReveal } from '@/lib/scroll/ani
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
 import { useLocale } from '@/composables/useLocale'
 
+usePageSeo('meta.collection')
+
 const scroll = inject(scrollInjectionKey, null)
 const { t, locale } = useLocale()
 
-const products = ref<Product[]>([])
-const loading = ref(true)
-const fallbackNotice = ref<string | null>(null)
+const { data: productsResult, pending: loading } = await useAsyncData(
+  () => `products-${locale.value}`,
+  () => fetchProducts(),
+  { watch: [locale] },
+)
+
+const products = computed(() => productsResult.value?.data ?? [])
+const fallbackNotice = computed(() => productsResult.value?.error ?? null)
 
 const heroRef = ref<HTMLElement | null>(null)
 const eyebrowRef = ref<HTMLElement | null>(null)
@@ -29,23 +36,19 @@ const categories = computed(() => [
 ])
 const activeCategory = ref('')
 
-async function loadProducts() {
-  loading.value = true
-  activeCategory.value = t('catalog.allCategories')
-  const result = await fetchProducts()
-  if (result.data) products.value = result.data
-  if (result.error) fallbackNotice.value = result.error
-  loading.value = false
-  await nextTick()
-  await scroll?.update()
-}
+watch(
+  locale,
+  () => {
+    activeCategory.value = t('catalog.allCategories')
+  },
+  { immediate: true },
+)
 
-onMounted(() => {
-  void loadProducts()
-})
-
-watch(locale, () => {
-  void loadProducts()
+watch(loading, async (isLoading) => {
+  if (!isLoading) {
+    await nextTick()
+    await scroll?.update()
+  }
 })
 
 useGsapTimeline(
@@ -84,7 +87,7 @@ const filtered = computed(() => {
   const allLabel = t('catalog.allCategories')
   return activeCategory.value === allLabel || !activeCategory.value
     ? products.value
-    : products.value.filter((product) => product.category === activeCategory.value)
+    : products.value.filter((product: Product) => product.category === activeCategory.value)
 })
 </script>
 

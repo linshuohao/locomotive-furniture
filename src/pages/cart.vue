@@ -5,8 +5,9 @@ import { formatPrice } from '@/data/products'
 import CartItemRow from '@/components/product/CartItem.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
-import { RouterLink } from 'vue-router'
 import { useLocale } from '@/composables/useLocale'
+
+usePageSeo('meta.cart')
 
 const cart = useCartStore()
 const { t, locale, localizedPath } = useLocale()
@@ -30,9 +31,9 @@ const isEmpty = computed(() => cart.items.length === 0)
         <p class="text-brand-600 mb-8">
           {{ t('cart.empty') }}
         </p>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton>{{ t('cart.continueShopping') }}</BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </ScrollReveal>
 
       <template v-else>
@@ -62,16 +63,16 @@ const isEmpty = computed(() => cart.items.length === 0)
             </p>
 
             <div class="mt-8 flex flex-col sm:flex-row gap-4">
-              <RouterLink :to="localizedPath('/checkout')" class="flex-1">
+              <NuxtLink :to="localizedPath('/checkout')" class="flex-1">
                 <BaseButton data-testid="cart-checkout" size="lg" class="w-full">
                   {{ t('cart.checkout') }}
                 </BaseButton>
-              </RouterLink>
-              <RouterLink :to="localizedPath('/products')">
+              </NuxtLink>
+              <NuxtLink :to="localizedPath('/products')">
                 <BaseButton variant="secondary" size="lg" class="w-full">
                   {{ t('cart.continueShopping') }}
                 </BaseButton>
-              </RouterLink>
+              </NuxtLink>
             </div>
           </ScrollReveal>
         </div>

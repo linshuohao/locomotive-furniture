@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import { useCartStore } from '@/store/cart'
 import { useLocale } from '@/composables/useLocale'
@@ -38,15 +37,12 @@ watch(itemCount, (next, prev) => {
     <div
       class="mx-auto flex h-[var(--header-height)] max-w-7xl items-center justify-between px-6 backdrop-blur-md bg-brand-50/80 border-b border-brand-200/50"
     >
-      <RouterLink
-        :to="localizedPath('/')"
-        class="font-display text-2xl tracking-wide text-brand-900"
-      >
+      <NuxtLink :to="localizedPath('/')" class="font-display text-2xl tracking-wide text-brand-900">
         {{ t('brand.name') }}
-      </RouterLink>
+      </NuxtLink>
 
       <nav class="hidden md:flex items-center gap-8">
-        <RouterLink
+        <NuxtLink
           v-for="link in links"
           :key="link.to"
           :to="link.to"
@@ -54,12 +50,12 @@ watch(itemCount, (next, prev) => {
           active-class="text-brand-950 nav-link--active"
         >
           {{ link.label }}
-        </RouterLink>
+        </NuxtLink>
       </nav>
 
       <div class="flex items-center gap-4">
         <LocaleSwitcher />
-        <RouterLink
+        <NuxtLink
           :to="localizedPath('/cart')"
           class="relative text-sm uppercase tracking-widest text-brand-700 hover:text-brand-950 transition-colors"
         >
@@ -71,7 +67,7 @@ watch(itemCount, (next, prev) => {
           >
             {{ itemCount }}
           </span>
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
   </header>

@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import ScrollSection from '@/components/scroll/ScrollSection.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import MaskReveal from '@/components/scroll/MaskReveal.vue'
 import MarqueeBand from '@/components/scroll/MarqueeBand.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import { RouterLink } from 'vue-router'
-import { computed } from 'vue'
 import { useLocale } from '@/composables/useLocale'
+
+usePageSeo('meta.about')
 
 const { t, localizedPath } = useLocale()
 
@@ -65,11 +66,11 @@ const marqueeItems = computed(() => [
         <h2 class="font-display text-3xl text-brand-900 mb-6">
           {{ t('about.ctaTitle') }}
         </h2>
-        <RouterLink :to="localizedPath('/products')">
+        <NuxtLink :to="localizedPath('/products')">
           <BaseButton size="lg">
             {{ t('about.ctaButton') }}
           </BaseButton>
-        </RouterLink>
+        </NuxtLink>
       </ScrollReveal>
     </section>
   </div>

@@ -28,7 +28,7 @@ interface Product { ... }
 
 ## 环境变量
 
-- 所有 `VITE_*` 在 `src/env.d.ts` 声明
+- 公开变量以 `NUXT_PUBLIC_` 为前缀，在 `nuxt.config.ts` → `runtimeConfig.public` 声明
 - 读取集中在 `data/config.ts` 或 composable 门控
 - 新增变量同步 `.env.example`
 

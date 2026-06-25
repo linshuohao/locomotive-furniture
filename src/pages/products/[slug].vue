@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed, watch } from 'vue'
 import { fetchProductBySlug } from '@/data/api'
-import type { Product } from '@/data/schemas'
-import { getProductBySlug, formatPrice } from '@/data/products'
+import { formatPrice } from '@/data/products'
 import { useCartStore } from '@/store/cart'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -15,46 +13,41 @@ import { useGsapTimeline } from '@/composables/useGsapTimeline'
 import { createPdpTimeline } from '@/lib/scroll/animation'
 import { useLocale } from '@/composables/useLocale'
 
+usePageSeo('meta.product')
+
 const route = useRoute()
-const router = useRouter()
 const cart = useCartStore()
 const { t, locale, localizedPath } = useLocale()
 
-const product = ref<Product | null>(null)
-const loading = ref(true)
+const slug = computed(() => route.params.slug as string)
+
+const { data: productResult, pending: loading } = await useAsyncData(
+  () => `product-${slug.value}-${locale.value}`,
+  () => fetchProductBySlug(slug.value),
+  { watch: [slug, locale] },
+)
+
+const product = computed(() => productResult.value?.data ?? null)
+
+watch([product, loading], ([value, isLoading]) => {
+  if (!isLoading && productResult.value && !value) {
+    navigateTo(localizedPath('/products'), { replace: true })
+  }
+})
+
 const selectedVariant = ref('')
 const quantity = ref(1)
 const added = ref(false)
 
 const copyColRef = ref<HTMLElement | null>(null)
 
-async function loadProduct(slug: string) {
-  loading.value = true
-  const result = await fetchProductBySlug(slug)
-  if (result.data) {
-    product.value = result.data
-    selectedVariant.value = result.data.variants[0]?.id ?? ''
-  } else {
-    router.replace(localizedPath('/products'))
-  }
-  loading.value = false
-}
-
-onMounted(() => {
-  void loadProduct(route.params.slug as string)
-})
-
 watch(
-  () => route.params.slug,
-  (slug) => {
-    if (typeof slug === 'string') void loadProduct(slug)
+  product,
+  (value) => {
+    if (value) selectedVariant.value = value.variants[0]?.id ?? ''
   },
+  { immediate: true },
 )
-
-watch(locale, () => {
-  const slug = route.params.slug
-  if (typeof slug === 'string') void loadProduct(slug)
-})
 
 useGsapTimeline(
   () => {
@@ -87,15 +80,6 @@ function addToCart() {
 watch(selectedVariant, () => {
   added.value = false
 })
-
-watch(
-  () => route.params.slug,
-  (slug) => {
-    if (!loading.value && !getProductBySlug(slug as string, locale.value)) {
-      router.replace(localizedPath('/products'))
-    }
-  },
-)
 </script>
 
 <template>
@@ -116,9 +100,9 @@ watch(
       <ProductViewTracker :product="product" />
 
       <ScrollReveal class="text-sm text-brand-500 mb-8" tag="nav">
-        <RouterLink :to="localizedPath('/products')" class="hover:text-brand-900">
+        <NuxtLink :to="localizedPath('/products')" class="hover:text-brand-900">
           {{ t('nav.collection') }}
-        </RouterLink>
+        </NuxtLink>
         <span class="mx-2">/</span>
         <span class="text-brand-900">{{ product.name }}</span>
       </ScrollReveal>
@@ -202,11 +186,11 @@ watch(
             </div>
 
             <div data-pdp-reveal>
-              <RouterLink :to="localizedPath('/cart')">
+              <NuxtLink :to="localizedPath('/cart')">
                 <BaseButton variant="secondary" size="lg" class="w-full mt-3">
                   {{ t('product.viewCart') }}
                 </BaseButton>
-              </RouterLink>
+              </NuxtLink>
             </div>
           </div>
 

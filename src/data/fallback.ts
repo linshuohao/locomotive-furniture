@@ -2,9 +2,17 @@ import { getProducts, getProductBySlug as getLocalizedProductBySlug } from '@/da
 import type { Product } from '@/data/schemas'
 import type { CommerceResponse } from '@/data/types'
 import { API_TIMEOUT_MS } from '@/data/client'
-import { getCurrentLocale } from '@/i18n'
-import { i18n } from '@/i18n'
+import { getCurrentLocale } from '@/lib/i18n/currentLocale'
 import type { AppLocale } from '@/lib/i18n/constants'
+
+function fallbackMessage(): string {
+  try {
+    const { t } = useI18n()
+    return t('fallback.offlineCatalog')
+  } catch {
+    return 'Showing offline catalog'
+  }
+}
 
 export function offlineProducts(locale?: AppLocale): Product[] {
   return getProducts(locale ?? getCurrentLocale())
@@ -17,7 +25,7 @@ export function offlineProductBySlug(slug: string, locale?: AppLocale): Product 
 export function catalogFallback<T>(data: T): CommerceResponse<T> {
   return {
     data,
-    error: i18n.global.t('fallback.offlineCatalog'),
+    error: fallbackMessage(),
     meta: { latencyMs: API_TIMEOUT_MS, source: 'fallback' },
   }
 }

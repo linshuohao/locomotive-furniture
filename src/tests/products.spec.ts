@@ -12,12 +12,12 @@ describe('products data', () => {
   })
 
   it('finds localized product by slug', () => {
-    const product = getProductBySlug('nordic-lounge-chair', 'zh-CN')
+    const product = getProductBySlug('nordic-lounge-chair', 'zh')
     expect(product?.name).toBe('北欧休闲椅')
   })
 
   it('returns localized catalog', () => {
-    const zhProducts = getProducts('zh-CN')
+    const zhProducts = getProducts('zh')
     expect(zhProducts[0]?.category).toBe('座椅')
   })
 
@@ -25,7 +25,7 @@ describe('products data', () => {
     expect(formatPrice(1290, 'USD', 'en')).toMatch(/\$1,290/)
   })
 
-  it('formats price for zh-CN locale', () => {
-    expect(formatPrice(1290, 'USD', 'zh-CN')).toMatch(/1,290/)
+  it('formats price for zh locale', () => {
+    expect(formatPrice(1290, 'USD', 'zh')).toMatch(/1,290/)
   })
 })

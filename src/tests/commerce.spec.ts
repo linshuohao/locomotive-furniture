@@ -27,7 +27,7 @@ describe('commerce provider', () => {
   })
 
   it('selects http provider when env is http', () => {
-    vi.stubEnv('VITE_COMMERCE_PROVIDER', 'http')
+    vi.stubEnv('NUXT_PUBLIC_COMMERCE_PROVIDER', 'http')
     resetCommerceProvider()
     expect(getCommerceProvider()).toBe(httpProvider)
     vi.unstubAllEnvs()

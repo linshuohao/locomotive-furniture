@@ -1,13 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run vercel-build",
-  "outputDirectory": "dist",
   "installCommand": "npm ci",
-  "framework": null,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "framework": "nuxtjs",
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/_nuxt/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

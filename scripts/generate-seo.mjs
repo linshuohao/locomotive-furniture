@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 
-const siteUrl = process.env.VITE_SITE_URL || 'http://localhost:5173'
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || process.env.VITE_SITE_URL || 'http://localhost:3000'
 
 /** Product slugs — keep in sync with src/data/productCatalog.ts */
 const productSlugs = [
@@ -76,8 +76,8 @@ Allow: /
 Sitemap: ${siteUrl}/sitemap.xml
 `
 
-mkdirSync(join(root, 'public'), { recursive: true })
-writeFileSync(join(root, 'public', 'sitemap.xml'), sitemap)
-writeFileSync(join(root, 'public', 'robots.txt'), robots)
+mkdirSync(join(root, 'src', 'public'), { recursive: true })
+writeFileSync(join(root, 'src', 'public', 'sitemap.xml'), sitemap)
+writeFileSync(join(root, 'src', 'public', 'robots.txt'), robots)
 
-console.log('[generate-seo] Wrote public/sitemap.xml and public/robots.txt')
+console.log('[generate-seo] Wrote src/public/sitemap.xml and src/public/robots.txt')

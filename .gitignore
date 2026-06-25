@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.nuxt
+.output
 *.local
 .vercel
 .vercel.main
@@ -27,6 +29,7 @@ docs/.vitepress/dist
 *.sln
 *.sw?
 .env*
+!.env.example
 /test-results/
 /playwright-report/
 /blob-report/

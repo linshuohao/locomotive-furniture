@@ -8,7 +8,7 @@ alwaysApply: false
 
 ## 生命周期
 
-- `App.vue`：`useLocomotiveScroll` init/destroy
+- `layouts/default.vue`：`useLocomotiveScroll` init/destroy
 - 路由切换必须 `destroy()`，防止内存泄漏
 - DOM 变更后 `update()`；子组件 inject `scrollInjectionKey`
 
@@ -34,7 +34,7 @@ alwaysApply: false
 - `motionCapabilities`：`full | reduced | static`
 - `detectPerformanceTier()`：低端关闭视差/WebGL
 - `prefers-reduced-motion` 跳过平滑滚动
-- 环境变量：`VITE_ENABLE_SMOOTH_SCROLL`、`VITE_ENABLE_PARALLAX`
+- 环境变量：`NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL`、`NUXT_PUBLIC_ENABLE_PARALLAX`
 
 ## data-scroll 属性
 

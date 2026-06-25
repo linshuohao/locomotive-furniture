@@ -15,8 +15,12 @@ function getVariantPrice(basePrice: number, priceModifier: number): number {
 }
 
 export const useCartStore = defineStore('cart', () => {
-  const items = ref<CartItem[]>(getStorageItem<CartItem[]>(CART_KEY, []))
+  const items = ref<CartItem[]>([])
   const recentAdd = ref<CartItem | null>(null)
+
+  function hydrateFromStorage() {
+    items.value = getStorageItem<CartItem[]>(CART_KEY, [])
+  }
 
   const itemCount = computed(() => items.value.reduce((sum, i) => sum + i.quantity, 0))
   const subtotal = computed(() => items.value.reduce((sum, i) => sum + i.price * i.quantity, 0))
@@ -126,5 +130,6 @@ export const useCartStore = defineStore('cart', () => {
     clearRecentAdd,
     clearCart,
     submitCheckout,
+    hydrateFromStorage,
   }
 })

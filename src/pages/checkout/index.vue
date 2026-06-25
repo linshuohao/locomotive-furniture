@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useCartStore } from '@/store/cart'
 import { formatPrice } from '@/data/products'
 import type { CheckoutForm } from '@/types'
@@ -10,8 +9,9 @@ import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
 import { useLocale } from '@/composables/useLocale'
 import { resolveCartLine } from '@/composables/useCartLine'
 
+usePageSeo('meta.checkout')
+
 const cart = useCartStore()
-const router = useRouter()
 const { t, locale, localizedPath } = useLocale()
 
 const form = ref<CheckoutForm>({
@@ -40,7 +40,7 @@ const isValid = computed(() => {
 })
 
 onMounted(() => {
-  if (cart.items.length === 0) router.replace(localizedPath('/cart'))
+  if (cart.items.length === 0) navigateTo(localizedPath('/cart'), { replace: true })
 })
 
 function validate(): boolean {
@@ -62,7 +62,7 @@ async function submit() {
   const subtotalBefore = cart.subtotal
   try {
     const result = await cart.submitCheckout(form.value)
-    await router.push({
+    await navigateTo({
       path: localizedPath('/checkout/success'),
       query: { orderId: result.orderId, subtotal: String(subtotalBefore) },
     })
