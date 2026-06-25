@@ -8,8 +8,16 @@ import { useLocale } from '@/composables/useLocale'
 
 const route = useRoute()
 const { t, localizedPath } = useLocale()
-const { scrollDirection, isScrolling, init, destroy, scrollProgress, update, scrollTo } =
-  useLocomotiveScroll()
+const {
+  scrollDirection,
+  isScrolling,
+  scrollInstance,
+  init,
+  destroy,
+  scrollProgress,
+  update,
+  scrollTo,
+} = useLocomotiveScroll()
 const { capabilities } = useMotionCapabilities()
 
 provide(scrollInjectionKey, { update, scrollTo })
@@ -34,14 +42,21 @@ onMounted(() => {
 
 watch(
   () => route.path,
-  (path) => {
+  async () => {
     if (!import.meta.client) return
-    destroy()
+
     if (capabilities.value.pageTransition) {
-      document.documentElement.dataset.route = path
-    } else {
-      onPageEnter()
+      destroy()
+      document.documentElement.dataset.route = route.path
+      return
     }
+
+    if (scrollInstance.value) {
+      await update()
+      return
+    }
+
+    await onPageEnter()
   },
 )
 </script>

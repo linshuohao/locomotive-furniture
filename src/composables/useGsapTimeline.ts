@@ -2,7 +2,7 @@ import { inject, onMounted, onUnmounted, nextTick, watch, type WatchSource } fro
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { scrollInjectionKey } from '@/composables/useLocomotiveScroll'
-import { detectPerformanceTier } from '@/lib/motion/performance'
+import { getMotionCapabilitiesSnapshot } from '@/lib/motion/motionCapabilities'
 
 /**
  * Vue lifecycle wrapper for GSAP timelines + ScrollTrigger.
@@ -19,8 +19,7 @@ export function useGsapTimeline(
   let ctx: gsap.Context | null = null
 
   async function run() {
-    const tier = detectPerformanceTier()
-    if (!tier.animations) return
+    if (!getMotionCapabilitiesSnapshot().animations) return
 
     ctx?.revert()
     ctx = null

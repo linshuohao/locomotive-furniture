@@ -1,50 +1,42 @@
 import type { PerformanceTier } from '@/types'
-import { getMotionCapabilitiesSnapshot } from '@/lib/motion/motionCapabilities'
+import {
+  getMotionCapabilitiesSnapshot,
+  type MotionCapabilities,
+} from '@/lib/motion/motionCapabilities'
 
 export type { MotionCapabilities } from '@/lib/motion/motionCapabilities'
 export { getMotionCapabilitiesSnapshot, trackMotionJank } from '@/lib/motion/motionCapabilities'
 
-const MOBILE_BREAKPOINT = 768
-
-export function detectPerformanceTier(): PerformanceTier {
-  if (typeof window === 'undefined') {
-    return { tier: 'medium', smoothScroll: true, parallax: true, animations: true }
-  }
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const motionCaps = getMotionCapabilitiesSnapshot()
-  if (prefersReducedMotion || !motionCaps.smoothScroll) {
-    return { tier: 'low', smoothScroll: false, parallax: false, animations: false }
-  }
-
-  const isMobile = window.innerWidth < MOBILE_BREAKPOINT
-  const cores = navigator.hardwareConcurrency ?? 4
-  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 4
-  const connection = (navigator as Navigator & { connection?: { effectiveType?: string } })
-    .connection?.effectiveType
-
-  const isSlowConnection = connection === '2g' || connection === 'slow-2g'
-  const isLowEnd = cores <= 2 || memory <= 2 || isSlowConnection
-
-  if (isLowEnd) {
+function toPerformanceTier(caps: MotionCapabilities): PerformanceTier {
+  if (caps.tier === 'static' || !caps.animations) {
     return {
       tier: 'low',
-      smoothScroll: false,
-      parallax: false,
-      animations: false,
+      smoothScroll: caps.smoothScroll,
+      parallax: caps.parallax,
+      animations: caps.animations,
     }
   }
 
-  if (isMobile) {
+  if (caps.tier === 'reduced') {
     return {
       tier: 'medium',
-      smoothScroll: true,
-      parallax: motionCaps.parallax,
-      animations: true,
+      smoothScroll: caps.smoothScroll,
+      parallax: caps.parallax,
+      animations: caps.animations,
     }
   }
 
-  return { tier: 'high', smoothScroll: true, parallax: true, animations: true }
+  return {
+    tier: 'high',
+    smoothScroll: caps.smoothScroll,
+    parallax: caps.parallax,
+    animations: caps.animations,
+  }
+}
+
+/** @deprecated Prefer getMotionCapabilitiesSnapshot() — kept for gradual migration */
+export function detectPerformanceTier(): PerformanceTier {
+  return toPerformanceTier(getMotionCapabilitiesSnapshot())
 }
 
 export function shouldEnableFeature(

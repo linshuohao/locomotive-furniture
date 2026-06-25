@@ -18,8 +18,22 @@ export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>([])
   const recentAdd = ref<CartItem | null>(null)
 
+  function sanitizeStoredItems(raw: unknown): CartItem[] {
+    if (!Array.isArray(raw)) return []
+
+    const sanitized: CartItem[] = []
+    for (const entry of raw) {
+      const parsed = CartItemInputSchema.safeParse(entry)
+      if (!parsed.success) continue
+
+      const line = resolveLine(parsed.data.productId, parsed.data.variantId, parsed.data.quantity)
+      if (line) sanitized.push(line)
+    }
+    return sanitized
+  }
+
   function hydrateFromStorage() {
-    items.value = getStorageItem<CartItem[]>(CART_KEY, [])
+    items.value = sanitizeStoredItems(getStorageItem<unknown>(CART_KEY, []))
   }
 
   const itemCount = computed(() => items.value.reduce((sum, i) => sum + i.quantity, 0))
@@ -61,6 +75,7 @@ export const useCartStore = defineStore('cart', () => {
 
     if (existing) {
       existing.quantity = Math.min(MAX_QUANTITY, existing.quantity + line.quantity)
+      existing.price = line.price
     } else {
       items.value.push(line)
     }

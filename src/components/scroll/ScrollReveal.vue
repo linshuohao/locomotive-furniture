@@ -17,6 +17,7 @@ withDefaults(
     scrollClass: 'is-inview',
     tag: 'div',
     variant: 'default',
+    speed: undefined,
   },
 )
 

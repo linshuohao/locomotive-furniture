@@ -7,19 +7,12 @@ const root = join(__dirname, '..')
 
 const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || process.env.VITE_SITE_URL || 'http://localhost:3000'
 
-/** Product slugs — keep in sync with src/data/productCatalog.ts */
-const productSlugs = [
-  'nordic-lounge-chair',
-  'horizon-dining-table',
-  'arc-floor-lamp',
-  'cloud-modular-sofa',
-  'pillar-sideboard',
-  'zen-coffee-table',
-  'frame-wall-shelf',
-  'haven-bed-frame',
-  'orbit-pendant-light',
-  'studio-desk',
-]
+const catalogSource = readFileSync(join(root, 'src', 'data', 'productCatalog.ts'), 'utf8')
+const productSlugs = [...catalogSource.matchAll(/^\s+slug:\s*'([^']+)'/gm)].map((match) => match[1])
+
+if (productSlugs.length === 0) {
+  throw new Error('[generate-seo] No product slugs found in src/data/productCatalog.ts')
+}
 
 const locales = [
   { prefix: '', hreflang: 'en' },

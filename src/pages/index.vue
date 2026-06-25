@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref, computed } from 'vue'
-import { getProducts } from '@/data/products'
+import { defineAsyncComponent, ref, computed, watch, nextTick } from 'vue'
+import { fetchProducts } from '@/data/api'
+import type { Product } from '@/data/schemas'
 import ProductCard from '@/components/product/ProductCard.vue'
 import ScrollSection from '@/components/scroll/ScrollSection.vue'
 import ScrollReveal from '@/components/scroll/ScrollReveal.vue'
@@ -26,7 +27,22 @@ const WebGLRevealMask = defineAsyncComponent(
 )
 
 const { t, locale, localizedPath } = useLocale()
-const featured = computed(() => getProducts(locale.value).filter((product) => product.featured))
+
+const { data: productsResult, pending: loadingFeatured } = await useAsyncData(
+  () => `home-featured-${locale.value}`,
+  () => fetchProducts(),
+  { watch: [locale] },
+)
+
+const featured = computed(
+  () => productsResult.value?.data?.filter((product: Product) => product.featured) ?? [],
+)
+
+watch(loadingFeatured, async (isLoading) => {
+  if (!isLoading) {
+    await nextTick()
+  }
+})
 
 const marqueeItems = computed(() => [
   t('home.marquee.craftsmanship'),
@@ -87,7 +103,11 @@ useGsapTimeline(
       createScaleFadeReveal(featuredGridRef.value, '[data-featured-card]')
     }
   },
-  { watchSource: featuredGridRef },
+  {
+    watchSource: computed(
+      () => !loadingFeatured.value && featuredGridRef.value && featured.value.length,
+    ),
+  },
 )
 </script>
 
@@ -197,6 +217,12 @@ useGsapTimeline(
             <ProductCard :product="product" />
           </div>
         </div>
+        <p
+          v-if="!loadingFeatured && featured.length === 0"
+          class="text-center text-brand-500 text-sm"
+        >
+          {{ t('catalog.subtitle') }}
+        </p>
         <ScrollReveal variant="scale" class="text-center mt-16">
           <NuxtLink :to="localizedPath('/products')">
             <BaseButton variant="secondary">

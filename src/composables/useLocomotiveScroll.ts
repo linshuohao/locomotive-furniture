@@ -4,7 +4,7 @@ import 'locomotive-scroll/dist/locomotive-scroll.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { LocomotiveScrollOptions } from '@/types'
-import { detectPerformanceTier, FpsMonitor } from '@/lib/motion/performance'
+import { FpsMonitor } from '@/lib/motion/performance'
 import { trackScrollFps } from '@/lib/analytics/analytics'
 import { getMotionCapabilitiesSnapshot, trackMotionJank } from '@/lib/motion/motionCapabilities'
 import { LENIS_OPTIONS, SCROLL_CSS_VARS } from '@/lib/scroll/scrollConstants'
@@ -31,21 +31,16 @@ let jankTicker: ((time: number) => void) | null = null
 
 function isSmoothScrollEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
   if (config.public.enableSmoothScroll === 'false') return false
-  if (!getMotionCapabilitiesSnapshot().smoothScroll) return false
-  const tier = detectPerformanceTier()
-  return tier.smoothScroll
+  return getMotionCapabilitiesSnapshot().smoothScroll
 }
 
 function isParallaxEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean {
   if (config.public.enableParallax === 'false') return false
-  if (!getMotionCapabilitiesSnapshot().parallax) return false
-  const tier = detectPerformanceTier()
-  return tier.parallax
+  return getMotionCapabilitiesSnapshot().parallax
 }
 
 export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
   const runtimeConfig = useRuntimeConfig()
-  const tier = detectPerformanceTier()
   const enableSmooth = options.enableSmooth ?? isSmoothScrollEnabled(runtimeConfig)
   const enableParallax = options.enableParallax ?? isParallaxEnabled(runtimeConfig)
 
@@ -189,7 +184,7 @@ export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
     scrollProgress,
     scrollDirection,
     isScrolling,
-    tier,
+    tier: getMotionCapabilitiesSnapshot().tier,
     enableParallax,
     init,
     update,

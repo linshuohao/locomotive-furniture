@@ -46,13 +46,13 @@ export const CartItemSchema = z.object({
 export type CartItem = z.infer<typeof CartItemSchema>
 
 export const CheckoutFormSchema = z.object({
-  email: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  address: z.string(),
-  city: z.string(),
-  country: z.string(),
-  postalCode: z.string(),
+  email: z.string().email(),
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
+  address: z.string().trim().min(1),
+  city: z.string().trim().min(1),
+  country: z.string().trim().min(1),
+  postalCode: z.string().trim().min(1),
 })
 
 export type CheckoutForm = z.infer<typeof CheckoutFormSchema>

@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useCartStore } from '@/store/cart'
+import { setStorageItem } from '@/lib/storage'
+
+const CART_KEY = 'atelier-cart-v2'
 
 describe('cart store', () => {
   beforeEach(() => {
@@ -26,5 +29,38 @@ describe('cart store', () => {
     cart.addItem('1', '1a')
     cart.removeItem('1', '1a')
     expect(cart.itemCount).toBe(0)
+  })
+
+  it('recalculates price when hydrating tampered storage', () => {
+    setStorageItem(CART_KEY, [
+      {
+        productId: '1',
+        variantId: '1a',
+        quantity: 1,
+        slug: 'nordic-lounge-chair',
+        price: 1,
+        image: '/images/products/1-1.jpg',
+      },
+    ])
+
+    const cart = useCartStore()
+    cart.hydrateFromStorage()
+
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0]?.price).toBe(1290)
+    expect(cart.subtotal).toBe(1290)
+  })
+
+  it('drops invalid stored cart lines', () => {
+    setStorageItem(CART_KEY, [
+      { productId: 'invalid', variantId: '1a', quantity: 1, price: 10 },
+      { productId: '1', variantId: '1a', quantity: 2 },
+    ])
+
+    const cart = useCartStore()
+    cart.hydrateFromStorage()
+
+    expect(cart.items).toHaveLength(1)
+    expect(cart.itemCount).toBe(2)
   })
 })

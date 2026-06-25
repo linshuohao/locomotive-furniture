@@ -22,7 +22,10 @@ const { data: productsResult, pending: loading } = await useAsyncData(
 )
 
 const products = computed(() => productsResult.value?.data ?? [])
-const fallbackNotice = computed(() => productsResult.value?.error ?? null)
+const fallbackNotice = computed(() => {
+  const error = productsResult.value?.error
+  return error ? t(error as 'fallback.offlineCatalog') : null
+})
 
 const heroRef = ref<HTMLElement | null>(null)
 const eyebrowRef = ref<HTMLElement | null>(null)

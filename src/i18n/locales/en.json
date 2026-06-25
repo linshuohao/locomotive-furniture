@@ -7,7 +7,10 @@
     "home": "Home",
     "collection": "Collection",
     "about": "About",
-    "cart": "Cart"
+    "cart": "Cart",
+    "primary": "Primary navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "meta": {
     "home": "Home",
@@ -141,5 +144,8 @@
   },
   "fallback": {
     "offlineCatalog": "Using offline catalog fallback"
+  },
+  "ui": {
+    "imageUnavailable": "Image unavailable"
   }
 }
