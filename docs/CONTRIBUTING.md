@@ -1,4 +1,10 @@
-# 贡献指南 · 代码门禁与提交规范
+# 贡献指南
+
+| 字段     | 内容                                                  |
+| -------- | ----------------------------------------------------- |
+| 适用范围 | 本地环境、代码门禁、提交规范、GitHub Flow             |
+| 关联文档 | [DEPLOYMENT](./DEPLOYMENT.md) · [README](./README.md) |
+| 更新日期 | 2026-06-25                                            |
 
 ## 1. 本地环境
 
@@ -9,16 +15,16 @@
 npm install   # 自动执行 husky prepare，安装 Git hooks
 ```
 
-首次克隆仓库后务必执行 `npm install`，否则本地不会启用提交门禁。
+首次克隆后务必执行 `npm install`，否则本地不会启用提交门禁。
 
 ## 2. 代码门禁
 
-| 层级           | 触发时机            | 检查项                                                            |
-| -------------- | ------------------- | ----------------------------------------------------------------- |
-| **pre-commit** | `git commit`        | lint-staged：暂存区文件 ESLint + Prettier                         |
-| **commit-msg** | 写入 commit message | commitlint：Conventional Commits 格式                             |
-| **pre-push**   | `git push`          | `npm run check:changed`（增量 lint + typecheck + Vitest related） |
-| **CI**         | push / PR           | `check` + `build:e2e` + Playwright E2E（见 CI 配置）              |
+| 层级           | 触发时机            | 检查项                                 |
+| -------------- | ------------------- | -------------------------------------- |
+| **pre-commit** | `git commit`        | lint-staged：ESLint + Prettier         |
+| **commit-msg** | 写入 commit message | commitlint：Conventional Commits       |
+| **pre-push**   | `git push`          | `npm run check:changed`                |
+| **CI**         | push / PR           | `check` + `build:e2e` + Playwright E2E |
 
 跳过 hooks（仅限紧急情况）：
 
@@ -107,7 +113,7 @@ git commit -m "Fixed the scroll bug"
 
 ## 5. 代码风格
 
-- **ESLint**：`eslint.config.js`，覆盖 `src/**/*.ts`、`src/**/*.vue`
+- **ESLint**：`eslint.config.js`，覆盖 `app/**/*.ts`、`app/**/*.vue`
 - **Prettier**：`.prettierrc`（单引号、无分号、printWidth 100）
 - **EditorConfig**：`.editorconfig`（2 空格、LF、UTF-8）
 
@@ -212,3 +218,47 @@ gh api --method PUT repos/linshuohao/locomotive-furniture/branches/main/protecti
 | `commitlint.config.js`         | 提交规范配置                                            |
 | `.github/workflows/ci.yml`     | 远程 CI 门禁                                            |
 | `package.json` → `lint-staged` | 暂存文件规则                                            |
+
+## 8. 文档同步
+
+变更代码时，按类型同步更新对应文档，并确认 VitePress 侧栏（`docs/.vitepress/config.ts`）是否需要调整。
+
+| 变更类型              | 文档                                                                |
+| --------------------- | ------------------------------------------------------------------- |
+| scroll / ui 组件      | COMPONENTS                                                          |
+| 排版 / hover 参数     | VISUAL-DESIGN                                                       |
+| 架构 / 模块路径       | ARCHITECTURE                                                        |
+| 依赖 / i18n 目录      | README · ARCHITECTURE · DELIVERY · `.cursor/rules/project-core.mdc` |
+| 性能 / 降级           | PERFORMANCE · TRADEOFFS                                             |
+| Commerce / Provider   | ARCHITECTURE §5 · FAQ                                               |
+| Motion / WebGL 公共层 | ARCHITECTURE §4 · COMPONENTS · PERFORMANCE                          |
+| 测试用例扩充          | DEPLOYMENT §10 · `.cursor/rules/testing.mdc`                        |
+| Locomotive 对标       | RESEARCH                                                            |
+| Demo 范围             | DELIVERY                                                            |
+| FAQ / 排错            | FAQ                                                                 |
+| VitePress 导航        | `.vitepress/config.ts`                                              |
+| Mermaid 图表          | 任意 `.md`（见下节）                                                |
+
+文档阅读路径见 [README](./README.md)。
+
+### 8.1 Mermaid 图表
+
+文档站通过 [`vitepress-plugin-mermaid`](https://emersonbottero.github.io/vitepress-plugin-mermaid/) 渲染流程图，配置见 `docs/.vitepress/config.ts`（`withMermaid` 包装）。
+
+在 Markdown 中使用标准围栏语法：
+
+````md
+```mermaid
+flowchart LR
+  A[Pages] --> B[Components]
+```
+````
+
+本地预览：`npm run docs:dev`，打开含图表的页面（如 [ARCHITECTURE](./ARCHITECTURE.md)）确认渲染正常。暗色模式下插件会自动切换 Mermaid 主题。
+
+---
+
+## 下一步阅读
+
+- 部署流程与 CI 流水线 → [DEPLOYMENT](./DEPLOYMENT.md)
+- 文档阅读路径与索引 → [README](./README.md)

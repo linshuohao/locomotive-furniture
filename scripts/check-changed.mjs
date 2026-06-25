@@ -77,13 +77,15 @@ function main() {
     return
   }
 
-  const srcChanges = changed.filter((file) => file.startsWith('src/') || file.startsWith('e2e/'))
-  if (srcChanges.length === 0) {
-    console.log('No src/e2e changes — skipping check')
+  const appChanges = changed.filter(
+    (file) => file.startsWith('app/') || file.startsWith('server/') || file.startsWith('e2e/'),
+  )
+  if (appChanges.length === 0) {
+    console.log('No app/server/e2e changes — skipping check')
     return
   }
 
-  const lintTargets = changed.filter((file) => /^src\/.*\.(ts|vue)$/.test(file))
+  const lintTargets = changed.filter((file) => /^(app|server)\/.*\.(ts|vue)$/.test(file))
   if (lintTargets.length > 0) {
     run('npx', ['eslint', ...lintTargets])
   }
@@ -98,7 +100,7 @@ function main() {
     run('npm', ['run', 'typecheck'])
   }
 
-  const testTargets = changed.filter((file) => /^src\/.*\.(ts|vue)$/.test(file))
+  const testTargets = changed.filter((file) => /^app\/.*\.(ts|vue)$/.test(file))
   if (testTargets.length > 0) {
     run('npx', [
       'vitest',

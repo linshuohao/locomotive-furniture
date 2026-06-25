@@ -9,7 +9,7 @@ test.describe('checkout flow', () => {
   })
 
   test('adds to cart and completes checkout', async ({ page }) => {
-    await page.goto('/products/nordic-lounge-chair')
+    await page.goto('/products/eames-lounge-chair')
 
     const addToCart = page.getByTestId('add-to-cart')
     await expect(addToCart).toBeEnabled()
@@ -19,7 +19,7 @@ test.describe('checkout flow', () => {
 
     await page.goto('/cart')
     await expect(page.getByRole('heading', { name: 'Your Cart' })).toBeVisible()
-    await expect(page.getByText('Nordic Lounge Chair')).toBeVisible()
+    await expect(page.getByText('Eames Lounge Chair & Ottoman')).toBeVisible()
 
     await page.getByTestId('cart-checkout').click()
     await expect(page).toHaveURL(/\/checkout$/)

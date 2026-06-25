@@ -6,7 +6,7 @@ alwaysApply: false
 
 # 样式规范
 
-- TailwindCSS 4：`@import 'tailwindcss'` + `@theme` 定义 Token（`src/assets/styles/main.css`）
+- TailwindCSS 4：`@import 'tailwindcss'` + `@theme` 定义 Token（`app/assets/css/main.css`）
 - 品牌色：`brand-50` ~ `brand-950`
 - 字体：`font-display`（Cormorant Garamond）、`font-body`（Inter）
 - 动效缓动：`--ease-brand`

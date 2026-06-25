@@ -10,11 +10,11 @@ alwaysApply: false
 
 | 目录 | 工具 | 覆盖范围 |
 | ---- | ---- | -------- |
-| `src/tests/*.spec.ts` | Vitest + jsdom | cart、commerce、products、storage 等业务逻辑 |
-| `e2e/*.spec.ts` | Playwright | 浏览器内用户路径（电商主流程等） |
+| `app/tests/*.spec.ts` | Vitest + jsdom | cart、commerce、products、storage、motionCapabilities、jankGuard、translateError |
+| `e2e/*.spec.ts` | Playwright | 电商主流程、checkout 守卫、locale 路由、scroll 首屏 init |
 
 - 单元测试不测试纯 UI 渲染
-- E2E 使用 `data-testid` 选择器（见 PDP 加购、购物车结算、下单按钮）
+- E2E 使用 `data-testid`（`add-to-cart`、`cart-checkout`、`place-order`、`locale-switcher`）
 - E2E 构建用 `npm run build:e2e`（mock commerce + 关闭动效）
 
 ## Vitest

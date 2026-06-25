@@ -34,3 +34,4 @@ docs/.vitepress/dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+scripts/.outline-previews/

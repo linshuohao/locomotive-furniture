@@ -17,7 +17,9 @@ alwaysApply: false
 
 - 样式优先 Tailwind；设计 Token 用 `brand-*`（`main.css` `@theme`）
 - 展示字体 `font-display`，正文 `font-body`
-- 按钮 → `BaseButton`，图片 → `LazyImage`
+- 图片 → `LazyImage`（叠层图传 `fill` + `class`）；3D 倾斜包装 → `ImageTilt3D`（须 `useLayoutInvalidation`）
+- 商品卡 → `ProductCard`；媒体层已集成 `useMouseParallax`；卡片 BEM 样式在 `main.css`，勿在全局 CSS 用 `:deep()`
+- CTA 磁性吸附 → `MagneticButton`；导航 hover shuffle → `HoverShuffleText`
 - 加载态 → `Skeleton` / `PageSkeleton` / `ProductCardSkeleton`
 - 无 `<style>` 块时优先纯 Tailwind，不写 SCSS
 
@@ -25,7 +27,8 @@ alwaysApply: false
 
 - 通过 `inject(scrollInjectionKey)` 获取 `update()` / `scrollTo()`
 - async 数据或图片 load 后调用 `scroll?.update()`
-- 入场优先 `ScrollReveal` / `MaskReveal` / `ScrollSection`，避免重复手写 `data-scroll-*`
+- 入场优先 `ScrollReveal` / `MaskReveal` / `ScrollSection`；首页叙事用 `cssProgress` 或专用 stage 组件
+- 避免首页使用 `data-scroll-speed`（见 `docs/RESEARCH.md`）
 - 页面级 init/destroy 仅在 `layouts/default.vue`
 
 ```vue
@@ -41,6 +44,6 @@ const scroll = inject(scrollInjectionKey, null)
 | 目录 | 用途 |
 |------|------|
 | `layout/` | AppHeader 等布局 |
-| `ui/` | BaseButton、LazyImage、Skeleton |
-| `product/` | ProductCard、CartItem、VariantSelector |
-| `scroll/` | ScrollReveal、MaskReveal、MarqueeBand、CyclingText、ScrollSection、WebGLRevealMask |
+| `ui/` | BaseButton、MagneticButton、LazyImage、Skeleton |
+| `product/` | ProductCard、ProductCardMedia、CartItem、VariantSelector |
+| `scroll/` | ScrollReveal、MaskReveal、PageIntroCurtain、MarqueeBand、CyclingText、HoverShuffleText、SplitText、ScrollSection、WebGLRevealMask、TeamScene3D |

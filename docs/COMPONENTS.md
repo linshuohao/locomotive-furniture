@@ -1,288 +1,256 @@
-# 组件库使用文档
+# 组件库参考
 
-组件按职责分四层，路径与 import 示例：
+| 字段     | 内容                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------- |
+| 适用范围 | 组件分层、API、composables、data-scroll 约定                                                        |
+| 关联文档 | [ARCHITECTURE](./ARCHITECTURE.md) · [VISUAL-DESIGN](./VISUAL-DESIGN.md) · [RESEARCH](./RESEARCH.md) |
+| 更新日期 | 2026-06-25                                                                                          |
 
-| 目录                  | 用途     | 示例                                                                                           |
-| --------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `components/layout/`  | 布局     | `AppHeader`                                                                                    |
-| `components/ui/`      | 通用 UI  | `BaseButton`, `Skeleton`, `LazyImage`                                                          |
-| `components/product/` | 商品域   | `ProductCard`, `CartItem`, `VariantSelector`                                                   |
-| `components/scroll/`  | 滚动动效 | `ScrollReveal`, `MaskReveal`, `MarqueeBand`, `CyclingText`, `ScrollSection`, `WebGLRevealMask` |
+> 微交互默认参数见 [VISUAL-DESIGN](./VISUAL-DESIGN.md)。动效选型见 [RESEARCH §3.3](./RESEARCH.md#33-动效选型决策树)。
 
----
-
-## layout
-
-### AppHeader
-
-- 固定顶部导航
-- 滚动方向显隐（`layouts/default.vue` 注入 scroll 上下文）
-- 购物车数量角标 + bump 动画
-- 导航链接 hover 下划线滑入（`.nav-link::after`）
-
-```vue
-import AppHeader from '@/components/layout/AppHeader.vue'
-```
+本页是**开发时的组件速查手册**：分层职责、Props 约定、composables 门控与 data-scroll 优先级。
 
 ---
 
-## ui
+## 分层概览
 
-### BaseButton
+| 目录       | 用途     | 代表组件                                                   |
+| ---------- | -------- | ---------------------------------------------------------- |
+| `home/`    | 首页区块 | `HomeHeroSection`, `HomeDynastyStrip`, `HomeFeaturedRail`  |
+| `layout/`  | 布局     | `AppHeader`（含 `HoverShuffleText` 导航）                  |
+| `ui/`      | 通用 UI  | `BaseButton`, `MagneticButton`, `LazyImage`, `ImageTilt3D` |
+| `product/` | 商品域   | `ProductCard`, `ProductCardMedia`, `CartItem`              |
+| `scroll/`  | 滚动动效 | `MotionSceneHost`, `ScrollReveal`, `HoverShuffleText`      |
 
-```vue
-<BaseButton variant="primary" size="lg" :disabled="false">
-  Add to Cart
-</BaseButton>
+动效分三层：
+
+1. **Locomotive 声明式** — `ScrollReveal` / `ScrollSection` 的 `data-scroll-*`
+2. **GSAP 声明式** — `MotionSceneHost` + `sceneRegistry`（页面级推荐）
+3. **指针微交互** — `HoverShuffleText` / `useMagnetic` / `useMouseParallax`
+
+---
+
+## Motion Runtime（布局层）
+
+`layouts/default.vue` 调用 `provideMotionRuntime()`，同时 provide：
+
+- `motionRuntimeKey` — 完整 Motion 契约
+- `scrollInjectionKey` — 向后兼容 `{ update, scrollTo }`
+
+子组件布局变更后调用 `useLayoutInvalidation()`，**禁止**在 `components/ui` 直接 inject scroll。
+
+```ts
+import { useLayoutInvalidation } from '@/composables/useLayoutInvalidation'
+
+const invalidateLayout = useLayoutInvalidation()
+await invalidateLayout() // 图片 load、async 网格后
 ```
 
-| Prop     | 类型                                  | 默认    | 说明     |
-| -------- | ------------------------------------- | ------- | -------- |
-| variant  | `'primary' \| 'secondary' \| 'ghost'` | primary | 样式变体 |
-| size     | `'sm' \| 'md' \| 'lg'`                | md      | 尺寸     |
-| disabled | boolean                               | false   | 禁用状态 |
-| type     | `'button' \| 'submit'`                | button  | 按钮类型 |
+---
 
-### LazyImage
+## MotionSceneHost
+
+页面不再直接 `useGsapTimeline` + DOM ref，改为声明场景描述符：
 
 ```vue
-<LazyImage src="/img.jpg" alt="Product" :lazy="true" aspect="4/3" />
+<MotionSceneHost
+  :scene="{
+    id: 'products-hero-enter',
+    trigger: 'mount',
+    effect: 'hero-enter',
+    targets: {
+      eyebrow: '[data-hero-eyebrow]',
+      title: '[data-hero-title]',
+      subtitle: '[data-hero-subtitle]',
+    },
+  }"
+  :when="!loading"
+>
+  <section>
+    <p data-hero-eyebrow>...</p>
+    <h1 data-hero-title>...</h1>
+  </section>
+</MotionSceneHost>
 ```
 
-- 骨架屏占位
-- 加载失败兜底文案
-- 图片 load 后触发 Locomotive `update()`
+| Prop    | 类型                          | 说明                                            |
+| ------- | ----------------------------- | ----------------------------------------------- |
+| `scene` | `MotionSceneDescriptor`       | 见 `lib/motion/scene.ts`                        |
+| `when`  | `boolean \| string \| number` | 覆盖 `scene.trigger`（如 `introComplete` gate） |
 
-### Skeleton / PageSkeleton / ProductCardSkeleton
+| `scene.trigger`  | 行为                                             |
+| ---------------- | ------------------------------------------------ |
+| `mount`          | root 挂载后激活                                  |
+| `inview`         | IntersectionObserver 进入视口                    |
+| `intro-complete` | 须配合 `:when`（如幕帘结束）                     |
+| `scrub`          | root 挂载后激活，供 ScrollTrigger scrub 工厂使用 |
 
-加载态占位，用于 `pages/products/index.vue` async fetch 期间。
+| effect            | 工厂                                             | 典型页面        |
+| ----------------- | ------------------------------------------------ | --------------- |
+| `hero-enter`      | `createHeroEnterTimeline`（含可选 `media` 目标） | 首页 Hero、列表 |
+| `clip-image`      | `createClipImageReveal`                          | 理念区          |
+| `scale-fade-grid` | `createScaleFadeReveal`                          | 商品列表        |
+| `pdp-copy`        | `createPdpTimeline`                              | 商品详情        |
+| `success-enter`   | `createSuccessTimeline`                          | 结账成功        |
+
+能力不足时自动 `trackMotionSkipped` 并跳过动画。
+
+---
+
+## home（首页区块）
+
+| 组件                    | 职责                                                                    |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `HomeHeroSection`       | Hero + WebGL gate；`hero-enter` 经 `MotionSceneHost`（含 `media` 入场） |
+| `HomeDynastyStrip`      | Dynasty 扫光 + `data-scroll-css-progress`                               |
+| `HomeFeaturedRail`      | 精选网格（暗场）                                                        |
+| `HomeFeaturedWorkItem`  | 单条精选 + `ImageTilt3D`                                                |
+| `HomePhilosophySection` | 理念区 + `clip-image`                                                   |
+| `HomeAgencySection`     | Agency 叙事 + `ShuffleLink`                                             |
+| `HomeExtrasSection`     | 文章列表 + 商品 teaser                                                  |
+
+`pages/index.vue` 仅负责数据 fetch 与区块组装。`MagneticButton` 用于 `/about` 底部 CTA。
 
 ---
 
 ## product
 
-### ProductCard
+### ProductCard / ProductCardMedia 解耦
+
+- **ProductCardMedia**：纯展示 + `useMouseParallax`；`emit('quick-add')`，不 import Pinia
+- **ProductCard**：`useProductQuickAdd()` 处理加购；失败时展示 `cart.addFailed` 提示
 
 ```vue
-<ProductCard :product="product" />
+<ProductCard :product="product" @quick-add="onQuickAdd" />
 ```
 
-接收 `Product`（`@/data/schemas`），渲染卡片 + 路由跳转。Hover 时图片放大、标题下划线滑入。
-
-### VariantSelector
-
-```vue
-<VariantSelector v-model="variantId" :variants="product.variants" />
-```
-
-### ProductViewTracker
-
-无 UI，挂载于 PDP，触发 `product_view` 埋点。
+类型：`lib/product/contracts.ts` · 库存：`lib/product/stock.ts`
 
 ---
 
 ## scroll
 
-动效分两层：
+| 组件                       | 用途                                                            |
+| -------------------------- | --------------------------------------------------------------- |
+| `ScrollReveal`             | InView + 可选 `cssProgress`；clip/scale 变体                    |
+| `ScrollSection`            | Sticky 容器；优先 css-progress                                  |
+| `MaskReveal`               | 逐行遮罩（`data-mask-line`）                                    |
+| `PageIntroCurtain`         | 开场幕帘；`useGsapTimeline` + `createPageIntroCurtainTimeline`  |
+| `MarqueeBand`              | 无限横向文字带（纯 CSS）                                        |
+| `CharReveal` / `SplitText` | 逐字入场                                                        |
+| `HoverShuffleText`         | hover 逐字跳动                                                  |
+| `HeroDepthCanvas`          | Hero WebGL 深度（`webglCanvas` + `HERO_DEPTH_FRAGMENT_SHADER`） |
+| `WebGLRevealMask`          | 遮罩 WebGL（共享 `webglCanvas` 层）                             |
+| `TeamScene3D`              | About 页 3D 团队（InView 挂载）                                 |
 
-1. **Locomotive 声明式** — `ScrollReveal` / `ScrollSection` 的 `data-scroll-*`（视差、InView）
-2. **GSAP 命令式** — `lib/scroll/animation.ts` 工厂 + `useGsapTimeline`（遮罩行、clip 图片、交错入场）
-
-页面级 GSAP 须在 `detectPerformanceTier().animations === true` 时才会运行；`prefers-reduced-motion` 或低端设备自动跳过。
-
-### ScrollReveal
-
-DRY 封装 Locomotive InView + 可选视差：
-
-```vue
-<ScrollReveal :speed="-0.2" offset="0,100px">
-  <h2>Section title</h2>
-</ScrollReveal>
-
-<!-- Locomotive 风格 clip / scale 变体（CSS transition，无 GSAP 开销） -->
-<ScrollReveal variant="clip" :speed="0.12">
-  <LazyImage src="/img.jpg" alt="Product" aspect="4/3" />
-</ScrollReveal>
-
-<ScrollReveal variant="scale" class="text-center">
-  <h2>Featured</h2>
-</ScrollReveal>
-```
-
-| Prop    | 类型                             | 默认      | 说明                               |
-| ------- | -------------------------------- | --------- | ---------------------------------- |
-| speed   | number                           | —         | 视差速度（负值背景慢、正值前景快） |
-| offset  | string                           | `0,100px` | InView 触发偏移                    |
-| variant | `'default' \| 'clip' \| 'scale'` | default   | CSS 揭示变体                       |
-| tag     | string                           | div       | 根元素标签                         |
-
-未进入视口时保持可见（仅位移），避免与 GSAP 双重隐藏。
-
-### MaskReveal
-
-Locomotive 标志性**逐行遮罩上滑**揭示。子元素须按行标记 `data-mask-line`，外层用 `.mask-line-wrap`（`overflow: hidden`）包一层：
+### HoverShuffleText
 
 ```vue
-<MaskReveal tag="h1" hero>
-  <span class="mask-line-wrap">
-    <span data-mask-line>Design that</span>
-  </span>
-  <span class="mask-line-wrap">
-    <span data-mask-line>lives with you</span>
-  </span>
-</MaskReveal>
-
-<!-- 滚动进入时触发（默认） -->
-<MaskReveal tag="div">
-  <span class="mask-line-wrap">
-    <span data-mask-line>{{ t('about.title') }}</span>
-  </span>
-</MaskReveal>
+<HoverShuffleText :text="t('nav.collection')" tag="span" :stagger="0.024" />
 ```
 
-| Prop    | 类型    | 默认  | 说明                                        |
-| ------- | ------- | ----- | ------------------------------------------- |
-| hero    | boolean | false | `true` 时页面加载即播放（无 ScrollTrigger） |
-| stagger | number  | 0.08  | 行间交错间隔（秒）                          |
-| delay   | number  | 0     | 整体延迟（秒）                              |
-| tag     | string  | div   | 根元素标签                                  |
-
-底层调用 `createHeroMaskLines` / `createMaskLineReveal`（`animation.ts`）。
-
-### MarqueeBand
-
-无限横向滚动文字带（纯 CSS animation，`prefers-reduced-motion` 下静止换行）：
-
-```vue
-<MarqueeBand :items="['Craftsmanship', 'Sustainability', 'Global Shipping']" speed="slow" reverse />
-```
-
-| Prop      | 类型                           | 默认   | 说明                                   |
-| --------- | ------------------------------ | ------ | -------------------------------------- |
-| items     | string[]                       | —      | 滚动文案（内部复制一份以实现无缝循环） |
-| speed     | `'slow' \| 'normal' \| 'fast'` | normal | 滚动速度                               |
-| reverse   | boolean                        | false  | 反向滚动                               |
-| separator | string                         | ·      | 项间分隔符                             |
-
-### CyclingText
-
-Hero 区循环切换文案（类似 Locomotive.ca「Digital → Digital-First → …」）：
-
-```vue
-<CyclingText
-  :phrases="['Timeless', 'Timeless Design', 'Timeless Living']"
-  tag="span"
-  :interval="2800"
-/>
-```
-
-| Prop     | 类型     | 默认 | 说明           |
-| -------- | -------- | ---- | -------------- |
-| phrases  | string[] | —    | 循环短语       |
-| interval | number   | 2800 | 切换间隔（ms） |
-| tag      | string   | span | 内层文本标签   |
-
-`motionCapabilities.tier === 'static'` 时不循环。
-
-### ScrollSection
-
-```vue
-<ScrollSection :speed="0.3" :sticky="true">
-  <ScrollReveal>Content</ScrollReveal>
-</ScrollSection>
-```
-
-### WebGLRevealMask
-
-Hero 蒙层，仅 `motionCapabilities.webgl === true` 时渲染。
-
-### InViewReveal
-
-轻量 IntersectionObserver 入场（无 Locomotive 依赖），用于不需视差的区块。
+| Prop      | 默认    | 说明           |
+| --------- | ------- | -------------- |
+| `text`    | —       | 显示文案       |
+| `tag`     | `span`  | 根元素标签     |
+| `stagger` | `0.024` | 逐字延迟（秒） |
 
 ---
 
-## GSAP 动画工厂（`lib/scroll/animation.ts`）
+## ui
 
-页面通过 `useGsapTimeline` 挂载，卸载时自动 `ctx.revert()`：
+### MagneticButton
 
-```ts
-import { useGsapTimeline } from '@/composables/useGsapTimeline'
-import { createScaleFadeReveal } from '@/lib/scroll/animation'
-
-const gridRef = ref<HTMLElement | null>(null)
-
-useGsapTimeline(
-  () => {
-    if (gridRef.value) {
-      createScaleFadeReveal(gridRef.value, '[data-product-card]', { stagger: 0.08 })
-    }
-  },
-  { watchSource: gridRef },
-)
+```vue
+<MagneticButton :to="localizedPath('/products')" size="lg" :strength="0.28">
+  Shop Collection
+</MagneticButton>
 ```
 
-| 工厂函数                  | 用途                                   | 典型页面           |
-| ------------------------- | -------------------------------------- | ------------------ |
-| `createHeroEnterTimeline` | Hero eyebrow / subtitle / CTA 交错入场 | 首页、商品列表     |
-| `createHeroMaskLines`     | Hero 标题逐行遮罩（mount-only）        | 首页               |
-| `createMaskLineReveal`    | 滚动触发逐行遮罩                       | About、首页区块    |
-| `createStaggerReveal`     | 网格 y + fade 交错                     | —                  |
-| `createClipImageReveal`   | 图片 clip-path 自下展开                | 首页理念区         |
-| `createScaleFadeReveal`   | 卡片 scale + fade 交错                 | 首页精选、商品列表 |
-| `createScrubParallax`     | 单元素 scrub 视差                      | —                  |
-| `createNarrativeScrub`    | Sticky 叙事区内 scrub（无 pin）        | 首页               |
-| `createHorizontalDrift`   | 水平 scrub 漂移                        | —                  |
-| `createPdpTimeline`       | PDP 文案列 `[data-pdp-reveal]` 交错    | 商品详情           |
-| `createFormCascade`       | 表单字段横向 cascade                   | 结算               |
-| `createSuccessTimeline`   | 成功页庆祝 burst                       | 订单确认           |
+| Prop       | 默认   | 说明                |
+| ---------- | ------ | ------------------- |
+| `to`       | —      | 有则渲染 `NuxtLink` |
+| `strength` | `0.28` | 吸附强度 0–1        |
 
-**约定**：ScrollTrigger 默认 `toggleActions: 'play none none none'`（不 reverse，避免上滚内容消失）；叙事 scrub **不使用 pin**（与 Locomotive transform 冲突会产生巨大空白）。
+### LazyImage / ImageTilt3D
 
-### useGsapTimeline
-
-```ts
-useGsapTimeline(factory, { watchSource?: Ref })  // watchSource 变化时重建动画
+```vue
+<LazyImage src="/img.jpg" alt="Product" priority aspect="4/3" />
 ```
 
-内部注入 `scrollInjectionKey`，动画就绪后调用 `scroll.update()` + `ScrollTrigger.refresh()`。
+`LazyImage` 与 `ImageTilt3D` 均在布局就绪后通过 `useLayoutInvalidation()` 通知 MotionRuntime。
 
 ---
 
-## data-scroll 属性
+## Composables
 
-| 属性                       | 说明             | 示例                            |
-| -------------------------- | ---------------- | ------------------------------- |
-| `data-scroll`              | 启用 InView 检测 | `<div data-scroll>`             |
-| `data-scroll-speed`        | 视差速度         | `data-scroll-speed="-0.5"`      |
-| `data-scroll-class`        | 进入视口 class   | `data-scroll-class="is-inview"` |
-| `data-scroll-sticky`       | Sticky 吸附      | `<section data-scroll-sticky>`  |
-| `data-scroll-css-progress` | CSS 进度变量     | Hero 进度条                     |
+| Composable              | 用途                 | 门控                          |
+| ----------------------- | -------------------- | ----------------------------- |
+| `useMagnetic`           | 元素磁性偏移         | `animations` + `hover: hover` |
+| `useMouseParallax`      | 商品图微动           | `animations` + `parallax`     |
+| `useGsapTimeline`       | 组件内 GSAP 生命周期 | 内部使用                      |
+| `useLayoutInvalidation` | 布局变更通知         | 替代 scroll inject            |
+
+```ts
+useMagnetic(shellRef, { strength: 0.28, maxOffset: 12, lerp: 0.15 })
+useMouseParallax(mediaRef, stackRef, { maxX: 10, maxY: 8, lerp: 0.1 })
+```
 
 ---
 
-## useLocomotiveScroll
+## GSAP 工厂（`lib/scroll/animation.ts`）
 
-```ts
-import {
-  useLocomotiveScroll,
-  useScrollLifecycle,
-  scrollInjectionKey,
-} from '@/composables/useLocomotiveScroll'
-```
+| 函数                             | 用途                                 |
+| -------------------------------- | ------------------------------------ |
+| `createHeroEnterTimeline`        | 页面 Hero 入场（含 `media` 3D 透视） |
+| `createPageIntroCurtainTimeline` | 全屏幕帘 clip-path 揭示              |
+| `createMaskLineReveal`           | 行遮罩上滑                           |
+| `createSplitCharReveal`          | 逐字入场                             |
+| `createHoverShuffle`             | hover 逐字跳动                       |
+| `createScaleFadeReveal`          | 网格交错入场                         |
+| `createClipImageReveal`          | clip-path 揭示                       |
+| `createPdpTimeline`              | PDP 文案列                           |
 
-| API                     | 说明                                     |
-| ----------------------- | ---------------------------------------- |
-| `useLocomotiveScroll()` | 在 `layouts/default.vue` 初始化/销毁实例 |
-| `useScrollLifecycle()`  | 页面级生命周期封装                       |
-| `scrollInjectionKey`    | provide/inject 滚动上下文                |
-| `update()`              | DOM 变更后 resize                        |
-| `scrollTo(target)`      | 编程式滚动                               |
+页面级通过 `sceneRegistry` 引用；`PageIntroCurtain` 等 scroll 组件通过 `useGsapTimeline` 调用工厂。交互级由组件直接调用 `createHoverShuffle`。
+
+---
+
+## data-scroll 优先级
+
+| 属性                       | 用途                            |
+| -------------------------- | ------------------------------- |
+| `data-scroll-css-progress` | **首选** — Hero、Dynasty、scrub |
+| `data-scroll`              | InView 检测                     |
+| `data-scroll-class`        | 进入视口 class（`is-inview`）   |
+| `data-scroll-offset`       | IO rootMargin（默认 15%）       |
+| `data-scroll-speed`        | 例外视差；**首页不用**          |
+| `data-scroll-sticky`       | Sticky 吸附                     |
 
 ---
 
 ## 性能降级
 
-自动检测 `prefers-reduced-motion`、CPU、内存、网络；低端设备关闭平滑滚动和视差。移动端视差受 `motionCapabilities` 与环境变量共同门控。
+| 层级     | 机制                                       |
+| -------- | ------------------------------------------ |
+| 静态     | `prefers-reduced-motion` → static          |
+| 设备     | 低端 CPU/内存/2g → reduced                 |
+| 运行时   | `jankGuard` → `forceMotionDegrade('jank')` |
+| 环境变量 | `NUXT_PUBLIC_ENABLE_SMOOTH_SCROLL=false`   |
 
 详见 [PERFORMANCE.md](./PERFORMANCE.md)。
+
+---
+
+## 内部约定
+
+- 页面与组件**不应**直接调用 `useLocomotiveScroll`；通过 `MotionRuntime` 或 `useLayoutInvalidation` 消费
+- 滚动常量：`lib/scroll/scrollConstants.ts`（`lerp: 0.12`）
+- 全局错误页：`error.vue`（上报 `app_error`）
+
+---
+
+## 下一步阅读
+
+- 微交互默认参数与验收清单 → [VISUAL-DESIGN](./VISUAL-DESIGN.md)
+- 动效选型决策树 → [RESEARCH §3.3](./RESEARCH.md#33-动效选型决策树)
+- 降级策略与 jankGuard → [PERFORMANCE](./PERFORMANCE.md)

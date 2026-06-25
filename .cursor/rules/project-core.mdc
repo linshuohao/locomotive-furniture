@@ -8,49 +8,62 @@ alwaysApply: true
 Vue 3 跨境家具独立站 Demo，复刻 Locomotive.ca 滚动视觉体系。10 SPU 电商闭环，含 Locomotive Scroll + GSAP、Commerce 数据层、性能降级与可观测性。
 
 - 主站：`npm run dev` → http://localhost:3000
-- 文档：`docs/ARCHITECTURE.md`、`docs/COMPONENTS.md`、`docs/CONTRIBUTING.md`
+- 文档：`docs/ARCHITECTURE.md`、`docs/COMPONENTS.md`、`docs/VISUAL-DESIGN.md`、`docs/CONTRIBUTING.md`
 
 ## 技术栈
 
-Vue 3.5 · Nuxt 3 · TS 6 · TailwindCSS 4 · Locomotive Scroll v5 · GSAP · Zod · Pinia · @nuxtjs/i18n · Vitest · Vercel
+Vue 3.5 · Nuxt 4 · TS 6 · TailwindCSS 4 · Locomotive Scroll v5 · GSAP · Zod · Pinia · @nuxtjs/i18n v10 · vue-i18n v11 · Vitest · Vercel
 
 ## 架构分层
 
-Pages → Layouts → Components → Composables/Lib → Data/Store。禁止下层引用上层。
+Pages → Layouts → Components → Motion Runtime → Composables/Lib → Data/Store。禁止下层引用上层。
 
 | 层 | 路径 |
 |----|------|
-| Pages | `pages/`（文件路由：index / products / cart / checkout / about） |
-| Layouts | `layouts/default.vue` |
-| Components | `layout` / `ui` / `product` / `scroll` |
-| Composables + Lib | `composables/`、`lib/scroll`、`lib/motion`、`lib/analytics` |
-| Data + Store | `data/`、`store/` |
+| Pages | `app/pages/`（文件路由：index / products / cart / checkout / about） |
+| Layouts | `app/layouts/default.vue`（`provideMotionRuntime`） |
+| Components | `app/components/` — home / layout / ui / product / scroll |
+| Motion Runtime | `app/lib/motion/contracts` · `MotionSceneHost` · `sceneRegistry` |
+| Composables + Lib | `app/composables/`、`app/lib/scroll`、`app/lib/motion`、`app/lib/product`、`app/lib/analytics` |
+| Data + Store | `app/data/`、`app/store/` |
 
 ## 路径别名
 
-`@/` → `src/`，始终用绝对导入，避免 `../../`。
+`@/` → `app/`，始终用绝对导入，避免 `../../`。
 
 ## AI 编码原则
 
-**必须**：最小改动 · 遵循分层 · Zod 推导领域类型 · 复用 BaseButton/ScrollReveal/LazyImage · 动效门控 · scroll 生命周期 · 通过 `npm run check`
+**必须**：最小改动 · 遵循分层 · 页面动效用 `MotionSceneHost` · `components/ui` 用 `useLayoutInvalidation` · 商品卡用 `useProductQuickAdd` · Zod 推导领域类型 · 动效门控 · 交付前代码应能通过 `npm run check`
 
-**禁止**：新 CSS 方案替代 Tailwind · Page 直接 fetch · 绕过 Zod · 重复定义领域类型 · 低端强制 WebGL · 提交 `.env` · 未经请求 commit/push · 过度抽象
+**禁止**：Page 直连 GSAP DOM ref · `ProductCardMedia` import `store/cart` · `components/ui` inject scroll · 低端强制 WebGL · 未经请求 commit/push
+
+### 门禁执行策略（AI）
+
+**不要**在每次对话或每次小改动后自动跑 `typecheck` / `npm run check` / `lint` — 耗时长，打断迭代。
+
+仅在以下情况运行（优先 `check:changed` 或 `read_lints`，全量 `check` 需用户明确要求或准备提交/推送前）：
+
+- 用户明确要求验证
+- 改动涉及类型签名、构建配置、跨模块重构等高风险区域
+- 用户要求 commit / push / 开 PR 前
 
 ## 扩展路径
 
 | 任务 | 做法 |
 |------|------|
 | 新增页面 | `pages/<route>.vue`（Nuxt 文件路由） |
+| 新增翻译 | `i18n/locales/<locale>.json`（`nuxt.config.ts` → `i18n.langDir: 'locales'`，解析为 `i18n/locales/`） |
 | 新增商品 | `data/products.ts` + SEO slugs |
 | 接 API | `NUXT_PUBLIC_COMMERCE_PROVIDER=http` |
 | 新增组件 | `components/<layer>/` |
+| 新增微交互 | `HoverShuffleText` / `MagneticButton` / `useMouseParallax`；参数见 `docs/VISUAL-DESIGN.md` |
 
 ## 常用命令
 
 ```bash
-npm run dev | build | check | lint:fix | test:watch | docs:dev
+npm run dev | build | check | check:perf | lint:fix | test:watch | docs:dev
 ```
 
 ## 关键文件
 
-`nuxt.config.ts` · `layouts/default.vue` · `useLocomotiveScroll.ts` · `lib/scroll/animation.ts` · `motionCapabilities.ts` · `schemas.ts` · `api.ts` · `store/cart.ts` · `main.css`
+`nuxt.config.ts` · `layouts/default.vue` · `useMotionRuntime.ts` · `MotionSceneHost.vue` · `sceneRegistry.ts` · `jankGuard.ts` · `motionCapabilities.ts` · `useMagnetic.ts` · `useMouseParallax.ts` · `lib/analytics/transport.ts` · `error.vue` · `schemas.ts` · `main.css` · `docs/VISUAL-DESIGN.md`

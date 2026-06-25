@@ -1,0 +1,204 @@
+{
+  "brand": {
+    "name": "Atelier",
+    "fullName": "Atelier Furniture"
+  },
+  "nav": {
+    "home": "Home",
+    "collection": "Collection",
+    "about": "About",
+    "cart": "Cart",
+    "primary": "Primary navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "meta": {
+    "home": "Home",
+    "collection": "Collection",
+    "product": "Product",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "checkoutSuccess": "Order Confirmed",
+    "about": "About"
+  },
+  "footer": {
+    "tagline": "Curated furniture for modern living. Crafted with intention, shipped worldwide.",
+    "shop": "Shop",
+    "brand": "Brand",
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "intro": {
+      "cycling1": "Timeless",
+      "cycling2": "Timeless Design",
+      "cycling3": "Timeless Living, Built to Last"
+    },
+    "hero": {
+      "cycling1a": "Timeless",
+      "cycling1b": "Timeless Design",
+      "cycling1c": "Timeless Living",
+      "cycling2a": "Curated",
+      "cycling2b": "Curated globally",
+      "cycling2c": "Curated for modern living",
+      "titleMark": "◆",
+      "titleMarkEnd": "◆",
+      "titleLine1": "Atelier®",
+      "titleLine2": "Cross-border Furniture Atelier",
+      "copyright": "©2018–2026",
+      "imageAlt": "Minimal luxury living room"
+    },
+    "marquee": {
+      "talent": "Always seeking the next timeless piece",
+      "craftsmanship": "Craftsmanship",
+      "sustainability": "Sustainability",
+      "shipping": "Global Shipping",
+      "curated": "Curated Living",
+      "artisan": "Artisan Made"
+    },
+    "manifesto": {
+      "mark": "◆",
+      "markEnd": "◆",
+      "body": "Craft and material are only tools of expression. What sets our collection apart is intention. We're a small group of curators who craft bespoke living environments — tailor-made for you and your space."
+    },
+    "agency": {
+      "body": "From sourcing to delivery and care, we're the ultimate furniture one-stop shop. Over the past years, Atelier® has become a go-to for meaningful, innovative, results-driven interiors. Freshness guaranteed.",
+      "collection": "Collection",
+      "about": "About"
+    },
+    "featured": {
+      "title": "Featured work",
+      "allWork": "All Work",
+      "viewAll": "See all pieces",
+      "readMore": "View piece"
+    },
+    "dynasty": {
+      "years": "Seven Years Running 2018–2024",
+      "tagline": "The dynasty"
+    },
+    "extras": {
+      "title": "Extras (13)",
+      "articles": {
+        "heading": "Articles",
+        "items": {
+          "a1": "Atelier x Vitra: When Heritage Meets Modern Living",
+          "a2": "Atelier x Cassina: More Than Just a Collaboration",
+          "a3": "Should I invest in a design classic for my home?",
+          "a4": "Why we curate fewer pieces, not more",
+          "a5": "The revolution of the living room as we know it",
+          "a6": "A few things your interior designer can learn from your architect"
+        }
+      },
+      "culture": {
+        "heading": "Culture",
+        "items": {
+          "c1": "(2024) Atelier in Milan",
+          "c2": "(2023) Atelier in Copenhagen",
+          "c3": "(2022) Atelier in Tokyo",
+          "c4": "(2019) Atelier in Basel",
+          "c5": "(2018) Atelier in London",
+          "c6": "(2017) Atelier in Paris"
+        }
+      },
+      "store": {
+        "heading": "Store",
+        "link": "Check out our collection",
+        "buyNow": "Buy now→"
+      }
+    }
+  },
+  "catalog": {
+    "eyebrow": "Curated Collection",
+    "title": "The Collection",
+    "subtitle": "Curated furniture for modern living. Each piece designed to complement the others.",
+    "allCategories": "All"
+  },
+  "product": {
+    "quantity": "Quantity",
+    "addToCart": "Add to Cart",
+    "addToBag": "Add to bag",
+    "addedToCart": "Added — view cart below",
+    "viewCart": "View Cart",
+    "viewProduct": "View product",
+    "outOfStock": "Out of stock",
+    "new": "New",
+    "description": "Description",
+    "dimensions": "Dimensions",
+    "selectVariant": "Select variant"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "item": "item",
+    "items": "items",
+    "empty": "Your cart is empty.",
+    "continueShopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "shippingNote": "Shipping and taxes calculated at checkout.",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "toastAdded": "Added to cart",
+    "toastQty": "Qty",
+    "toastViewCart": "View cart ({count})",
+    "toastContinue": "Continue",
+    "toastDismiss": "Dismiss",
+    "addFailed": "Could not add to cart — item may be out of stock"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "email": "Email",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "postalCode": "Postal Code",
+    "processing": "Processing...",
+    "placeOrder": "Place Order (Demo)",
+    "orderSummary": "Order Summary",
+    "total": "Total",
+    "paymentDemoNote": "Payment provider is set to {provider}, but checkout remains demo-only.",
+    "errors": {
+      "email": "Valid email required",
+      "required": "Required",
+      "failed": "Checkout failed"
+    }
+  },
+  "checkoutSuccess": {
+    "eyebrow": "Order confirmed",
+    "title": "Thank you",
+    "orderNumber": "Your order number is {orderId}",
+    "demoNote": "This is a demo checkout — no payment was processed."
+  },
+  "about": {
+    "eyebrow": "About Atelier",
+    "title": "Furniture with intention",
+    "storyTitle": "Our story",
+    "storyP1": "Atelier was founded on a simple belief: your home deserves fewer, better things. We partner with independent workshops across Europe and Asia to bring you a carefully curated collection — each piece selected for craftsmanship, sustainability, and timeless design.",
+    "storyP2": "We ship worldwide with carbon-conscious logistics. Every order is packed with care, and white-glove delivery is available in select regions.",
+    "imageAlt": "Atelier showroom",
+    "ctaTitle": "Ready to explore?",
+    "ctaButton": "View Collection",
+    "teamEyebrow": "In the studio",
+    "teamTitle": "Where pieces take shape",
+    "teamBody": "A small team of curators, designers, and craftspeople — united by the belief that furniture should feel inevitable in your space, not imposed upon it."
+  },
+  "locale": {
+    "switchTo": "Switch to {language}",
+    "en": "English",
+    "zh": "中文"
+  },
+  "fallback": {
+    "offlineCatalog": "Using offline catalog fallback",
+    "apiTimeout": "Request timed out — showing cached catalog",
+    "apiError": "Could not reach the server",
+    "apiNotConfigured": "API is not configured",
+    "productNotFound": "Product not found"
+  },
+  "ui": {
+    "imageUnavailable": "Image unavailable"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "We could not load this page. Please try again.",
+    "backHome": "Back to home"
+  }
+}
