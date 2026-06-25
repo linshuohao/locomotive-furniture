@@ -29,5 +29,5 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      - run: playwright test
+      - run: npx playwright test
 

@@ -192,7 +192,7 @@ server {
 4. `npm run test`
 5. `npm run build:e2e`
 6. `npx playwright install --with-deps chromium`
-7. `playwright test`
+7. `npx playwright test`
 
 CI 负责代码质量门禁；生产部署由 Vercel Git 集成触发。
 
