@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
+import { useWebglCapability } from '@/composables/useWebglCapability'
 
 const props = withDefaults(
   defineProps<{
@@ -16,7 +16,7 @@ const props = withDefaults(
 
 const rootRef = ref<HTMLElement | null>(null)
 const canvasRef = ref<HTMLCanvasElement | null>(null)
-const { capabilities } = useMotionCapabilities()
+const webglEnabled = useWebglCapability()
 
 const inView = ref(false)
 let cleanup: (() => void) | null = null
@@ -34,12 +34,12 @@ onMounted(() => {
 })
 
 watch(
-  [inView, capabilities, canvasRef],
+  [inView, webglEnabled, canvasRef],
   async () => {
     cleanup?.()
     cleanup = null
 
-    if (!inView.value || !capabilities.value.webgl || !canvasRef.value) return
+    if (!inView.value || !webglEnabled.value || !canvasRef.value) return
 
     const THREE = await import('three')
     cleanup = initTeamScene(THREE, canvasRef.value, () => props.progress) ?? null
@@ -238,7 +238,7 @@ function initTeamScene(THREE: ThreeModule, canvas: HTMLCanvasElement, readProgre
     :class="$props.class"
   >
     <canvas
-      v-if="capabilities.webgl"
+      v-if="webglEnabled"
       ref="canvasRef"
       class="team-scene__canvas"
       aria-hidden="true"

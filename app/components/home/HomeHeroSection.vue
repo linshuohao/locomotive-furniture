@@ -7,6 +7,7 @@ import MotionSceneHost from '@/components/scroll/MotionSceneHost.vue'
 import ImageTilt3D from '@/components/ui/ImageTilt3D.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
+import { REQUIRES_ANIMATIONS } from '@/lib/motion/sceneRequirements'
 import { useLocale } from '@/composables/useLocale'
 import { staticImages } from '@/lib/assets/paths'
 
@@ -29,6 +30,7 @@ const heroScene = {
   id: 'home-hero-enter',
   trigger: 'intro-complete' as const,
   effect: 'hero-enter' as const,
+  requires: REQUIRES_ANIMATIONS,
   targets: {
     eyebrow: '[data-hero-eyebrow]',
     subtitle: '[data-hero-subtitle]',
@@ -38,10 +40,7 @@ const heroScene = {
 </script>
 
 <template>
-  <MotionSceneHost
-    :scene="heroScene"
-    :when="introComplete"
-  >
+  <MotionSceneHost :scene="heroScene">
     <section
       class="hero-stage relative min-h-[100svh] overflow-hidden flex flex-col justify-between px-6"
       data-scroll

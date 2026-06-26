@@ -44,7 +44,7 @@ features:
 | **入门**       | [DELIVERY](./DELIVERY.md)           | Demo 范围、产物清单、验收标准 |
 | **设计与决策** | [RESEARCH](./RESEARCH.md)           | 原站机制原理与复刻映射        |
 |                | [VISUAL-DESIGN](./VISUAL-DESIGN.md) | 视觉与微交互规范              |
-|                | [TRADEOFFS](./TRADEOFFS.md)         | 全项目取舍矩阵                |
+|                | [TRADEOFFS](./TRADEOFFS.md)         | 项目取舍矩阵                  |
 | **开发与架构** | [ARCHITECTURE](./ARCHITECTURE.md)   | 六层架构与 Motion Runtime     |
 |                | [COMPONENTS](./COMPONENTS.md)       | 组件 API 与 composables       |
 |                | [PERFORMANCE](./PERFORMANCE.md)     | Web Vitals、降级与包体积预算  |

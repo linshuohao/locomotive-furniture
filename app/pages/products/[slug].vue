@@ -13,6 +13,7 @@ import MotionSceneHost from '@/components/scroll/MotionSceneHost.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import { useLocale } from '@/composables/useLocale'
 import { getDefaultVariant } from '@/lib/product/stock'
+import { REQUIRES_ANIMATIONS } from '@/lib/motion/sceneRequirements'
 
 usePageSeo('meta.product')
 
@@ -48,6 +49,7 @@ const pdpScene = {
   id: 'pdp-copy-reveal',
   trigger: 'mount' as const,
   effect: 'pdp-copy' as const,
+  requires: REQUIRES_ANIMATIONS,
   targets: {},
 }
 
