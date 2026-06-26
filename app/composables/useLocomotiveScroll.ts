@@ -1,4 +1,4 @@
-import { ref, nextTick, onMounted, onUnmounted, type Ref, type InjectionKey } from 'vue'
+import { nextTick, onMounted, onUnmounted, type InjectionKey } from 'vue'
 import LocomotiveScroll from 'locomotive-scroll'
 import 'locomotive-scroll/dist/locomotive-scroll.css'
 import { gsap } from 'gsap'
@@ -17,11 +17,6 @@ export interface ScrollContext {
 }
 
 export const scrollInjectionKey: InjectionKey<ScrollContext> = Symbol('scroll')
-
-const scrollInstance: Ref<ScrollInstance | null> = ref(null)
-const scrollProgress = ref(0)
-const scrollDirection = ref<'up' | 'down'>('down')
-const isScrolling = ref(false)
 
 let fpsMonitor: FpsMonitor | null = null
 let scrollTimeout: ReturnType<typeof setTimeout> | null = null
@@ -43,6 +38,10 @@ function isParallaxEnabled(config: ReturnType<typeof useRuntimeConfig>): boolean
 
 export function useLocomotiveScroll(options: LocomotiveScrollOptions = {}) {
   const runtimeConfig = useRuntimeConfig()
+  const scrollInstance = useState<ScrollInstance | null>('locomotive-scroll-instance', () => null)
+  const scrollProgress = useState<number>('locomotive-scroll-progress', () => 0)
+  const scrollDirection = useState<'up' | 'down'>('locomotive-scroll-direction', () => 'down')
+  const isScrolling = useState<boolean>('locomotive-scroll-scrolling', () => false)
 
   const init = async () => {
     if (import.meta.server) return

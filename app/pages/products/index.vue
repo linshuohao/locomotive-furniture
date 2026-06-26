@@ -9,6 +9,7 @@ import MotionSceneHost from '@/components/scroll/MotionSceneHost.vue'
 import { useLayoutInvalidation } from '@/composables/useLayoutInvalidation'
 import { useLocale } from '@/composables/useLocale'
 import { trackFunnelStep } from '@/lib/analytics/analytics'
+import { REQUIRES_ANIMATIONS } from '@/lib/motion/sceneRequirements'
 
 usePageSeo('meta.collection')
 
@@ -37,6 +38,7 @@ const heroScene = {
   id: 'products-hero-enter',
   trigger: 'mount' as const,
   effect: 'hero-enter' as const,
+  requires: REQUIRES_ANIMATIONS,
   targets: {
     eyebrow: '[data-hero-eyebrow]',
     title: '[data-hero-title]',
@@ -48,6 +50,7 @@ const gridScene = computed(() => ({
   id: 'products-grid-reveal',
   trigger: 'mount' as const,
   effect: 'scale-fade-grid' as const,
+  requires: REQUIRES_ANIMATIONS,
   targets: { items: '[data-product-card]' },
   options: { stagger: 0.12 },
 }))

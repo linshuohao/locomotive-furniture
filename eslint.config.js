@@ -51,6 +51,12 @@ export default [
     },
   },
   {
+    files: ['app/tests/**/*.ts'],
+    rules: {
+      'vue/one-component-per-file': 'off',
+    },
+  },
+  {
     files: ['app/components/ui/**/*.vue', 'app/components/product/ProductCardMedia.vue'],
     rules: {
       'no-restricted-imports': [

@@ -41,7 +41,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      include: ['three'],
+      include: ['gsap', 'gsap/ScrollTrigger', 'locomotive-scroll', 'three', 'web-vitals', 'zod'],
     },
     build: {
       rollupOptions: {

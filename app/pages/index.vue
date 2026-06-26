@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import { providePageIntroComplete } from '@/composables/usePageIntroComplete'
 import { fetchProducts } from '@/data/api'
 import type { Product } from '@/data/schemas'
 import HomeHeroSection from '@/components/home/HomeHeroSection.vue'
@@ -52,7 +53,7 @@ const fallbackNotice = computed(() => {
 
 const storeTeasers = computed(() => featured.value.slice(0, 2))
 
-const introComplete = ref(false)
+const { introComplete, markIntroComplete } = providePageIntroComplete()
 
 const cyclingPhrasesPrimary = computed(() => [
   t('home.hero.cycling1a'),
@@ -71,7 +72,7 @@ const talentMarquee = computed(() => [t('home.marquee.talent')])
 
 <template>
   <div class="pt-[var(--header-height)]">
-    <PageIntroCurtain @complete="introComplete = true" />
+    <PageIntroCurtain @complete="markIntroComplete" />
 
     <HomeHeroSection
       :intro-complete="introComplete"

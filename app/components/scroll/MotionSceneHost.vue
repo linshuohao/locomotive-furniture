@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted } from 'vue'
 import type { MotionSceneDescriptor } from '@/lib/motion/scene'
-import type { MotionCapabilities } from '@/lib/motion/motionCapabilities'
 import { resolveSceneFactory } from '@/lib/motion/sceneRegistry'
 import { useGsapTimeline } from '@/composables/useGsapTimeline'
+import { usePageIntroComplete } from '@/composables/usePageIntroComplete'
 import { trackMotionSkipped } from '@/lib/analytics/analytics'
 import { getMotionCapabilitiesSnapshot } from '@/lib/motion/motionCapabilities'
+import { meetsSceneRequirements, resolveSceneActive } from '@/lib/motion/sceneActivation'
 
 const props = defineProps<{
   scene: MotionSceneDescriptor
@@ -15,25 +16,16 @@ const props = defineProps<{
 
 const rootRef = ref<HTMLElement | null>(null)
 const inViewActive = ref(false)
+const pageIntroComplete = usePageIntroComplete()
 
-const isActive = computed(() => {
-  if (props.when !== undefined) {
-    return props.when !== false && props.when !== 0 && props.when !== ''
-  }
-
-  switch (props.scene.trigger) {
-    case 'mount':
-      return !!rootRef.value
-    case 'inview':
-      return inViewActive.value
-    case 'intro-complete':
-      return false
-    case 'scrub':
-      return !!rootRef.value
-    default:
-      return !!rootRef.value
-  }
-})
+const isActive = computed(() =>
+  resolveSceneActive(props.scene.trigger, {
+    hasRoot: !!rootRef.value,
+    inViewActive: inViewActive.value,
+    introComplete: pageIntroComplete?.value ?? false,
+    when: props.when,
+  }),
+)
 
 let observer: IntersectionObserver | undefined
 
@@ -68,13 +60,7 @@ watch(
 onUnmounted(teardownObserver)
 
 function meetsRequirements(): boolean {
-  const requires = props.scene.requires
-  if (!requires) return true
-
-  const caps = getMotionCapabilitiesSnapshot()
-  return (Object.keys(requires) as (keyof MotionCapabilities)[]).every(
-    (key) => caps[key] === requires[key],
-  )
+  return meetsSceneRequirements(props.scene.requires, getMotionCapabilitiesSnapshot())
 }
 
 useGsapTimeline(
