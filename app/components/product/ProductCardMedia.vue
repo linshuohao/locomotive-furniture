@@ -49,7 +49,7 @@ const productUrl = computed(() => localizedPath(`/products/${props.product.slug}
 function onQuickAdd(event: MouseEvent) {
   event.preventDefault()
   event.stopPropagation()
-  if (!inStock.value || adding.value) return
+  if (!inStock.value || adding.value || props.justAdded) return
 
   adding.value = true
   const variant = defaultVariant.value
@@ -60,7 +60,9 @@ function onQuickAdd(event: MouseEvent) {
     slug: props.product.slug,
     price: props.product.price + variant.priceModifier,
   })
-  adding.value = false
+  queueMicrotask(() => {
+    adding.value = false
+  })
 }
 </script>
 
@@ -135,7 +137,7 @@ function onQuickAdd(event: MouseEvent) {
           'product-card__bag--added': props.justAdded,
           'product-card__bag--disabled': !inStock,
         }"
-        :disabled="!inStock || adding"
+        :disabled="!inStock || adding || props.justAdded"
         :aria-label="inStock ? t('product.addToBag') : t('product.outOfStock')"
         @click="onQuickAdd"
       >

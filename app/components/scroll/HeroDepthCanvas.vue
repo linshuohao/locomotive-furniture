@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onUnmounted, watch } from 'vue'
 import gsap from 'gsap'
-import { useMotionCapabilities } from '@/composables/useMotionCapabilities'
+import { useWebglCapability } from '@/composables/useWebglCapability'
 import { staticImages } from '@/lib/assets/paths'
 import {
   bindCanvasResize,
@@ -28,7 +28,7 @@ const props = withDefaults(
 )
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
-const { capabilities } = useMotionCapabilities()
+const webglEnabled = useWebglCapability()
 
 let cleanup: (() => void) | null = null
 
@@ -125,11 +125,11 @@ function initWebGL(canvas: HTMLCanvasElement, imageSrc: string) {
 }
 
 watch(
-  [capabilities, canvasRef, () => props.imageSrc],
+  [webglEnabled, canvasRef, () => props.imageSrc],
   () => {
     cleanup?.()
     cleanup = null
-    if (!capabilities.value.webgl || !canvasRef.value) return
+    if (!webglEnabled.value || !canvasRef.value) return
     cleanup = initWebGL(canvasRef.value, props.imageSrc) ?? null
   },
   { immediate: true },
@@ -142,7 +142,7 @@ onUnmounted(() => {
 
 <template>
   <canvas
-    v-if="capabilities.webgl"
+    v-if="webglEnabled"
     ref="canvasRef"
     class="hero-depth-canvas pointer-events-none absolute inset-0 z-[1] h-full w-full"
     :class="$props.class"

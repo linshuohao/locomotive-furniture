@@ -5,6 +5,7 @@ import { consumeCheckoutSession } from '@/lib/checkoutSession'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import MotionSceneHost from '@/components/scroll/MotionSceneHost.vue'
 import { useLocale } from '@/composables/useLocale'
+import { REQUIRES_ANIMATIONS } from '@/lib/motion/sceneRequirements'
 
 usePageSeo('meta.checkoutSuccess')
 
@@ -19,6 +20,7 @@ const successScene = {
   id: 'checkout-success-enter',
   trigger: 'mount' as const,
   effect: 'success-enter' as const,
+  requires: REQUIRES_ANIMATIONS,
   targets: {},
 }
 
